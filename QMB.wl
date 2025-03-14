@@ -376,7 +376,7 @@ qubit[\[Theta]_,\[Phi]_]:=FullSimplify[Normalize[{Cos[\[Theta]/2],Exp[I \[Phi]]S
 coherentstate[state_,L_]:=Flatten[KroneckerProduct@@Table[state,L]]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Quantum chaos*)
 
 
@@ -386,14 +386,18 @@ MeanLevelSpacingRatio[eigenvalues_]:=Mean[Min/@Transpose[{#,1/#}]&[Ratios[Differ
 IPR[\[Psi]_] := Total[\[Psi]^4]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Quantum channels*)
+
+
+(* ::Subsubsection:: *)
+(*Reshuffle*)
 
 
 Reshuffle[m_] := ArrayFlatten[ArrayFlatten/@Partition[Partition[ArrayReshape[#,{Sqrt[Dimensions[m][[1]]],Sqrt[Dimensions[m][[1]]]}]&/@m,Sqrt[Dimensions[m][[1]]]],Sqrt[Dimensions[m][[1]]]],1];
 
 
-Reshuffle[A_,m_,n_]:=ArrayFlatten[ArrayReshape[A,{m,n,m,n}]]
+Reshuffle[A_,m_,n_] := ArrayFlatten[ArrayReshape[A, {m, n, m, n}]]
 
 
 (* ::Subsection::Closed:: *)
