@@ -35,7 +35,7 @@ BeginPackage["QMB`"];
 (*Usage definitions*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*General quantum mechanics*)
 
 
@@ -114,6 +114,13 @@ KroneckerVectorProduct::usage = "KroneckerVectorProduct[a,b] calculates \!\(\*Te
 
 
 Purity::usage = "Purity[\[Rho]] calculates the purity of \[Rho].";
+
+
+KetBra::usage = FormatUsage["KetBra[\[Psi]] returns the density matrix ```|\[Psi]\[RightAngleBracket]\[LeftAngleBracket]\[Psi]|``` for state ```\[Psi]````."];
+
+
+(* ::Text:: *)
+(*Agregadas por Miguel*)
 
 
 qubit::usage = "Generates a state with the parametrization of the Bloch sphere (\[Theta],\[Phi])";
@@ -217,7 +224,7 @@ FuzzyMeasurement::usage = "FuzzyMeasurement[\[Psi], \!\(\*SubscriptBox[\(p\), \(
 SpinParityEigenvectors::usage = "SpinParityEigenvectors[L] gives a list of {even, odd} eigenvectors of the L-spin system parity operator P; P\!\(\*TemplateBox[{RowBox[{SubscriptBox[\"k\", \"1\"], \",\", \"\[Ellipsis]\", \",\", SubscriptBox[\"k\", \"L\"]}]},\n\"Ket\"]\) = \!\(\*TemplateBox[{RowBox[{SubscriptBox[\"k\", \"L\"], \",\", \"\[Ellipsis]\", \",\", SubscriptBox[\"k\", \"1\"]}]},\n\"Ket\"]\), \!\(\*SubscriptBox[\(k\), \(i\)]\)=0,1.";
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Hamiltonians*)
 
 
@@ -294,7 +301,7 @@ Begin["`Private`"];
 ClearAll[SigmaPlusSigmaMinus,SigmaMinusSigmaPlus,SigmaPlusSigmaMinus2,SigmaMinusSigmaPlus2];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*General quantum mechanics*)
 
 
@@ -378,6 +385,9 @@ KroneckerVectorProduct[a_,b_]:=Flatten[KroneckerProduct[a,b]]
 
 
 Purity[\[Rho]_]:=Tr[\[Rho] . \[Rho]] 
+
+
+KetBra[psi_] := Transpose[{psi}] . Conjugate[{psi}]
 
 
 qubit[\[Theta]_,\[Phi]_]:=FullSimplify[Normalize[{Cos[\[Theta]/2],Exp[I \[Phi]]Sin[\[Theta]/2]}]]
