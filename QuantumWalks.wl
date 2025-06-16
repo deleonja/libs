@@ -27,7 +27,7 @@ PositionProbabilityDistribution::usage = FormatUsage["PositionProbabilityDistrib
 ExpValPosition::usage = FormatUsage["ExpValPosition[\[Psi],t] returns the expected value of position for the state \[Psi] of a 1D DTQW at time ```t```."];
 
 
-0Begin["`Private`"]
+Begin["`Private`"]
 
 
 Shift[t_] := Module[{},
