@@ -214,7 +214,11 @@ BosonEscapeKrausOperators::usage = "BosonEscapeKrausOperators[N, L]: bosons esca
 BosonEscapeKrausOperators2::usage = "sdfa";
 
 
-HilbertSpaceDim::usage = "HilbertSpaceDim[N, L] returns the dimension of Hilbert space of a Bose Hubbard system of N bosons and L sites.";
+HilbertSpaceDim::deprecated = "Function `1` is being deprecated. Use instead `2`.";
+
+
+BoseHubbardHilbertSpaceDimension::usage = FormatUsage["BoseHubbardHilbertSpaceDimension[n,L] returns the dimension"<> 
+"of Hilbert space of a Bose Hubbard system of N bosons and L sites."];
 
 
 FockBasis::usage = "FockBasis[N, M] returns the lexicographical-sorted Fock basis of N bosons in M sites.";
@@ -494,7 +498,7 @@ FockBasis[N_, M_] := Module[{k, fockState},
 SortFockBasis[fockBasis_]:=Transpose[Sort[{Tag[#],#}&/@fockBasis]]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Bose Hubbard*)
 
 
@@ -508,7 +512,7 @@ a=NestList[RotateRight,Join[{-1.,1.},ConstantArray[0.,L-2]],L-2]
 
 Switch[OptionValue[SymmetricSubspace],
 "All",
-Module[{b,cols,rows,coef,d=HilbertSpaceDim[n,L]},
+Module[{b,cols,rows,coef,d=BoseHubbardHilbertSpaceDimension[n,L]},
 #+ConjugateTranspose[#]&[
 Total[Table[
 (*|u\[RightAngleBracket]=a_ia_j^\dagger|v\[RightAngleBracket]*)
@@ -665,7 +669,7 @@ SubsystemComplementSize=L-SubsystemSize;
 {SubsystemFockBasisTags,SubsystemFockBasis}=SortFockBasis[Flatten[Table[FockBasis[k,SubsystemSize],{k,0,n}],1]];
 (*Complement subsystem's Fock basis*)
 SubsystemComplementFockBasis=Map[ReplacePart[ConstantArray[_,L],Thread[Complement[Range[L],SitesOfSubsystem]->#]]&,Flatten[Table[SortFockBasis[FockBasis[k,SubsystemComplementSize]][[2]],{k,0,n}],1]];(*<<<*)
-RulesForOrderedSystemBasis=Thread[Rule[SystemFockBasisTags,Range[HilbertSpaceDim[n,L]]]];
+RulesForOrderedSystemBasis=Thread[Rule[SystemFockBasisTags,Range[BoseHubbardHilbertSpaceDimension[n,L]]]];
 SubsystemHilbertSpaceDim=Length[SubsystemFockBasis];
 RulesForOrderedSubsystemBasis=Thread[Rule[SubsystemFockBasisTags,Range[SubsystemHilbertSpaceDim]]];
 FockIndicesInRho=Map[Tuples[{#,#}]&[Extract[SystemFockBasis,Position[SystemFockBasis,#]]]&,SubsystemComplementFockBasis];(*<<<*)
@@ -717,7 +721,7 @@ FuzzyMeasurement[\[Psi]_,pFuzzy_] :=
 (*BosonEscapeKrausOperators[n, L]*)
 
 
-BosonEscapeKrausOperators[n_,L_] := Module[{dimH=HilbertSpaceDim[n,L],fockBasisTags,fockBasisStates,KrausOperators},
+BosonEscapeKrausOperators[n_,L_] := Module[{dimH=BoseHubbardHilbertSpaceDimension[n,L],fockBasisTags,fockBasisStates,KrausOperators},
 {fockBasisTags,fockBasisStates}=SortFockBasis[FockBasis[n,L]];
 
 KrausOperators=1/Sqrt[2(n-1)]*Join[
@@ -752,7 +756,10 @@ ReplaceAt[ReplaceAt[fockState,x_:>x-1,i],x_:>x+1,i+1]
 (*Secondary routines*)
 
 
-HilbertSpaceDim[n_,L_]:=(n+L-1)!/(n!(L-1)!)
+HilbertSpaceDim[args___] := Message[HilbertSpaceDim::deprecated, "HilbertSpaceDim", "BoseHubbardHilbertSpaceDimension"];
+
+
+BoseHubbardHilbertSpaceDimension[n_,L_]:=(n+L-1)!/(n!(L-1)!)
 
 
 FockBasisIndex[fockState_,sortedTagsFockBasis_]:=
