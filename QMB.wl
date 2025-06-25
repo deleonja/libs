@@ -35,7 +35,7 @@ BeginPackage["QMB`"];
 (*Usage definitions*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*General quantum mechanics*)
 
 
@@ -160,11 +160,52 @@ Quiet[
 , {FrontEndObject::notavail, First::normal}];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Bose-Hubbard*)
 
 
-BoseHubbardHamiltonian::usage = "BoseHubbardHamiltonian[N, L, J, U] returns the BH Hamiltonian for N bosons and L sites with hopping parameter J, and interaction parameter U.";
+BoseHubbardHamiltonian::usage = FormatUsage["BoseHubbardHamiltonian[n,L,J,U] returns the BH Hamiltonian for ```n``` bosons "<>
+"and ```L``` sites with hopping parameter ```J```, and interaction parameter ```U```.\n"<>
+"BoseHubbardHamiltonian[n,L,J,U,SymmetricSubspace] returns the Hamiltonian in a symmetric subspace; option "<>
+"SymmetricSubspace takes the options \"All\" | \"EvenParity\" | \"OddParity\". \n\n"<>
+"Notes: \n"<>
+"- BoseHubbardHamiltonian[n,L,J,U] is equivalent to BoseHubbardHamiltonian[n,L,J,U, SymmetricSubspace->\"All\"].\n"<>
+"- Open boundary conditions are used."];
+
+
+SymmetricSubspace::usage = "SymmetricSubspace is an option for BoseHubbardHamiltonian to return the Hamiltonian in "<>
+"the even/odd parity subspaces.\n\n"<>
+"- Example of usage to obtain the BH Hamiltonian in the even parity subspace: "<>
+"BoseHubbardHamiltonian[n,L,J,U,SymmetricSubspace->\"EvenParity\"]";
+
+
+Options[BoseHubbardHamiltonian]={SymmetricSubspace->"All" (*"All"|"EvenParity"|"OddParity"*)}
+
+
+KineticTermBoseHubbardHamiltonian::usage = FormatUsage["KineticTermBoseHubbardHamiltonian[n,L,tags,basis,SymmetricSubspace"<>
+"] returns the kinetic term of the BH Hamiltonian for ```n``` bosons and ```L``` sites with hopping parameter ```J```, "<>
+"and interaction parameter ```U```.\n"<>
+"KineticTermBoseHubbardHamiltonian[n,L,SymmetricSubspace] returns the term in a symmetric subspace; option "<>
+"SymmetricSubspace takes the options \"All\" | \"EvenParity\" | \"OddParity\". \n\n"<>
+"**Notes**\n"<>
+"- KineticTermBoseHubbardHamiltonian[n,L,J,U] is equivalent to "<>
+"KineticTermBoseHubbardHamiltonian[n,L,J,U, SymmetricSubspace->\"All\"].\n"<>
+"- Open boundary conditions are used."];
+
+
+Options[KineticTermBoseHubbardHamiltonian]={SymmetricSubspace->"All" (*"All"|"EvenParity"|"OddParity"*)}
+
+
+PotentialTermBoseHubbardHamiltonian::usage = FormatUsage["PotentialTermBoseHubbardHamiltonian[n,L,SymmetricSubspace] returns "<>
+"the potential term of the BH Hamiltonian for ```n``` bosons and ```L``` sites.\n"<>
+"PotentialTermBoseHubbardHamiltonian[basis] returns the potential term of the BH Hamiltonian given the ```basis``` "<>
+"of the Fock space of the bosonic system.\n\n"<>
+"**Notes**\n"<>
+"- If you want the potential term of the BH Hamiltonian in a parity symmetry sector ```basis``` should be a list with"<>
+" only those representative Fock states of the symmectric subspace.\n\n"<>
+"**Examples of usage**\n"<>
+"- '''PotentialTermBoseHubbardHamiltonian[{{3,0,0},{2,1,0},{2,0,1},{1,2,0}}]''' returns the matrix in the odd parity sector "<>
+"of a system with 3 bosons and 3 sites."];
 
 
 BosonEscapeKrausOperators::usage = "BosonEscapeKrausOperators[N, L]: bosons escape to nearest neighbouring sites. N: bosons, L: site.";
@@ -203,7 +244,7 @@ BosonicPartialTrace::usage = "BosonicPartialTrace[\[Rho]] calculates the partial
 InitializationBosonicPartialTrace::usage = "InitializationBosonicPartialTrace[{\!\(\*SubscriptBox[\(i\), \(1\)]\),\[Ellipsis],\!\(\*SubscriptBox[\(i\), \(k\)]\)}, N, L] initializes variables for BosonicPartialTrace[] to calculate the reduced density matrix of sites {\!\(\*SubscriptBox[\(i\), \(1\)]\),\[Ellipsis],\!\(\*SubscriptBox[\(i\), \(k\)]\)}.";
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Fuzzy measurements in bosonic systems*)
 
 
@@ -301,7 +342,7 @@ Begin["`Private`"];
 ClearAll[SigmaPlusSigmaMinus,SigmaMinusSigmaPlus,SigmaPlusSigmaMinus2,SigmaMinusSigmaPlus2];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*General quantum mechanics*)
 
 
@@ -453,7 +494,7 @@ FockBasis[N_, M_] := Module[{k, fockState},
 SortFockBasis[fockBasis_]:=Transpose[Sort[{Tag[#],#}&/@fockBasis]]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Bose Hubbard*)
 
 
@@ -461,15 +502,145 @@ SortFockBasis[fockBasis_]:=Transpose[Sort[{Tag[#],#}&/@fockBasis]]
 (*General*)
 
 
+KineticTermBoseHubbardHamiltonian::badSymmetricSubspace = "Opci\[OAcute]n SymmetricSubspace `1` inv\[AAcute]lida."<>
+"Debe ser \"All\",\"EvenParity\" o \"OddParity\".";
+
+KineticTermBoseHubbardHamiltonian[n_,L_,tags_,basis_,OptionsPattern[]]:=Module[
+{
+a=NestList[RotateRight,Join[{-1.,1.},ConstantArray[0.,L-2]],L-2]
+},
+
+Switch[OptionValue[SymmetricSubspace],
+"All",
+Module[{b,cols,rows,coef,d=HilbertSpaceDim[n,L]},
+#+ConjugateTranspose[#]&[
+Total[Table[
+(*|u\[RightAngleBracket]=a_ia_j^\dagger|v\[RightAngleBracket]*)
+b=Select[basis+ConstantArray[a[[i]],d],Min[#]>=0&];
+(*indices columnas*)
+cols=Flatten[Position[basis+ConstantArray[a[[i]],d],_?(Min[#]>=0&),1]];
+(*coeficientes*)
+coef=Sqrt[basis[[cols,i]]*(basis[[cols,i+1]]+1.)];
+(*indices filas*)
+rows=Flatten[FirstPosition[tags,Tag[#],Nothing]&/@b];
+SparseArray[Thread[Transpose[{rows,cols}]->coef],{d,d}]
+,{i,L-1}]]
+]
+],
+"EvenParity",
+Module[{rules,cols,rows,coef,b1,b,d},
+d= Length[basis];
+
+rules=Catenate[{Thread[#->1/Sqrt[2.]],Thread[Complement[Range[Length[basis]],#]->1.]}&[Flatten[Position[basis,x_/;Length[x]==2,{1}]]]];
+
+#+ConjugateTranspose[#]&[
+Total[
+Table[
+(*aplicar a_ia_j^\dagger a todos los elementos de basis*)
+b1=Map[#+a[[i]]&,basis,{2}];
+(*posiciones columnas y elementos de b1 que si son fisicos*)
+{cols,b}={#[[All,1]],Extract[b1,#]}&[Position[b1,_?(Min[#]>=0&),{2}]];
+(*posiciones de los |u\[RightAngleBracket] que s\[IAcute] son estados o no son el cero vector*)
+rows=Flatten[FirstPosition[tags,Tag[#],FirstPosition[tags,Tag[Reverse[#]],Nothing]]&/@b];
+(*coeficientes (se hacen cero o imaginarios aquellos que se mapean al cero o estados no fisicos)*)
+coef=Sqrt[(b[[All,i]]+1)*b[[All,i+1]]];
+(*Print[Thread[Transpose[{rows,cols}]->coef*(cols/.rules)*(rows/.rules)]];*)
+SparseArray[Thread[Transpose[{rows,cols}]->coef*(cols/.rules)*(rows/.rules)],{d,d}]
+,{i,1,L-1}]
+]
+]
+],
+"OddParity",
+Module[{rules,cols,rows,coef,b1,b,d},
+d= Length[basis];
+
+(#+ConjugateTranspose[#])&[
+Total[
+Table[
+(*aplicar a_ia_j^\dagger a todos los elementos de basis*)
+b1=Map[#+a[[i]]&,basis,{2}];
+(*posiciones columnas y elementos de b1 que si son fisicos*)
+{cols,b}={#[[All,1]],Extract[b1,#]}&[Position[b1,_?(Min[#]>=0&&!PalindromeQ[#]&),{2}]];
+(*posiciones de los |u\[RightAngleBracket] que s\[IAcute] son estados o no son el cero vector*)
+rows=Flatten[FirstPosition[tags,Tag[#],FirstPosition[tags,Tag[Reverse[#]],Nothing]]&/@b];
+(*coeficientes (se hacen cero o imaginarios aquellos que se mapean al cero o estados no fisicos)*)
+coef=Sqrt[(b[[All,i]]+1)*b[[All,i+1]]]/2;
+(*Print[Thread[Transpose[{rows,cols}]->coef*(cols/.rules)*(rows/.rules)]];*)
+SparseArray[Thread[Transpose[{rows,cols}]->coef],{d,d}]
+,{i,1,L-1}]
+]
+]
+],
+_,
+Message[KineticTermBoseHubbardHamiltonian::badSymmetricSubspace,OptionValue[SymmetricSubspace]];Return[$Failed];
+]
+]
+
+KineticTermBoseHubbardHamiltonian[n_,L_,OptionsPattern[]]:=Module[
+{
+tags,basis
+},
+
+Switch[OptionValue[SymmetricSubspace],
+"All",
+{tags,basis}=SortFockBasis[N[FockBasis[n,L]]];
+KineticTermBoseHubbardHamiltonian[n,L,tags,basis]
+,
+"EvenParity",
+basis=GatherBy[N[FockBasis[n,L]],Sort[{#,Reverse[#]}]&];
+tags=tags=Tag/@basis[[All,1]];
+KineticTermBoseHubbardHamiltonian[n,L,tags,basis,SymmetricSubspace->"EvenParity"]
+,
+"OddParity",
+basis=GatherBy[Discard[FockBasis[n,L],PalindromeQ],Sort[{#,Reverse[#]}]&];
+tags=Tag/@basis[[All,1]];
+KineticTermBoseHubbardHamiltonian[n,L,tags,basis,SymmetricSubspace->"OddParity"]
+,
+_,
+Message[KineticTermBoseHubbardHamiltonian::badSymmetricSubspace,OptionValue[SymmetricSubspace]];Return[$Failed];
+]
+]
+
+
+PotentialTermBoseHubbardHamiltonian[n_,L_]:=Module[{fockbasis=SortFockBasis[N[FockBasis[n,L]]][[2]]},DiagonalMatrix[Total/@((#^2-#)&[fockbasis]),TargetStructure->"Sparse"]]
+
+PotentialTermBoseHubbardHamiltonian[basis_]:=DiagonalMatrix[Total/@((#^2-#)&[basis]),TargetStructure->"Sparse"]
+
+
 (* Define messages for incorrect types *)
 BoseHubbardHamiltonian::int = "The first argument (`1`) and second argument (`2`) are expected to be integers.";
 BoseHubbardHamiltonian::real = "The third argument (`1`) and fourth argument (`2`) are expected to be real numbers.";
 
-(*BoseHubbardH[n_Integer,M_Integer,t_Real,U_Real] computes the Bose-Hubbard Hamiltonian of n particles, M sites with hopping parameter t and interaction parameter U.*)
-BoseHubbardHamiltonian[N_Integer,L_Integer,J_Real,U_Real]:=Module[{sortedBasis,sortedTags},
-{sortedTags,sortedBasis}=SortFockBasis[FockBasis[N,L]];
--J KineticEnergyOfBoseHubbardHamiltonian[sortedBasis,sortedTags]+
-U/2PotentialEnergyOfBoseHubbardHamiltonian[sortedBasis]]
+BoseHubbardHamiltonian[n_Integer, L_Integer, J_Real, U_Real, OptionsPattern[]]:=Module[
+{
+tags, basis, T, V
+},
+
+Switch[ OptionValue[SymmetricSubspace],
+"All",
+{tags,basis} = SortFockBasis[N[FockBasis[n,L]]];
+T = KineticTermBoseHubbardHamiltonian[n,L,tags,basis];
+,
+"EvenParity",
+basis=GatherBy[N[FockBasis[n,L]],Sort[{#,Reverse[#]}]&];
+tags=tags=Tag/@basis[[All,1]];
+T=KineticTermBoseHubbardHamiltonian[n,L,tags,basis,SymmetricSubspace->"EvenParity"];
+basis=basis[[All,1]];
+,
+"OddParity",
+basis=GatherBy[Discard[FockBasis[n,L],PalindromeQ],Sort[{#,Reverse[#]}]&];
+tags=Tag/@basis[[All,1]];
+T=KineticTermBoseHubbardHamiltonian[n,L,tags,basis,SymmetricSubspace->"OddParity"];
+basis=basis[[All,1]];
+,
+_,
+Message[KineticTermBoseHubbardHamiltonian::badSymmetricSubspace,OptionValue[SymmetricSubspace]];Return[$Failed];
+];
+
+V=PotentialTermBoseHubbardHamiltonian[basis];
+
+-J*T+U/2*V
+]
 
 (* Handle cases where arguments don't match the expected types *)
 BoseHubbardHamiltonian[N_, L_, J_, U_] := Module[{},
@@ -482,6 +653,30 @@ BoseHubbardHamiltonian[N_, L_, J_, U_] := Module[{},
     Return[$Failed];
   ];
 ];
+
+
+(*Definicion anterior:*)
+(*(* Define messages for incorrect types *)
+BoseHubbardHamiltonian::int = "The first argument (`1`) and second argument (`2`) are expected to be integers.";
+BoseHubbardHamiltonian::real = "The third argument (`1`) and fourth argument (`2`) are expected to be real numbers.";
+
+(*BoseHubbardH[n_Integer,M_Integer,t_Real,U_Real] computes the Bose-Hubbard Hamiltonian of n particles, M sites with hopping parameter t and interaction parameter U.*)
+BoseHubbardHamiltonian[N_Integer,L_Integer,J_Real,U_Real]:=Module[{sortedBasis,sortedTags},
+{sortedTags,sortedBasis}=SortFockBasis[FockBasis[N,L]];
+-J*KineticEnergyOfBoseHubbardHamiltonian[sortedBasis,sortedTags]+
+U/2*PotentialEnergyOfBoseHubbardHamiltonian[sortedBasis]]
+
+(* Handle cases where arguments don't match the expected types *)
+BoseHubbardHamiltonian[N_, L_, J_, U_] := Module[{},
+  If[!IntegerQ[N] || !IntegerQ[L],
+    Message[BoseHubbardHamiltonian::int, N, L];
+    Return[$Failed];
+  ];
+  If[Head[J] =!= Real || Head[U] =!= Real,
+    Message[BoseHubbardHamiltonian::real, J, U];
+    Return[$Failed];
+  ];
+];*)
 
 
 (*Computes the tag FockBasisElement following Tag[FockBasisElement]=\!\(
@@ -556,7 +751,11 @@ FuzzyMeasurement[\[Psi]_,pFuzzy_] :=
 (*Private routines*)
 
 
-(*Hkin[sortedBasis_,sortedTags_] computes the kinetic term T of Bose hubbard model.*)
+(* ::Text:: *)
+(*Commenting this section as BoseHubbardHamiltonian is being replaced*)
+
+
+(*(*Hkin[sortedBasis_,sortedTags_] computes the kinetic term T of Bose hubbard model.*)
 KineticEnergyOfBoseHubbardHamiltonian[sortedBasis_,sortedTags_]:=Module[{HKin,d,k,i,j,tagu,l,n,M,u},
 d=Length[sortedBasis];n=Plus@@sortedBasis[[1]];M=Length[sortedBasis[[1]]];
 HKin=SparseArray[ConstantArray[0,{d,d}]];
@@ -570,30 +769,30 @@ l=SearchTagPosition[tagu,sortedTags];
 HKin+=SparseArray[{k,l}->N[u[[1]]],{d,d}]];,
 {ij,NearestNeighborIndices[M][[;;-2]]}];(*NearestNeighborIndices[M] para condiciones peri\[OAcute]dicas*)
 k=k+1;,
-{v,sortedBasis}];HKin+ConjugateTranspose[HKin]]
+{v,sortedBasis}];HKin+ConjugateTranspose[HKin]]*)
 
 
-(* AnnihilationOp[i_,fockState_] implements the action of anihiliation operator acting over fockState, with fockState of the form {Subscript[c, i],Subscript[v, i]}, with Subscript[c, i] the constant of vector Subscript[v, i] *)
+(*(* AnnihilationOp[i_,fockState_] implements the action of anihiliation operator acting over fockState, with fockState of the form {Subscript[c, i],Subscript[v, i]}, with Subscript[c, i] the constant of vector Subscript[v, i] *)
 AnnihilationOp[i_,fockState_]:=If[#[[2,i]]==0,{0,Nothing},{#[[1]] Sqrt[#[[2,i]]],ReplacePart[#[[2]],i->#[[2,i]]-1]}]&[fockState]
-AnnihilationOp[i_,{0,Nothing}]:={0,Nothing}
+AnnihilationOp[i_,{0,Nothing}]:={0,Nothing}*)
 
 
-(* CreationOp[i_,fockState_] implements the action of creation operator acting over fockState, with fockState of the form {Subscript[c, i],Subscript[v, i]}, with Subscript[c, i] the constant of vector Subscript[v, i] *)
+(*(* CreationOp[i_,fockState_] implements the action of creation operator acting over fockState, with fockState of the form {Subscript[c, i],Subscript[v, i]}, with Subscript[c, i] the constant of vector Subscript[v, i] *)
 CreationOp[i_,fockState_,N_]:=If[#[[2,i]]==N,{0,Nothing},{#[[1]] Sqrt[#[[2,i]]+1],ReplacePart[#[[2]],i->#[[2,i]]+1]}]&[fockState]
-CreationOp[i_,{0,Nothing},N_]:={0,Nothing}
+CreationOp[i_,{0,Nothing},N_]:={0,Nothing}*)
 
 
-(*SearchTagPosition[tagv_,sortedTags_] searches for the position of tagv in array sortedTags. *)
-SearchTagPosition[tagv_,sortedTags_]:=FromDigits[Flatten[Position[sortedTags,tagv]]]
+(*(*SearchTagPosition[tagv_,sortedTags_] searches for the position of tagv in array sortedTags. *)
+SearchTagPosition[tagv_,sortedTags_]:=FromDigits[Flatten[Position[sortedTags,tagv]]]*)
 
 
-(*NearestNeighborIndices[M_] computes the set of indices of nearest neighbours of M sites.*)
-NearestNeighborIndices[M_]:=Transpose[Join[{#},{RotateLeft[#]}]]&[Range[M]]
+(*(*NearestNeighborIndices[M_] computes the set of indices of nearest neighbours of M sites.*)
+NearestNeighborIndices[M_]:=Transpose[Join[{#},{RotateLeft[#]}]]&[Range[M]]*)
 
 
-(*Hint[sortedBasis_] computes the interaction term T of Bose hubbard model.*)
+(*(*Hint[sortedBasis_] computes the interaction term T of Bose hubbard model.*)
 PotentialEnergyOfBoseHubbardHamiltonian[sortedBasis_]:=Module[{d},d=Length[sortedBasis];
-SparseArray[Table[{i,i},{i,d}]->Table[N[ Plus@@(#^2-#&/@v)],{v,sortedBasis}],{d,d}]]
+SparseArray[Table[{i,i},{i,d}]->Table[N[ Plus@@(#^2-#&/@v)],{v,sortedBasis}],{d,d}]]*)
 
 
 (* ::Subsection::Closed:: *)
