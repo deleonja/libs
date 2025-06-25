@@ -22,7 +22,7 @@ Coin[t,C] yields a sparse array of the Coin operator ```C``` for a 1D DTQW in an
 DTQWStep::usage = FormatUsage["DTQWStep[t] yields the unitary matrix of a Haddamard 1D DTQW in an infinite line at time ```t```.
 DTQWStep[t,C] yields the unitary matrix of a 1D DTQW in an infinite line, using coin ```C```, at time ```t```."];
 DTQW::usage = FormatUsage["DTQW[\[Psi]_0,t] yields the state at time ```t``` of a 1D Haddamard DTQW in an infinite line with initial state ```\[Psi]_0```.
-DTQW[\[Psi]_0,t] yields the state at time ```t``` of a 1D DTQW in an infinite line, with coin ```C```, with initial state ```\[Psi]_0```."];
+DTQW[\[Psi]_0,t,C] yields the state at time ```t``` of a 1D DTQW in an infinite line, with coin ```C```, with initial state ```\[Psi]_0```."];
 PositionProbabilityDistribution::usage = FormatUsage["PositionProbabilityDistribution[\[Psi],t] yields the position probability distribution of the state ```\[Psi]``` of a 1D DTQW at time ```t```."];
 ExpValPosition::usage = FormatUsage["ExpValPosition[\[Psi],t] returns the expected value of position for the state \[Psi] of a 1D DTQW at time ```t```."];
 
