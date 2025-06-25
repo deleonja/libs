@@ -160,7 +160,7 @@ Quiet[
 , {FrontEndObject::notavail, First::normal}];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Bose-Hubbard*)
 
 
@@ -254,7 +254,7 @@ InitializeVariables::usage = "InitializeVariables[n, L, boundaries, FMmodel] set
 FuzzyMeasurement::usage = "FuzzyMeasurement[\[Psi], \!\(\*SubscriptBox[\(p\), \(fuzzy\)]\)] gives \[ScriptCapitalF](\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Ket\"]\)\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Bra\"]\)) = (1 - \!\(\*SubscriptBox[\(p\), \(fuzzy\)]\))\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Ket\"]\)\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Bra\"]\) + \!\(\*SubscriptBox[\(p\), \(fuzzy\)]\) \!\(\*UnderscriptBox[\(\[Sum]\), \(i\)]\) \!\(\*SubscriptBox[\(S\), \(i\)]\)\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Ket\"]\)\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Bra\"]\)\!\(\*SubsuperscriptBox[\(S\), \(i\), \(\[Dagger]\)]\), where \!\(\*SubscriptBox[\(S\), \(i\)]\) must be initizalized runnning InitializeVariables[n, L, boundaries, FMmodel].";
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Spin chains*)
 
 
@@ -498,10 +498,6 @@ SortFockBasis[fockBasis_]:=Transpose[Sort[{Tag[#],#}&/@fockBasis]]
 (*Bose Hubbard*)
 
 
-(* ::Subsubsection:: *)
-(*General*)
-
-
 KineticTermBoseHubbardHamiltonian::badSymmetricSubspace = "Opci\[OAcute]n SymmetricSubspace `1` inv\[AAcute]lida."<>
 "Debe ser \"All\",\"EvenParity\" o \"OddParity\".";
 
@@ -655,36 +651,6 @@ BoseHubbardHamiltonian[N_, L_, J_, U_] := Module[{},
 ];
 
 
-(*Definicion anterior:*)
-(*(* Define messages for incorrect types *)
-BoseHubbardHamiltonian::int = "The first argument (`1`) and second argument (`2`) are expected to be integers.";
-BoseHubbardHamiltonian::real = "The third argument (`1`) and fourth argument (`2`) are expected to be real numbers.";
-
-(*BoseHubbardH[n_Integer,M_Integer,t_Real,U_Real] computes the Bose-Hubbard Hamiltonian of n particles, M sites with hopping parameter t and interaction parameter U.*)
-BoseHubbardHamiltonian[N_Integer,L_Integer,J_Real,U_Real]:=Module[{sortedBasis,sortedTags},
-{sortedTags,sortedBasis}=SortFockBasis[FockBasis[N,L]];
--J*KineticEnergyOfBoseHubbardHamiltonian[sortedBasis,sortedTags]+
-U/2*PotentialEnergyOfBoseHubbardHamiltonian[sortedBasis]]
-
-(* Handle cases where arguments don't match the expected types *)
-BoseHubbardHamiltonian[N_, L_, J_, U_] := Module[{},
-  If[!IntegerQ[N] || !IntegerQ[L],
-    Message[BoseHubbardHamiltonian::int, N, L];
-    Return[$Failed];
-  ];
-  If[Head[J] =!= Real || Head[U] =!= Real,
-    Message[BoseHubbardHamiltonian::real, J, U];
-    Return[$Failed];
-  ];
-];*)
-
-
-(*Computes the tag FockBasisElement following Tag[FockBasisElement]=\!\(
-\*UnderoverscriptBox[\(\[Sum]\), \(i = 1\), \(M\)]\(
-\*SqrtBox[\(100 i + 3\)]\*
-StyleBox[
-RowBox[{"FockBasisElement", "[", "i", "]"}],
-FontSlant->"Italic"]\)\)*)
 Tag[FockBasisElement_]:=N[Round[Sum[Sqrt[100 i+3]#[[i+1]],{i,0,Length[#]-1}]&[FockBasisElement],10^-8]]
 Tag[Nothing]:=Nothing
 
@@ -717,7 +683,7 @@ BosonicPartialTrace[Rho_] :=
 	]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Fuzzy measurements in bosonic systems*)
 
 
@@ -745,54 +711,6 @@ InitializeVariables[n_, L_, boundaries_, FMmodel_] :=
 
 FuzzyMeasurement[\[Psi]_,pFuzzy_] := 
 (1 - pFuzzy) Dyad[\[Psi]] + (pFuzzy/numberOfPermutations) * Total[ Table[ Dyad[\[Psi][[i]]], {i,permutedBasisIndices}]]
-
-
-(* ::Subsubsection:: *)
-(*Private routines*)
-
-
-(* ::Text:: *)
-(*Commenting this section as BoseHubbardHamiltonian is being replaced*)
-
-
-(*(*Hkin[sortedBasis_,sortedTags_] computes the kinetic term T of Bose hubbard model.*)
-KineticEnergyOfBoseHubbardHamiltonian[sortedBasis_,sortedTags_]:=Module[{HKin,d,k,i,j,tagu,l,n,M,u},
-d=Length[sortedBasis];n=Plus@@sortedBasis[[1]];M=Length[sortedBasis[[1]]];
-HKin=SparseArray[ConstantArray[0,{d,d}]];
-k=1;
-Do[
-Do[
-i=ij[[1]];j=ij[[2]];
-u=CreationOp[i,AnnihilationOp[j,{1,v}],n];
-If[u[[1]]==0,Continue,tagu=Tag[u[[2]]];
-l=SearchTagPosition[tagu,sortedTags];
-HKin+=SparseArray[{k,l}->N[u[[1]]],{d,d}]];,
-{ij,NearestNeighborIndices[M][[;;-2]]}];(*NearestNeighborIndices[M] para condiciones peri\[OAcute]dicas*)
-k=k+1;,
-{v,sortedBasis}];HKin+ConjugateTranspose[HKin]]*)
-
-
-(*(* AnnihilationOp[i_,fockState_] implements the action of anihiliation operator acting over fockState, with fockState of the form {Subscript[c, i],Subscript[v, i]}, with Subscript[c, i] the constant of vector Subscript[v, i] *)
-AnnihilationOp[i_,fockState_]:=If[#[[2,i]]==0,{0,Nothing},{#[[1]] Sqrt[#[[2,i]]],ReplacePart[#[[2]],i->#[[2,i]]-1]}]&[fockState]
-AnnihilationOp[i_,{0,Nothing}]:={0,Nothing}*)
-
-
-(*(* CreationOp[i_,fockState_] implements the action of creation operator acting over fockState, with fockState of the form {Subscript[c, i],Subscript[v, i]}, with Subscript[c, i] the constant of vector Subscript[v, i] *)
-CreationOp[i_,fockState_,N_]:=If[#[[2,i]]==N,{0,Nothing},{#[[1]] Sqrt[#[[2,i]]+1],ReplacePart[#[[2]],i->#[[2,i]]+1]}]&[fockState]
-CreationOp[i_,{0,Nothing},N_]:={0,Nothing}*)
-
-
-(*(*SearchTagPosition[tagv_,sortedTags_] searches for the position of tagv in array sortedTags. *)
-SearchTagPosition[tagv_,sortedTags_]:=FromDigits[Flatten[Position[sortedTags,tagv]]]*)
-
-
-(*(*NearestNeighborIndices[M_] computes the set of indices of nearest neighbours of M sites.*)
-NearestNeighborIndices[M_]:=Transpose[Join[{#},{RotateLeft[#]}]]&[Range[M]]*)
-
-
-(*(*Hint[sortedBasis_] computes the interaction term T of Bose hubbard model.*)
-PotentialEnergyOfBoseHubbardHamiltonian[sortedBasis_]:=Module[{d},d=Length[sortedBasis];
-SparseArray[Table[{i,i},{i,d}]->Table[N[ Plus@@(#^2-#&/@v)],{v,sortedBasis}],{d,d}]]*)
 
 
 (* ::Subsection::Closed:: *)
