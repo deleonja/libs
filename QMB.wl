@@ -160,55 +160,51 @@ Quiet[
 , {FrontEndObject::notavail, First::normal}];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Bose-Hubbard*)
 
 
-BoseHubbardHamiltonian::usage = FormatUsage["BoseHubbardHamiltonian[n,L,J,U] returns the BH Hamiltonian for ```n``` bosons "<>
-"and ```L``` sites with hopping parameter ```J```, and interaction parameter ```U```.\n"<>
-"BoseHubbardHamiltonian[n,L,J,U,SymmetricSubspace] returns the Hamiltonian in a symmetric subspace; option "<>
-"SymmetricSubspace takes the options \"All\" | \"EvenParity\" | \"OddParity\". \n\n"<>
-"Notes: \n"<>
-"- BoseHubbardHamiltonian[n,L,J,U] is equivalent to BoseHubbardHamiltonian[n,L,J,U, SymmetricSubspace->\"All\"].\n"<>
-"- Open boundary conditions are used."];
+BoseHubbardHamiltonian::usage = FormatUsage[
+  "BoseHubbardHamiltonian[n, L, J, U] returns the Bose-Hubbard Hamiltonian for \
+```n``` bosons and ```L``` sites with hopping parameter ```J``` and interaction \
+parameter ```U```.\n" <>
+  "BoseHubbardHamiltonian[n, L, J, U, SymmetricSubspace] returns the Hamiltonian \
+in a symmetric subspace. Option SymmetricSubspace takes the values \
+\"All\" | \"EvenParity\" | \"OddParity\"."
+];
 
 
-SymmetricSubspace::usage = "SymmetricSubspace is an option for BoseHubbardHamiltonian to return the Hamiltonian in "<>
-"the even/odd parity subspaces.\n\n"<>
-"- Example of usage to obtain the BH Hamiltonian in the even parity subspace: "<>
-"BoseHubbardHamiltonian[n,L,J,U,SymmetricSubspace->\"EvenParity\"]";
+SymmetricSubspace::usage = 
+  "SymmetricSubspace is an option for BoseHubbardHamiltonian. Valid values are \
+\"All\", \"EvenParity\", and \"OddParity\".";
 
 
-Options[BoseHubbardHamiltonian]= {
-SymmetricSubspace->"All" (*"All"|"EvenParity"|"OddParity"*),
-Version->"New"
-};
+KineticTermBoseHubbardHamiltonian::usage = FormatUsage[
+"KineticTermBoseHubbardHamiltonian[basis] returns the kinetic term of the BH Hamiltonian \
+with ```basis``` a list with Fock basis elements. \ 
+KineticTermBoseHubbardHamiltonian[basis,SymmetricSubspace] returns the kinetic term of the BH \
+Hamiltonian in a symmetric subspace with ```basis``` a list with Fock basis elements. \
+Option SymmetricSubspace takes the values \"All\" | \"EvenParity\" | \"OddParity\"."
+];
 
 
-KineticTermBoseHubbardHamiltonian::usage = FormatUsage["KineticTermBoseHubbardHamiltonian[n,L,tags,basis,SymmetricSubspace"<>
-"] returns the kinetic term of the BH Hamiltonian for ```n``` bosons and ```L``` sites with hopping parameter ```J```, "<>
-"and interaction parameter ```U```.\n"<>
-"KineticTermBoseHubbardHamiltonian[n,L,SymmetricSubspace] returns the term in a symmetric subspace; option "<>
-"SymmetricSubspace takes the options \"All\" | \"EvenParity\" | \"OddParity\". \n\n"<>
-"**Notes**\n"<>
-"- KineticTermBoseHubbardHamiltonian[n,L,J,U] is equivalent to "<>
-"KineticTermBoseHubbardHamiltonian[n,L,J,U, SymmetricSubspace->\"All\"].\n"<>
-"- Open boundary conditions are used."];
+PotentialTermBoseHubbardHamiltonian::usage = FormatUsage[
+  "PotentialTermBoseHubbardHamiltonian[n, L, SymmetricSubspace] returns the \
+potential term of the Bose-Hubbard Hamiltonian for ```n``` bosons and ```L``` \
+sites.
+PotentialTermBoseHubbardHamiltonian[basis] returns the potential term of the \
+Bose-Hubbard Hamiltonian given the ```basis``` of the Fock space of the bosonic \
+system.\n\n"
+  (*"**Notes**\n" <>
+  "- If you want the potential term in a parity symmetry sector, ```basis``` \
+should be a list containing only the representative Fock states of that \
+symmetric subspace.\n\n" <>
+  "**Examples of usage**\n" <>
+  "- '''PotentialTermBoseHubbardHamiltonian[{{3,0,0},{2,1,0},{2,0,1},{1,2,0}}]''' \
+returns the matrix in the odd parity sector of a system with 3 bosons and 3 \
+sites."
+*)];
 
-
-Options[KineticTermBoseHubbardHamiltonian]={SymmetricSubspace->"All" (*"All"|"EvenParity"|"OddParity"*)}
-
-
-PotentialTermBoseHubbardHamiltonian::usage = FormatUsage["PotentialTermBoseHubbardHamiltonian[n,L,SymmetricSubspace] returns "<>
-"the potential term of the BH Hamiltonian for ```n``` bosons and ```L``` sites.\n"<>
-"PotentialTermBoseHubbardHamiltonian[basis] returns the potential term of the BH Hamiltonian given the ```basis``` "<>
-"of the Fock space of the bosonic system.\n\n"<>
-"**Notes**\n"<>
-"- If you want the potential term of the BH Hamiltonian in a parity symmetry sector ```basis``` should be a list with"<>
-" only those representative Fock states of the symmectric subspace.\n\n"<>
-"**Examples of usage**\n"<>
-"- '''PotentialTermBoseHubbardHamiltonian[{{3,0,0},{2,1,0},{2,0,1},{1,2,0}}]''' returns the matrix in the odd parity sector "<>
-"of a system with 3 bosons and 3 sites."];
 
 
 BosonEscapeKrausOperators::usage = "BosonEscapeKrausOperators[N, L]: bosons escape to nearest neighbouring sites. N: bosons, L: site.";
@@ -231,9 +227,6 @@ SortFockBasis::usage = "SortFockBasis[fockBasis] returns fockBasis in ascending-
 
 
 Tag::usage = "Tag[ { \!\(\*SubscriptBox[\(k\), \(1\)]\),\!\(\*SubscriptBox[\(k\), \(2\)]\),\[Ellipsis],\!\(\*SubscriptBox[\(k\), \(L\)]\) } ] returns the tag \!\(\*UnderoverscriptBox[\(\[Sum]\), \(i = 1\), \(L\)]\)\!\(\*SqrtBox[\(100  i + 3\)]\)\!\(\*SubscriptBox[\(k\), \(i\)]\) of Fock state \!\(\*TemplateBox[{RowBox[{SubscriptBox[\"k\", \"1\"], \",\", SubscriptBox[\"k\", \"2\"], \",\", \"\[Ellipsis]\", \",\", SubscriptBox[\"k\", \"L\"]}]},\n\"Ket\"]\).";
-
-
-(*Bosons*)
 
 
 FockBasisStateAsColumnVector::usage = "FockBasisStateAsColumnVector[FockState, N, L] returns matrix representation of fockState={\!\(\*SubscriptBox[\(i\), \(1\)]\),\!\(\*SubscriptBox[\(i\), \(2\)]\),\[Ellipsis],\!\(\*SubscriptBox[\(i\), \(L\)]\)}. N: bosons, L: sites.";
@@ -501,182 +494,89 @@ FockBasis[N_, M_] := Module[{k, fockState},
 SortFockBasis[fockBasis_]:=Transpose[Sort[{Tag[#],#}&/@fockBasis]]
 
 
-(* ::Subsection:: *)
-(*Bose Hubbard*)
+(* ::Subsection::Closed:: *)
+(*Bose-Hubbard*)
 
 
-KineticTermBoseHubbardHamiltonian::badSymmetricSubspace = "Opci\[OAcute]n SymmetricSubspace `1` inv\[AAcute]lida."<>
-"Debe ser \"All\",\"EvenParity\" o \"OddParity\".";
+(* Mensajes para tipos incorrectos *)
+BoseHubbardHamiltonian::int = 
+    "n (`1`) and L (`2`) are expected to be integers.";
+BoseHubbardHamiltonian::real = 
+    "Hopping J (`1`) and interaction parameters U (`2`) are expected " <>
+    "to be real numbers.";
+BoseHubbardHamiltonian::badSymmetricSubspace = 
+    "Opci\[OAcute]n SymmetricSubspace `1` inv\[AAcute]lida. " <>
+    "Opciones v\[AAcute]lidas: \"All\", \"EvenParity\" o \"OddParity\".";
 
-KineticTermBoseHubbardHamiltonian[n_,L_,tags_,basis_,OptionsPattern[]]:=Module[
-{
-a=NestList[RotateRight,Join[{-1.,1.},ConstantArray[0.,L-2]],L-2]
-},
+Options[BoseHubbardHamiltonian] = {
+    SymmetricSubspace -> "All" (* "All"|"EvenParity"|"OddParity" *),
+    Version -> "New"
+};
 
-Switch[OptionValue[SymmetricSubspace],
-"All",
-Module[{b,cols,rows,coef,d=BoseHubbardHilbertSpaceDimension[n,L]},
-#+ConjugateTranspose[#]&[
-Total[Table[
-(*|u\[RightAngleBracket]=a_ia_j^\dagger|v\[RightAngleBracket]*)
-b=Select[basis+ConstantArray[a[[i]],d],Min[#]>=0&];
-(*indices columnas*)
-cols=Flatten[Position[basis+ConstantArray[a[[i]],d],_?(Min[#]>=0&),1]];
-(*coeficientes*)
-coef=Sqrt[basis[[cols,i]]*(basis[[cols,i+1]]+1.)];
-(*indices filas*)
-rows=Flatten[FirstPosition[tags,Tag[#],Nothing]&/@b];
-SparseArray[Thread[Transpose[{rows,cols}]->coef],{d,d}]
-,{i,L-1}]]
-]
-],
-"EvenParity",
-Module[{rules,cols,rows,coef,b1,b,d},
-d= Length[basis];
+OptionValuePatterns[BoseHubbardHamiltonian] = {
+  SymmetricSubspace -> Alternatives["All", "EvenParity", "OddParity"],
+  Version -> _
+};
 
-rules=Catenate[{Thread[#->1/Sqrt[2.]],Thread[Complement[Range[Length[basis]],#]->1.]}&[Flatten[Position[basis,x_/;Length[x]==2,{1}]]]];
-
-#+ConjugateTranspose[#]&[
-Total[
-Table[
-(*aplicar a_ia_j^\dagger a todos los elementos de basis*)
-b1=Map[#+a[[i]]&,basis,{2}];
-(*posiciones columnas y elementos de b1 que si son fisicos*)
-{cols,b}={#[[All,1]],Extract[b1,#]}&[Position[b1,_?(Min[#]>=0&),{2}]];
-(*posiciones de los |u\[RightAngleBracket] que s\[IAcute] son estados o no son el cero vector*)
-rows=Flatten[FirstPosition[tags,Tag[#],FirstPosition[tags,Tag[Reverse[#]],Nothing]]&/@b];
-(*coeficientes (se hacen cero o imaginarios aquellos que se mapean al cero o estados no fisicos)*)
-coef=Sqrt[(b[[All,i]]+1)*b[[All,i+1]]];
-(*Print[Thread[Transpose[{rows,cols}]->coef*(cols/.rules)*(rows/.rules)]];*)
-SparseArray[Thread[Transpose[{rows,cols}]->coef*(cols/.rules)*(rows/.rules)],{d,d}]
-,{i,1,L-1}]
-]
-]
-],
-"OddParity",
-Module[{rules,cols,rows,coef,b1,b,d},
-d= Length[basis];
-
-(#+ConjugateTranspose[#])&[
-Total[
-Table[
-(*aplicar a_ia_j^\dagger a todos los elementos de basis*)
-b1=Map[#+a[[i]]&,basis,{2}];
-(*posiciones columnas y elementos de b1 que si son fisicos*)
-{cols,b}={#[[All,1]],Extract[b1,#]}&[Position[b1,_?(Min[#]>=0&&!PalindromeQ[#]&),{2}]];
-(*posiciones de los |u\[RightAngleBracket] que s\[IAcute] son estados o no son el cero vector*)
-rows=Flatten[FirstPosition[tags,Tag[#],FirstPosition[tags,Tag[Reverse[#]],Nothing]]&/@b];
-(*coeficientes (se hacen cero o imaginarios aquellos que se mapean al cero o estados no fisicos)*)
-coef=Sqrt[(b[[All,i]]+1)*b[[All,i+1]]]/2;
-(*Print[Thread[Transpose[{rows,cols}]->coef*(cols/.rules)*(rows/.rules)]];*)
-SparseArray[Thread[Transpose[{rows,cols}]->coef],{d,d}]
-,{i,1,L-1}]
-]
-]
-],
-_,
-Message[KineticTermBoseHubbardHamiltonian::badSymmetricSubspace,OptionValue[SymmetricSubspace]];
-Return[$Failed];
-]
-]
-
-KineticTermBoseHubbardHamiltonian[n_,L_,OptionsPattern[]]:=Module[
-{
-tags,basis
-},
-
-Switch[OptionValue[SymmetricSubspace],
-"All",
-{tags,basis}=SortFockBasis[N[FockBasis[n,L]]];
-KineticTermBoseHubbardHamiltonian[n,L,tags,basis]
-,
-"EvenParity",
-basis=GatherBy[N[FockBasis[n,L]],Sort[{#,Reverse[#]}]&];
-tags=tags=Tag/@basis[[All,1]];
-KineticTermBoseHubbardHamiltonian[n,L,tags,basis,SymmetricSubspace->"EvenParity"]
-,
-"OddParity",
-basis=GatherBy[Discard[FockBasis[n,L],PalindromeQ],Sort[{#,Reverse[#]}]&];
-tags=Tag/@basis[[All,1]];
-KineticTermBoseHubbardHamiltonian[n,L,tags,basis,SymmetricSubspace->"OddParity"]
-,
-_,
-Message[KineticTermBoseHubbardHamiltonian::badSymmetricSubspace,OptionValue[SymmetricSubspace]];Return[$Failed];
-]
-]
-
-
-PotentialTermBoseHubbardHamiltonian[n_,L_]:=Module[{fockbasis=SortFockBasis[N[FockBasis[n,L]]][[2]]},DiagonalMatrix[Total/@((#^2-#)&[fockbasis]),TargetStructure->"Sparse"]]
-
-PotentialTermBoseHubbardHamiltonian[basis_]:=DiagonalMatrix[Total/@((#^2-#)&[basis]),TargetStructure->"Sparse"]
-
-
-(* Define messages for incorrect types *)
-BoseHubbardHamiltonian::int = "The first argument (`1`) and second argument (`2`) are expected to "<>
-"be integers.";
-BoseHubbardHamiltonian::real = "The third argument (`1`) and fourth argument (`2`) are expected to "<>
-"be real numbers.";
-
-BoseHubbardHamiltonian[n_Integer, L_Integer, J_Real, U_Real, OptionsPattern[]]:=Module[
-{
-tags, basis, basiseven, rbasiseven, rbasisodd, basisodd, H, T, V, map
-},
-
-Switch[OptionValue[Version],
-	"Old",
-	Switch[OptionValue[SymmetricSubspace],
-		"All",
-		{tags,basis} = SortFockBasis[N[FockBasis[n,L]]];
-		T = KineticTermBoseHubbardHamiltonian[n,L,tags,basis];
-		,
-		"EvenParity",
-		basis=GatherBy[N[FockBasis[n,L]],Sort[{#,Reverse[#]}]&];
-		tags=tags=Tag/@basis[[All,1]];
-		T=KineticTermBoseHubbardHamiltonian[n,L,tags,basis,SymmetricSubspace->"EvenParity"];
-		basis=basis[[All,1]];
-		,
-		"OddParity",
-		basis=GatherBy[Discard[FockBasis[n,L],PalindromeQ],Sort[{#,Reverse[#]}]&];
-		tags=Tag/@basis[[All,1]];
-		T=KineticTermBoseHubbardHamiltonian[n,L,tags,basis,SymmetricSubspace->"OddParity"];
-		basis=basis[[All,1]];
-		,
-		_,
-		Message[KineticTermBoseHubbardHamiltonian::badSymmetricSubspace,OptionValue[SymmetricSubspace]];
-		Return[$Failed];
-	];
-	V=PotentialTermBoseHubbardHamiltonian[basis];
-	H=-J*T+U/2*V,
-	"New",
-	basis=SortFockBasis[N[FockBasis[n,L]]][[2]];
-	H = -J*KineticTermBoseHubbardHamiltonian2[basis] + U/2*PotentialTermBoseHubbardHamiltonian[basis];
-	Switch[OptionValue[SymmetricSubspace],
-		"All",
-		(*Cambiarlo al 1*)
-		H
-		,
-		"EvenParity",
-		basiseven=DeleteDuplicatesBy[basis, Sort[{#, Reverse[#]}]&];
-		rbasiseven=Reverse/@basiseven;
-		map=AssociationThread[basis->Range[BoseHubbardHilbertSpaceDimension[n,L]]];
-		H=1/2# . (H[[#1,#1]]+H[[#1,#2]]+H[[#2,#1]]+H[[#2,#2]]&@@Map[map,{basiseven,rbasiseven},{2}]) . #&[DiagonalMatrix[ReplacePart[ConstantArray[1.,Length[basiseven]],Thread[Flatten[Position[basiseven,_?(PalindromeQ[#]&),{1}]]->1/Sqrt[2.]]],TargetStructure->"Sparse"]]
-		,
-		"OddParity",
-		basisodd=DeleteDuplicatesBy[Discard[basis,PalindromeQ],Sort[{#,Reverse[#]}]&];
-		rbasisodd=Reverse/@basisodd;
-		map=AssociationThread[basis->Range[BoseHubbardHilbertSpaceDimension[n,L]]];
-		H=1/2(H[[#1,#1]]-H[[#1,#2]]-H[[#2,#1]]+H[[#2,#2]]&@@Map[map,{basisodd,rbasisodd},{2}])
-		,
-		_,
-		Message[KineticTermBoseHubbardHamiltonian::badSymmetricSubspace,OptionValue[SymmetricSubspace]];Return[$Failed];
-	]
-];
-
-H
+BoseHubbardHamiltonian[n_Integer, L_Integer, J_Real, U_Real, 
+    OptionsPattern[]] := 
+Module[
+    {tags, basis, basiseven, rbasiseven, rbasisodd, basisodd, H, T, V, map},
+    
+    basis = N[FockBasis[n, L]];
+    H = -J*KineticTermBoseHubbardHamiltonian[basis] + 
+        U/2*PotentialTermBoseHubbardHamiltonian[basis];
+    
+    (* Para subespacios de simetria, obtenerlos a partir de H *)
+    Switch[OptionValue[SymmetricSubspace],
+        "All",
+            Nothing,
+            
+        "EvenParity",
+            basiseven = DeleteDuplicatesBy[basis, Sort[{#, Reverse[#]}]&];
+            rbasiseven = Reverse /@ basiseven;
+            map = AssociationThread[
+                basis -> Range[BoseHubbardHilbertSpaceDimension[n, L]]];
+            H = 1/2 # . (H[[#1,#1]] + H[[#1,#2]] + H[[#2,#1]] + H[[#2,#2]] & @@ 
+                Map[map, {basiseven, rbasiseven}, {2}]) . # &[
+                DiagonalMatrix[
+                    ReplacePart[
+                        ConstantArray[1., Length[basiseven]],
+                        Thread[
+                            Flatten[Position[
+                                basiseven, 
+                                _?(PalindromeQ[#] &), 
+                                {1}
+                            ]] -> 1/Sqrt[2.]
+                        ]
+                    ],
+                    TargetStructure -> "Sparse"
+                ]
+            ],
+            
+        "OddParity",
+            basisodd = DeleteDuplicatesBy[
+                Discard[basis, PalindromeQ], 
+                Sort[{#, Reverse[#]}]&];
+            rbasisodd = Reverse /@ basisodd;
+            map = AssociationThread[
+                basis -> Range[BoseHubbardHilbertSpaceDimension[n, L]]];
+            H = 1/2 (H[[#1,#1]] - H[[#1,#2]] - H[[#2,#1]] + H[[#2,#2]] & @@ 
+                Map[map, {basisodd, rbasisodd}, {2}]),
+                
+        _,
+            Message[
+                BoseHubbardHamiltonian::badSymmetricSubspace, 
+                OptionValue[SymmetricSubspace]
+            ];
+            Return[$Failed];
+    ];
+    
+    H
 ]
 
 (* Handle cases where arguments don't match the expected types *)
-BoseHubbardHamiltonian[N_, L_, J_, U_] := Module[{},
+BoseHubbardHamiltonian[N_, L_, J_, U_, OptionsPattern[]] := Module[{},
   If[!IntegerQ[N] || !IntegerQ[L],
     Message[BoseHubbardHamiltonian::int, N, L];
     Return[$Failed];
@@ -687,40 +587,197 @@ BoseHubbardHamiltonian[N_, L_, J_, U_] := Module[{},
   ];
 ];
 
+SyntaxInformation[BoseHubbardHamiltonian] = <|
+  "ArgumentsPattern" -> {_, _, _, _, OptionsPattern[]}
+|>;
 
-KineticTermBoseHubbardHamiltonian2[basis_]:=
-Module[{len=Length[basis], basisNumRange},
-	basisNumRange=Range[len];
-	# + ConjugateTranspose[#]&[
-		SparseArray[
-			kineticPart[basis, AssociationThread[basis->basisNumRange], basisNumRange], {len,len}]
-		]
+
+ClearAll[PotentialTermBoseHubbardHamiltonian];
+
+(* Mensajes de error *)
+PotentialTermBoseHubbardHamiltonian::nint = 
+    "El n\[UAcute]mero de part\[IAcute]culas n (`1`) debe ser un entero positivo.";
+PotentialTermBoseHubbardHamiltonian::lint = 
+    "El n\[UAcute]mero de sitios L (`1`) debe ser un entero positivo.";
+PotentialTermBoseHubbardHamiltonian::int = 
+    "Los par\[AAcute]metros n (`1`) y L (`2`) deben ser enteros positivos.";
+PotentialTermBoseHubbardHamiltonian::empty = 
+    "La base proporcionada est\[AAcute] vac\[IAcute]a.";
+PotentialTermBoseHubbardHamiltonian::dim = 
+    "Todos los estados en la base deben tener la misma longitud.";
+    
+PotentialTermBoseHubbardHamiltonian[n_Integer?Positive, L_Integer?Positive] := 
+DiagonalMatrix[
+    Total /@ ((#^2 - #) &[FockBasis[n, L]]),
+    TargetStructure -> "Sparse"
+]
+
+(* Versi\[OAcute]n con validaci\[OAcute]n de basis *)
+PotentialTermBoseHubbardHamiltonian[basis_List] := 
+Module[
+    {lengths},
+    If[basis === {},
+        Message[PotentialTermBoseHubbardHamiltonian::empty];
+        Return[$Failed]
+    ];
+    
+    lengths = Length /@ basis;
+    If[!AllTrue[lengths, EqualTo[First[lengths]]],
+        Message[PotentialTermBoseHubbardHamiltonian::dim];
+        Return[$Failed]
+    ];
+    
+    DiagonalMatrix[
+        Total /@ ((#^2 - #) &[basis]),
+        TargetStructure -> "Sparse"
+    ]
+]
+
+(* Versi\[OAcute]n con validaci\[OAcute]n de par\[AAcute]metros *)
+PotentialTermBoseHubbardHamiltonian[n_Integer, L_Integer] := 
+If[n <= 0 || L <= 0,
+    Message[PotentialTermBoseHubbardHamiltonian::int, n, L];
+    Return[$Failed]
+];
+
+PotentialTermBoseHubbardHamiltonian[n_, L_] /; !IntegerQ[n] := 
+(
+    Message[PotentialTermBoseHubbardHamiltonian::nint, n];
+    $Failed
+)
+
+PotentialTermBoseHubbardHamiltonian[n_, L_] /; !IntegerQ[L] := 
+(
+    Message[PotentialTermBoseHubbardHamiltonian::lint, L];
+    $Failed
+)
+
+PotentialTermBoseHubbardHamiltonian[___] := 
+(
+    Message[PotentialTermBoseHubbardHamiltonian::usage];
+    $Failed
+)
+
+
+KineticTermBoseHubbardHamiltonian::badSymmetricSubspace = 
+    "Opci\[OAcute]n SymmetricSubspace `1` inv\[AAcute]lida. " <>
+    "Opciones v\[AAcute]lidas: \"All\", \"EvenParity\" o \"OddParity\".";
+
+Options[KineticTermBoseHubbardHamiltonian] = {
+    SymmetricSubspace -> "All" (* "All"|"EvenParity"|"OddParity" *)
+};
+
+KineticTermBoseHubbardHamiltonian[basis_, OptionsPattern[]] := 
+Module[
+    {len = Length[basis], basisNumRange, T, basiseven, rbasiseven, 
+     basisodd, rbasisodd, map},
+    
+    basisNumRange = Range[len];
+    T = # + ConjugateTranspose[#] & [
+        SparseArray[
+            AssignationRulesKinetic[basis, 
+             AssociationThread[basis -> basisNumRange], basisNumRange], 
+            {len, len}
+        ]
+    ];
+    
+    Switch[OptionValue[SymmetricSubspace],
+        "All",
+            Nothing,
+        "EvenParity",
+            basiseven = DeleteDuplicatesBy[basis, Sort[{#, Reverse[#]}]&];
+            rbasiseven = Reverse /@ basiseven;
+            map = AssociationThread[basis -> Range[len]];
+            T = 1/2 # . (T[[#1,#1]] + T[[#1,#2]] + T[[#2,#1]] + T[[#2,#2]] & @@ 
+                Map[map, {basiseven, rbasiseven}, {2}]) . # &[
+                DiagonalMatrix[
+                    ReplacePart[
+                        ConstantArray[1., Length[basiseven]],
+                        Thread[
+                            Flatten[Position[
+                                basiseven, 
+                                _?(PalindromeQ[#] &), 
+                                {1}
+                            ]] -> 1/Sqrt[2.]
+                        ]
+                    ],
+                    TargetStructure -> "Sparse"
+                ]
+            ],
+        "OddParity",
+            basisodd = DeleteDuplicatesBy[
+                Discard[basis, PalindromeQ], Sort[{#, Reverse[#]}]&];
+            rbasisodd = Reverse /@ basisodd;
+            map = AssociationThread[basis -> Range[len]];
+            T = 1/2 (T[[#1,#1]] - T[[#1,#2]] - T[[#2,#1]] + T[[#2,#2]] & @@ 
+                Map[map, {basisodd, rbasisodd}, {2}]),
+            
+        _,
+            Message[
+                KineticTermBoseHubbardHamiltonian::badSymmetricSubspace,
+                OptionValue[SymmetricSubspace]
+            ];
+            Return[$Failed];
+    ];
+    
+    T
 ]
 
 
-kineticPart[basis_, positionMap_, basisNumRange_]:=
+AssignationRulesKinetic[basis_, positionMap_, basisNumRange_] := 
 Catenate[
-		MapThread[kineticPartMapFunc, 
-			{Apply[
-				{positionMap[#1], #2}&,
-				DeleteCases[
-					Transpose[{operatorADaggerAState[basis],operatorADaggerAValue[basis]},{3,1,2}] 
-					, {_,0.}, {2}]
-				,{2}]
-			, basisNumRange}]
-		]
-
-
-operatorADaggerAState[basis_]:= 
-Module[{len = Length[First[basis]]},
-	Outer[Plus, basis, #, 1] &[Catenate[NestList[RotateRight, PadRight[#, len], len-2] &/@{{1,-1}}]]
+    MapThread[
+        AssignationRulesKineticMapFunc,
+        {
+            Apply[
+                {positionMap[#1], #2} &,
+                DeleteCases[
+                    Transpose[
+                        {
+                            StateAfterADaggerA[basis],
+                            ValueAfterADaggerA[basis]
+                        },
+                        {3, 1, 2}
+                    ],
+                    {_, 0.},
+                    {2}
+                ],
+                {2}
+            ],
+            basisNumRange
+        }
+    ]
 ]
 
 
-operatorADaggerAValue[basis_]:=MapApply[Sqrt[(#1 + 1.)*#2]&, Partition[#,2,1]]&/@basis
+StateAfterADaggerA[basis_] := 
+Module[{len = Length[First[basis]]},
+    Outer[
+        Plus,
+        basis,
+        #,
+        1
+    ] & [
+        Catenate[
+            NestList[
+                RotateRight,
+                PadRight[#, len],
+                len - 2
+            ] & /@ {{1, -1}}
+        ]
+    ]
+]
 
 
-kineticPartMapFunc[stateValuePairs_,index_]:=({index,#1}->#2)&@@@stateValuePairs
+ValueAfterADaggerA[basis_] := 
+MapApply[
+    Sqrt[(#1 + 1.) * #2] &,
+    Partition[#, 2, 1]
+] & /@ basis
+
+
+AssignationRulesKineticMapFunc[stateValuePairs_,index_] := 
+({index, #1} -> #2) & @@@ stateValuePairs
 
 
 Tag[FockBasisElement_]:=N[Round[Sum[Sqrt[100 i+3]#[[i+1]],{i,0,Length[#]-1}]&[FockBasisElement],10^-8]]
@@ -860,7 +917,7 @@ Normalize[SparseArray[{FromDigits[#,2]+1->-1.,FromDigits[Reverse[#],2]+1->1.},2^
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Spin chains*)
 
 
