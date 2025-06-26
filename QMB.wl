@@ -160,7 +160,7 @@ Quiet[
 , {FrontEndObject::notavail, First::normal}];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Bose-Hubbard*)
 
 
@@ -179,7 +179,10 @@ SymmetricSubspace::usage = "SymmetricSubspace is an option for BoseHubbardHamilt
 "BoseHubbardHamiltonian[n,L,J,U,SymmetricSubspace->\"EvenParity\"]";
 
 
-Options[BoseHubbardHamiltonian]={SymmetricSubspace->"All" (*"All"|"EvenParity"|"OddParity"*)}
+Options[BoseHubbardHamiltonian]= {
+SymmetricSubspace->"All" (*"All"|"EvenParity"|"OddParity"*),
+Version->"New"
+};
 
 
 KineticTermBoseHubbardHamiltonian::usage = FormatUsage["KineticTermBoseHubbardHamiltonian[n,L,tags,basis,SymmetricSubspace"<>
@@ -498,7 +501,7 @@ FockBasis[N_, M_] := Module[{k, fockState},
 SortFockBasis[fockBasis_]:=Transpose[Sort[{Tag[#],#}&/@fockBasis]]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Bose Hubbard*)
 
 
@@ -572,7 +575,8 @@ SparseArray[Thread[Transpose[{rows,cols}]->coef],{d,d}]
 ]
 ],
 _,
-Message[KineticTermBoseHubbardHamiltonian::badSymmetricSubspace,OptionValue[SymmetricSubspace]];Return[$Failed];
+Message[KineticTermBoseHubbardHamiltonian::badSymmetricSubspace,OptionValue[SymmetricSubspace]];
+Return[$Failed];
 ]
 ]
 
@@ -608,38 +612,67 @@ PotentialTermBoseHubbardHamiltonian[basis_]:=DiagonalMatrix[Total/@((#^2-#)&[bas
 
 
 (* Define messages for incorrect types *)
-BoseHubbardHamiltonian::int = "The first argument (`1`) and second argument (`2`) are expected to be integers.";
-BoseHubbardHamiltonian::real = "The third argument (`1`) and fourth argument (`2`) are expected to be real numbers.";
+BoseHubbardHamiltonian::int = "The first argument (`1`) and second argument (`2`) are expected to "<>
+"be integers.";
+BoseHubbardHamiltonian::real = "The third argument (`1`) and fourth argument (`2`) are expected to "<>
+"be real numbers.";
 
 BoseHubbardHamiltonian[n_Integer, L_Integer, J_Real, U_Real, OptionsPattern[]]:=Module[
 {
-tags, basis, T, V
+tags, basis, basiseven, rbasiseven, rbasisodd, basisodd, H, T, V, map
 },
 
-Switch[ OptionValue[SymmetricSubspace],
-"All",
-{tags,basis} = SortFockBasis[N[FockBasis[n,L]]];
-T = KineticTermBoseHubbardHamiltonian[n,L,tags,basis];
-,
-"EvenParity",
-basis=GatherBy[N[FockBasis[n,L]],Sort[{#,Reverse[#]}]&];
-tags=tags=Tag/@basis[[All,1]];
-T=KineticTermBoseHubbardHamiltonian[n,L,tags,basis,SymmetricSubspace->"EvenParity"];
-basis=basis[[All,1]];
-,
-"OddParity",
-basis=GatherBy[Discard[FockBasis[n,L],PalindromeQ],Sort[{#,Reverse[#]}]&];
-tags=Tag/@basis[[All,1]];
-T=KineticTermBoseHubbardHamiltonian[n,L,tags,basis,SymmetricSubspace->"OddParity"];
-basis=basis[[All,1]];
-,
-_,
-Message[KineticTermBoseHubbardHamiltonian::badSymmetricSubspace,OptionValue[SymmetricSubspace]];Return[$Failed];
+Switch[OptionValue[Version],
+	"Old",
+	Switch[OptionValue[SymmetricSubspace],
+		"All",
+		{tags,basis} = SortFockBasis[N[FockBasis[n,L]]];
+		T = KineticTermBoseHubbardHamiltonian[n,L,tags,basis];
+		,
+		"EvenParity",
+		basis=GatherBy[N[FockBasis[n,L]],Sort[{#,Reverse[#]}]&];
+		tags=tags=Tag/@basis[[All,1]];
+		T=KineticTermBoseHubbardHamiltonian[n,L,tags,basis,SymmetricSubspace->"EvenParity"];
+		basis=basis[[All,1]];
+		,
+		"OddParity",
+		basis=GatherBy[Discard[FockBasis[n,L],PalindromeQ],Sort[{#,Reverse[#]}]&];
+		tags=Tag/@basis[[All,1]];
+		T=KineticTermBoseHubbardHamiltonian[n,L,tags,basis,SymmetricSubspace->"OddParity"];
+		basis=basis[[All,1]];
+		,
+		_,
+		Message[KineticTermBoseHubbardHamiltonian::badSymmetricSubspace,OptionValue[SymmetricSubspace]];
+		Return[$Failed];
+	];
+	V=PotentialTermBoseHubbardHamiltonian[basis];
+	H=-J*T+U/2*V,
+	"New",
+	basis=SortFockBasis[N[FockBasis[n,L]]][[2]];
+	H = -J*KineticTermBoseHubbardHamiltonian2[basis] + U/2*PotentialTermBoseHubbardHamiltonian[basis];
+	Switch[OptionValue[SymmetricSubspace],
+		"All",
+		(*Cambiarlo al 1*)
+		H
+		,
+		"EvenParity",
+		basiseven=DeleteDuplicatesBy[basis, Sort[{#, Reverse[#]}]&];
+		rbasiseven=Reverse/@basiseven;
+		map=AssociationThread[basis->Range[BoseHubbardHilbertSpaceDimension[n,L]]];
+		H=1/2# . (H[[#1,#1]]+H[[#1,#2]]+H[[#2,#1]]+H[[#2,#2]]&@@Map[map,{basiseven,rbasiseven},{2}]) . #&[DiagonalMatrix[ReplacePart[ConstantArray[1.,Length[basiseven]],Thread[Flatten[Position[basiseven,_?(PalindromeQ[#]&),{1}]]->1/Sqrt[2.]]],TargetStructure->"Sparse"]]
+		,
+		"OddParity",
+		basisodd=DeleteDuplicatesBy[Discard[basis,PalindromeQ],Sort[{#,Reverse[#]}]&];
+		rbasisodd=Reverse/@basisodd;
+		map=AssociationThread[basis->Range[BoseHubbardHilbertSpaceDimension[n,L]]];
+		H=1/2(H[[#1,#1]]-H[[#1,#2]]-H[[#2,#1]]+H[[#2,#2]]&@@Map[map,{basisodd,rbasisodd},{2}])
+		,
+		_,
+		Message[KineticTermBoseHubbardHamiltonian::badSymmetricSubspace,OptionValue[SymmetricSubspace]];Return[$Failed];
+	]
 ];
 
-V=PotentialTermBoseHubbardHamiltonian[basis];
-
--J*T+U/2*V
+H
 ]
 
 (* Handle cases where arguments don't match the expected types *)
@@ -653,6 +686,41 @@ BoseHubbardHamiltonian[N_, L_, J_, U_] := Module[{},
     Return[$Failed];
   ];
 ];
+
+
+KineticTermBoseHubbardHamiltonian2[basis_]:=
+Module[{len=Length[basis], basisNumRange},
+	basisNumRange=Range[len];
+	# + ConjugateTranspose[#]&[
+		SparseArray[
+			kineticPart[basis, AssociationThread[basis->basisNumRange], basisNumRange], {len,len}]
+		]
+]
+
+
+kineticPart[basis_, positionMap_, basisNumRange_]:=
+Catenate[
+		MapThread[kineticPartMapFunc, 
+			{Apply[
+				{positionMap[#1], #2}&,
+				DeleteCases[
+					Transpose[{operatorADaggerAState[basis],operatorADaggerAValue[basis]},{3,1,2}] 
+					, {_,0.}, {2}]
+				,{2}]
+			, basisNumRange}]
+		]
+
+
+operatorADaggerAState[basis_]:= 
+Module[{len = Length[First[basis]]},
+	Outer[Plus, basis, #, 1] &[Catenate[NestList[RotateRight, PadRight[#, len], len-2] &/@{{1,-1}}]]
+]
+
+
+operatorADaggerAValue[basis_]:=MapApply[Sqrt[(#1 + 1.)*#2]&, Partition[#,2,1]]&/@basis
+
+
+kineticPartMapFunc[stateValuePairs_,index_]:=({index,#1}->#2)&@@@stateValuePairs
 
 
 Tag[FockBasisElement_]:=N[Round[Sum[Sqrt[100 i+3]#[[i+1]],{i,0,Length[#]-1}]&[FockBasisElement],10^-8]]
