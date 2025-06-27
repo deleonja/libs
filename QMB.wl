@@ -117,9 +117,6 @@ KroneckerVectorProduct::usage = "KroneckerVectorProduct[a,b] calculates \!\(\*Te
 Purity::usage = "Purity[\[Rho]] calculates the purity of \[Rho].";
 
 
-KetBra::usage = FormatUsage["KetBra[\[Psi]] returns the density matrix ```|\[Psi]\[RightAngleBracket]\[LeftAngleBracket]\[Psi]|``` for state ```\[Psi]````."];
-
-
 Concurrence::usage = FormatUsage[
 "Concurrence[\[Rho]] returns the two-qubit concurrence of density matrix ```\[Rho]```."
 ];
@@ -348,7 +345,7 @@ Begin["`Private`"];
 ClearAll[SigmaPlusSigmaMinus,SigmaMinusSigmaPlus,SigmaPlusSigmaMinus2,SigmaMinusSigmaPlus2];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*General quantum mechanics*)
 
 
@@ -432,9 +429,6 @@ KroneckerVectorProduct[a_,b_]:=Flatten[KroneckerProduct[a,b]]
 
 
 Purity[\[Rho]_]:=Tr[\[Rho] . \[Rho]] 
-
-
-KetBra[psi_] := Transpose[{psi}] . Conjugate[{psi}]
 
 
 Concurrence[\[Rho]_Matrix] :=
