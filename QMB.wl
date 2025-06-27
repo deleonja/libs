@@ -44,12 +44,14 @@ BeginPackage["QMB`"];
 
 
 Quiet[
-DensityMatrix::usage = FormatUsage["DensityMatrix[\[Psi]] returns the density matrix of state vector ```\[Psi]```."];
-, {FrontEndObject::notavail, First::normal}];
+DensityMatrix::usage = FormatUsage[
+"DensityMatrix[\[Psi]] returns the density matrix of state vector ```\[Psi]```."
+];, {FrontEndObject::notavail, First::normal}];
 
 
 Quiet[
-Pauli::usage = FormatUsage["Pauli[0-3] gives the Pauli matrices. 
+Pauli::usage = FormatUsage[
+"Pauli[0-3] gives the Pauli matrices. 
 Pauli[{i_1,...,i_N}] returns the ```N```-qubit Pauli string '''Pauli[```i_1```]''' \[CircleTimes] '''...''' \[CircleTimes] '''Pauli[```i_N```]'''."];
 , {FrontEndObject::notavail, First::normal}];
 
@@ -65,13 +67,14 @@ KetInComputationalBasisFromVector::usage = "KetInComputationalBasisFromVector[ve
 
 
 Quiet[
-RandomQubitState::usage = FormatUsage["RandomQubitState[] returns a Haar random qubit state."];
+RandomQubitState::usage = FormatUsage["RandomQubitState[] returns a Haar random qubit state."]
 , {FrontEndObject::notavail, First::normal}];
 
 
 Quiet[
-RandomChainProductState::usage = "RandomChainProductState[L] returns a random ```L```-qubit product state.";
-, {FrontEndObject::notavail, First::normal}];
+RandomChainProductState::usage = FormatUsage[
+"RandomChainProductState[L] returns a random ```L```-qubit product state."
+], {FrontEndObject::notavail, First::normal}];
 
 
 Quiet[
@@ -92,11 +95,14 @@ CommutationQ::usage = FormatUsage["CommutationQ[A,B] yields True if ```A``` and 
 
 
 Quiet[
-MutuallyCommutingSetQ::usage=FormatUsage["MutuallyCommutingSetQ[{A,B,...}] yields True if all matrices ```{A,B,...}``` mutually commute, and False otherwise."];
+MutuallyCommutingSetQ::usage= FormatUsage[
+"MutuallyCommutingSetQ[{A,B,...}] yields True if all matrices ```{A,B,...}``` mutually commute, and False otherwise."];
 , {FrontEndObject::notavail, First::normal}];
 
 
-Braket::usage = "Braket[a,b] gives \!\(\*TemplateBox[{RowBox[{\"a\", \" \"}], RowBox[{\" \", \"b\"}]},\n\"BraKet\"]\).";
+Braket::usage = FormatUsage[
+"Braket[\[Psi],\[Phi]] returns \[LeftAngleBracket]```\[Psi]```|```\[Phi]```\[RightAngleBracket]."
+];
 
 
 FixCkForStateEvoultion::usage = "FixCkForStateEvoultion[\!\(\*SubscriptBox[\(\[Psi]\), \(0\)]\), { \!\(\*TemplateBox[{SubscriptBox[\"E\", \"k\"]},\n\"Ket\"]\) }] fixes \!\(\*SubscriptBox[\(c\), \(k\)]\) = \!\(\*TemplateBox[{RowBox[{SubscriptBox[\"E\", \"k\"], \" \"}], RowBox[{\" \", SubscriptBox[\"\[Psi]\", \"0\"]}]},\n\"BraKet\"]\) for StateEvolution[]";
@@ -114,7 +120,9 @@ BlochVector::usage = FormatUsage["BlochVector[\[Rho]] returns the Bloch vector o
 KroneckerVectorProduct::usage = "KroneckerVectorProduct[a,b] calculates \!\(\*TemplateBox[{\"a\"},\n\"Ket\"]\)\[CircleTimes]\!\(\*TemplateBox[{\"b\"},\n\"Ket\"]\).";
 
 
-Purity::usage = "Purity[\[Rho]] calculates the purity of \[Rho].";
+Purity::usage = FormatUsage[
+"Purity[\[Rho]] calculates the purity of ```\[Rho]```."
+];
 
 
 Concurrence::usage = FormatUsage[
@@ -122,11 +130,13 @@ Concurrence::usage = FormatUsage[
 ];
 
 
+Qubit::usage = FormatUsage[
+"Qubit[\[Theta],\[Phi]] returns the state cos(```\[Theta]```/2)|0\[RightAngleBracket] + \[ExponentialE]^\[Phi] sin(```\[Theta]```/2)|1\[RightAngleBracket]"
+];
+
+
 (* ::Text:: *)
 (*Agregadas por Miguel*)
-
-
-qubit::usage = "Generates a state with the parametrization of the Bloch sphere (\[Theta],\[Phi])";
 
 
 coherentstate::usage = "coherentstate[state,L] Generates a spin coherent state of L spins given a general single qubit state";
@@ -399,7 +409,7 @@ AllTrue[Table[CommutationQ@@ListOfMatrices[[{i,j}]],{i,SetLength-1},{j,i+1,SetLe
 ]
 
 
-Braket[a_,b_]:=Conjugate[a] . b
+Braket[a_,b_] := Conjugate[a] . b
 
 
 StateEvolution[t_,psi0_List,eigenvals_List,eigenvecs_List]:=
@@ -440,7 +450,7 @@ Module[{\[Rho]tilde, R, \[Lambda]},
 ]
 
 
-qubit[\[Theta]_,\[Phi]_]:=FullSimplify[Normalize[{Cos[\[Theta]/2],Exp[I \[Phi]]Sin[\[Theta]/2]}]]
+Qubit[\[Theta]_,\[Phi]_] := {Cos[\[Theta]/2],Exp[I \[Phi]]Sin[\[Theta]/2]}
 
 
 coherentstate[state_,L_]:=Flatten[KroneckerProduct@@Table[state,L]]
