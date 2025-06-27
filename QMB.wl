@@ -35,7 +35,7 @@ BeginPackage["QMB`"];
 (*Usage definitions*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*General quantum mechanics*)
 
 
@@ -75,8 +75,9 @@ RandomChainProductState::usage = "RandomChainProductState[L] returns a random ``
 
 
 Quiet[
-Dyad::usage = FormatUsage["Dyad[\[Psi]] returns | \[Psi] \[RightAngleBracket]\[LeftAngleBracket] \[Psi] |.
-Dyad[\[Psi],\[Phi]] returns | \[Psi] \[RightAngleBracket]\[LeftAngleBracket] \[Phi] |."];
+Dyad::usage = FormatUsage[
+"Dyad[\[Psi]] returns ```|\[Psi]\[RightAngleBracket]\[LeftAngleBracket]\[Psi]|```.
+Dyad[\[Psi],\[Phi]] returns ```|\[Psi]\[RightAngleBracket]\[LeftAngleBracket]\[Phi]|```."];
 , {FrontEndObject::notavail, First::normal}];
 
 
@@ -117,6 +118,11 @@ Purity::usage = "Purity[\[Rho]] calculates the purity of \[Rho].";
 
 
 KetBra::usage = FormatUsage["KetBra[\[Psi]] returns the density matrix ```|\[Psi]\[RightAngleBracket]\[LeftAngleBracket]\[Psi]|``` for state ```\[Psi]````."];
+
+
+Concurrence::usage = FormatUsage[
+"Concurrence[\[Rho]] returns the two-qubit concurrence of density matrix ```\[Rho]```."
+];
 
 
 (* ::Text:: *)
@@ -429,6 +435,15 @@ Purity[\[Rho]_]:=Tr[\[Rho] . \[Rho]]
 
 
 KetBra[psi_] := Transpose[{psi}] . Conjugate[{psi}]
+
+
+Concurrence[\[Rho]_Matrix] :=
+Module[{\[Rho]tilde, R, \[Lambda]},
+	\[Rho]tilde=# . Conjugate[\[Rho]] . #&[Pauli[{2,2}]];
+	R=MatrixPower[# . \[Rho]tilde . #&[MatrixPower[\[Rho],1/2]],1/2];
+	\[Lambda]=ReverseSort[Chop[Eigenvalues[R]]];
+	Max[0,\[Lambda][[1]]-Total[\[Lambda][[2;;]]]]
+]
 
 
 qubit[\[Theta]_,\[Phi]_]:=FullSimplify[Normalize[{Cos[\[Theta]/2],Exp[I \[Phi]]Sin[\[Theta]/2]}]]
