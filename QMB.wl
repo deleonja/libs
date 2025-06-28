@@ -35,7 +35,7 @@ BeginPackage["QMB`"];
 (*Usage definitions*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*General quantum mechanics*)
 
 
@@ -355,7 +355,7 @@ Begin["`Private`"];
 ClearAll[SigmaPlusSigmaMinus,SigmaMinusSigmaPlus,SigmaPlusSigmaMinus2,SigmaMinusSigmaPlus2];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*General quantum mechanics*)
 
 
@@ -441,7 +441,7 @@ KroneckerVectorProduct[a_,b_]:=Flatten[KroneckerProduct[a,b]]
 Purity[\[Rho]_]:=Tr[\[Rho] . \[Rho]] 
 
 
-Concurrence[\[Rho]_Matrix] :=
+Concurrence[\[Rho]_] :=
 Module[{\[Rho]tilde, R, \[Lambda]},
 	\[Rho]tilde=# . Conjugate[\[Rho]] . #&[Pauli[{2,2}]];
 	R=MatrixPower[# . \[Rho]tilde . #&[MatrixPower[\[Rho],1/2]],1/2];
@@ -919,7 +919,7 @@ Assignationk[M_,N_,n_]:=If[n[[1;;M-1]]==ConstantArray[0,M-1],M-1,FromDigits[Last
 RenyiEntropy[\[Alpha]_,\[Rho]_]:=1/(1-\[Alpha]) Log[Tr[MatrixPower[\[Rho],\[Alpha]]]]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Spins*)
 
 
@@ -945,9 +945,11 @@ IsingNNOpenHamiltonian[hx_,hz_,J_,L_] := Module[{NNIndices},
 	N[Normal[Total[{hx*Pauli[#]+hz*Pauli[3#]&/@IdentityMatrix[L],-J*(Pauli/@NNIndices)},2]]]]
 
 
-IsingNNClosedHamiltonian[hx_,hz_,J_,L_] := Module[{NNIndices},
+IsingNNClosedHamiltonian[hx_,hz_,J_,L_] := 
+Module[{NNIndices},
 	NNIndices=Normal[SparseArray[Thread[{#,Mod[#+1,L,1]}->3],{L}]&/@Range[L]];
-	N[Normal[Total[{hx*Pauli[#]+hz*Pauli[3#]&/@IdentityMatrix[L],-J*(Pauli/@NNIndices)},2]]]]
+	Total[{hx*Pauli[#]+hz*Pauli[3#]&/@IdentityMatrix[L],-J*(Pauli/@NNIndices)},2]
+]
 
 
 ClosedXXZHamiltonian[L_,\[CapitalDelta]_]:=
