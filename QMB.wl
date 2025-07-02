@@ -271,7 +271,7 @@ FuzzyMeasurement::usage = "FuzzyMeasurement[\[Psi], \!\(\*SubscriptBox[\(p\), \(
 (*Spin chains*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Symmetries*)
 
 
@@ -299,7 +299,7 @@ Symmetry::usage = FormatUsage[
 ];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Hamiltonians*)
 
 
@@ -392,7 +392,7 @@ Begin["`Private`"];
 
 
 (*no poner los nombres de funciones p\[UAcute]blicas porque se joden la definici\[OAcute]n de uso*)
-ClearAll[SigmaPlusSigmaMinus,SigmaMinusSigmaPlus,SigmaPlusSigmaMinus2,SigmaMinusSigmaPlus2];
+ClearAll[SigmaPlusSigmaMinus, SigmaMinusSigmaPlus];
 
 
 (* ::Subsection::Closed:: *)
@@ -963,7 +963,7 @@ RenyiEntropy[\[Alpha]_,\[Rho]_]:=1/(1-\[Alpha]) Log[Tr[MatrixPower[\[Rho],\[Alph
 (*Spins*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Symmetries*)
 
 
@@ -1052,7 +1052,7 @@ BlockDiagonalize::badSymmetry =
 
 
 (* ::Subsubsection:: *)
-(*Spin chains hamiltonians*)
+(*Hamiltonians*)
 
 
 Options[IsingHamiltonian] = {
