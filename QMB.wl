@@ -267,7 +267,7 @@ InitializeVariables::usage = "InitializeVariables[n, L, boundaries, FMmodel] set
 FuzzyMeasurement::usage = "FuzzyMeasurement[\[Psi], \!\(\*SubscriptBox[\(p\), \(fuzzy\)]\)] gives \[ScriptCapitalF](\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Ket\"]\)\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Bra\"]\)) = (1 - \!\(\*SubscriptBox[\(p\), \(fuzzy\)]\))\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Ket\"]\)\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Bra\"]\) + \!\(\*SubscriptBox[\(p\), \(fuzzy\)]\) \!\(\*UnderscriptBox[\(\[Sum]\), \(i\)]\) \!\(\*SubscriptBox[\(S\), \(i\)]\)\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Ket\"]\)\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Bra\"]\)\!\(\*SubsuperscriptBox[\(S\), \(i\), \(\[Dagger]\)]\), where \!\(\*SubscriptBox[\(S\), \(i\)]\) must be initizalized runnning InitializeVariables[n, L, boundaries, FMmodel].";
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Spin chains*)
 
 
@@ -278,8 +278,21 @@ FuzzyMeasurement::usage = "FuzzyMeasurement[\[Psi], \!\(\*SubscriptBox[\(p\), \(
 SpinParityEigenvectors::usage = "SpinParityEigenvectors[L] gives a list of {even, odd} eigenvectors of the L-spin system parity operator P; P\!\(\*TemplateBox[{RowBox[{SubscriptBox[\"k\", \"1\"], \",\", \"\[Ellipsis]\", \",\", SubscriptBox[\"k\", \"L\"]}]},\n\"Ket\"]\) = \!\(\*TemplateBox[{RowBox[{SubscriptBox[\"k\", \"L\"], \",\", \"\[Ellipsis]\", \",\", SubscriptBox[\"k\", \"1\"]}]},\n\"Ket\"]\), \!\(\*SubscriptBox[\(k\), \(i\)]\)=0,1.";
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Hamiltonians*)
+
+
+IsingHamiltonian::usage = FormatUsage[
+	"IsingHamiltonian[h_x,h_z,J,L,opts] returns the Hamiltonian \ 
+	H = \[Sum]_{*i=1*}^L (```h_x```\[Sigma]_i^x + ```h_z```\[Sigma]_i^z) - ```J``` \[Sum]_{*i=1*}^{*L-1*} \[Sigma]^z_i \[Sigma]^z_{*i+1*} \
+	with boundary conditions specified by option BoundaryCondition (default is \"Open\")."
+];
+
+
+BoundaryCondition::usage = FormatUsage[
+	"BoundaryCondition is an option for IsingHamiltonian to set the boundary conditions. It \
+	takes the values \"Open\" or \"Periodic\". Default option is \"Option\"."
+];
 
 
 Quiet[
@@ -938,6 +951,33 @@ Normalize[SparseArray[{FromDigits[#,2]+1->-1.,FromDigits[Reverse[#],2]+1->1.},2^
 
 (* ::Subsubsection:: *)
 (*Spin chains*)
+
+
+Options[IsingHamiltonian] = {
+  BoundaryCondition -> "Open"
+};
+
+IsingHamiltonian[hx_, hz_, J_, L_, opts:OptionsPattern[]] := Module[
+	{NNIndices},
+	NNIndices = Switch[OptionValue[BoundaryCondition],
+		"Open",
+			Normal[SparseArray[Thread[{#,#+1}->3],{L}]&/@Range[L-1]],
+		"Periodic",
+			Normal[SparseArray[Thread[{#,Mod[#+1,L,1]}->3],{L}]&/@Range[L]],
+		_,
+			Message[
+                IsingHamiltonian::badBoundaryCondition, 
+                OptionValue[BoundaryCondition]
+            ];
+            Return[$Failed];
+	];
+	
+	Total[{hx*Pauli[#]+hz*Pauli[3#]&/@IdentityMatrix[L],-J*(Pauli/@NNIndices)},2]
+]
+
+(*Mensaje de error si la opci\[OAcute]n es inv\[AAcute]lida*)
+IsingNNHamiltonian::badBoundaryCondition = 
+  "La opci\[OAcute]n BoundaryCondition -> `1` no es v\[AAcute]lida. Use \"Open\" o \"Periodic\".";
 
 
 IsingNNOpenHamiltonian[hx_,hz_,J_,L_] := Module[{NNIndices},
