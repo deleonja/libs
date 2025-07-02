@@ -286,20 +286,33 @@ TranslationEigenvectorRepresentatives::usage = FormatUsage[
 ];
 
 
-(* ::Subsubsection::Closed:: *)
+BlockDiagonalize::usage = FormatUsage[
+	"BlockDiagonalize[matrix,opts] returns ```matrix``` in block-diagonal form. Only \
+	option is '''Symmetry'''."
+];
+
+
+Symmetry::usage = FormatUsage[
+	"Symmetry is an option for '''BlockDiagonalize''' to specify the symmetry according to which \
+	```matrix``` in '''BlockDiagonalize'''[```matrix```] is block diagonalized. It takes the values: \
+	\"Translation\". Default option is \"Translation\"."
+];
+
+
+(* ::Subsubsection:: *)
 (*Hamiltonians*)
 
 
 IsingHamiltonian::usage = FormatUsage[
 	"IsingHamiltonian[h_x,h_z,J,L,opts] returns the Hamiltonian \ 
 	H = \[Sum]_{*i=1*}^L (```h_x```\[Sigma]_i^x + ```h_z```\[Sigma]_i^z) - ```J``` \[Sum]_{*i=1*}^{*L-1*} \[Sigma]^z_i \[Sigma]^z_{*i+1*} \
-	with boundary conditions specified by option BoundaryCondition (default is \"Open\")."
+	with boundary conditions specified by option BoundaryConditions (default is \"Open\")."
 ];
 
 
-BoundaryCondition::usage = FormatUsage[
-	"BoundaryCondition is an option for IsingHamiltonian to set the boundary conditions. It \
-	takes the values \"Open\" or \"Periodic\". Default option is \"Option\"."
+BoundaryConditions::usage = FormatUsage[
+	"BoundaryConditions is an option for '''IsingHamiltonian''' to specify the boundary conditions. It \
+	takes the values \"Open\" or \"Periodic\". Default option is \"Open\"."
 ];
 
 
@@ -993,17 +1006,62 @@ TranslationEigenvectorRepresentatives[L_Integer] := Module[
 ]
 
 
+Options[BlockDiagonalize] = {
+  Symmetry -> "Translation" (*coming soon: \"Parity\"*)
+};
+
+BlockDiagonalize[A_, opts:OptionsPattern[]]:= 
+Switch[OptionValue[Symmetry],
+	"Translation",
+		Module[
+			{
+				L = Log[2, Length[A]],
+				repsgathered,
+				P
+			},
+				(*Gather translation eigenvectors by their pseudomomentum k*)
+				repsgathered = GatherBy[TranslationEigenvectorRepresentatives[L], #[[2]]&];
+				
+				(*change of basis matrix*)
+				P = SparseArray[
+						Catenate[
+							Apply[
+								Normalize[SparseArray[
+									Thread[
+										FoldList[Translation[#, L]&, #1, Range[#3 - 1]] + 1 -> 
+										Power[\[Omega][L, #2], Range[0., #3 - 1]]
+									]
+										, 2^L
+								]]&,
+								repsgathered,
+								{2}
+							]
+						]
+					];
+					
+				BlockDiagonalMatrix[Chop[Conjugate[P] . A . Transpose[P]]]
+		],
+	_,
+		Message[BlockDiagonalize::badSymmetry, OptionValue[Symmetry]];
+		Return[$Failed];
+]
+
+(*Mensaje de error si la opci\[OAcute]n es inv\[AAcute]lida*)
+BlockDiagonalize::badSymmetry = 
+  "Option badSymmetry -> `1` is not valid. Valid options: \"Translation\".";
+
+
 (* ::Subsubsection:: *)
 (*Spin chains hamiltonians*)
 
 
 Options[IsingHamiltonian] = {
-  BoundaryCondition -> "Open"
+  BoundaryConditions -> "Open"
 };
 
 IsingHamiltonian[hx_, hz_, J_, L_, opts:OptionsPattern[]] := Module[
 	{NNIndices},
-	NNIndices = Switch[OptionValue[BoundaryCondition],
+	NNIndices = Switch[OptionValue[BoundaryConditions],
 		"Open",
 			Normal[SparseArray[Thread[{#,#+1}->3],{L}]&/@Range[L-1]],
 		"Periodic",
@@ -1011,7 +1069,7 @@ IsingHamiltonian[hx_, hz_, J_, L_, opts:OptionsPattern[]] := Module[
 		_,
 			Message[
                 IsingHamiltonian::badBoundaryCondition, 
-                OptionValue[BoundaryCondition]
+                OptionValue[BoundaryConditions]
             ];
             Return[$Failed];
 	];
@@ -1021,7 +1079,7 @@ IsingHamiltonian[hx_, hz_, J_, L_, opts:OptionsPattern[]] := Module[
 
 (*Mensaje de error si la opci\[OAcute]n es inv\[AAcute]lida*)
 IsingHamiltonian::badBoundaryCondition = 
-  "Option BoundaryCondition -> `1` not valid. Valid options: \"Open\" o \"Periodic\".";
+  "Option BoundaryConditions -> `1` not valid. Valid options: \"Open\" o \"Periodic\".";
 
 
 IsingNNOpenHamiltonian[args___] := Message[
