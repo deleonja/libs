@@ -226,7 +226,7 @@ BosonEscapeKrausOperators::usage = "BosonEscapeKrausOperators[N, L]: bosons esca
 BosonEscapeKrausOperators2::usage = "sdfa";
 
 
-HilbertSpaceDim::deprecated = "Function `1` is being deprecated. Use instead `2`.";
+HilbertSpaceDim::replaced = "Function `1` has been replaced by `2`.";
 
 
 BoseHubbardHilbertSpaceDimension::usage = FormatUsage["BoseHubbardHilbertSpaceDimension[n,L] returns the dimension"<> 
@@ -278,7 +278,7 @@ FuzzyMeasurement::usage = "FuzzyMeasurement[\[Psi], \!\(\*SubscriptBox[\(p\), \(
 SpinParityEigenvectors::usage = "SpinParityEigenvectors[L] gives a list of {even, odd} eigenvectors of the L-spin system parity operator P; P\!\(\*TemplateBox[{RowBox[{SubscriptBox[\"k\", \"1\"], \",\", \"\[Ellipsis]\", \",\", SubscriptBox[\"k\", \"L\"]}]},\n\"Ket\"]\) = \!\(\*TemplateBox[{RowBox[{SubscriptBox[\"k\", \"L\"], \",\", \"\[Ellipsis]\", \",\", SubscriptBox[\"k\", \"1\"]}]},\n\"Ket\"]\), \!\(\*SubscriptBox[\(k\), \(i\)]\)=0,1.";
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Hamiltonians*)
 
 
@@ -295,20 +295,26 @@ BoundaryCondition::usage = FormatUsage[
 ];
 
 
-Quiet[
+IsingNNOpenHamiltonian::replaced = "Function `1` has been replaced by `2`.";
+
+
+(*Quiet[
 IsingNNOpenHamiltonian::usage = FormatUsage["IsingNNOpenHamiltonian[h_x,h_z,J,L] returns the Hamiltonian H = \[Sum]_{*i=1*}^L (```h_x```\[Sigma]_i^x + ```h_z```\[Sigma]_i^z) - ```J```\[Sum]_{*i=1*}^{*L-1*} \[Sigma]^z_i \[Sigma]^z_{*i+1*}.
 IsingNNOpenHamiltonian[h_x,h_z,{J_1,...,J_L},L] returns the Hamiltonian H = \[Sum]_{*i=1*}^L (```h_x```\[Sigma]_i^x + ```h_z```\[Sigma]_i^z) - \[Sum]_{*i=1*}^{*L-1*} ```J_i``` \[Sigma]^z_i \[Sigma]^z_{*i+1*}."];
-, {FrontEndObject::notavail, First::normal}];
+, {FrontEndObject::notavail, First::normal}];*)
 
 
-IsingNNClosedHamiltonian::usage = "IsingNNClosedHamiltonian[\!\(\*
+IsingNNClosedHamiltonian::replaced = "Function `1` has been replaced by `2`.";
+
+
+(*IsingNNClosedHamiltonian::usage = "IsingNNClosedHamiltonian[\!\(\*
 StyleBox[SubscriptBox[\"h\", \"x\"],\nFontSlant->\"Italic\"]\)\!\(\*
 StyleBox[\",\",\nFontSlant->\"Italic\"]\)\!\(\*
 StyleBox[SubscriptBox[\"h\", \"z\"],\nFontSlant->\"Italic\"]\)\!\(\*
 StyleBox[\",\",\nFontSlant->\"Italic\"]\)\!\(\*
 StyleBox[\"J\",\nFontSlant->\"Italic\"]\)\!\(\*
 StyleBox[\",\",\nFontSlant->\"Italic\"]\)\!\(\*
-StyleBox[\"L\",\nFontSlant->\"Italic\"]\)] returns the Hamiltonian \!\(\*UnderoverscriptBox[\(\[Sum]\), \(i = 1\), \(L\)]\)(\!\(\*SubscriptBox[\(h\), \(x\)]\) \!\(\*SubsuperscriptBox[\(\[Sigma]\), \(i\), \(x\)]\) + \!\(\*SubscriptBox[\(h\), \(z\)]\) \!\(\*SubsuperscriptBox[\(\[Sigma]\), \(i\), \(z\)]\)) + \!\(\*UnderoverscriptBox[\(\[Sum]\), \(i = 1\), L]\) \!\(\*SubscriptBox[\(J\), \(i\)]\) \!\(\*SubsuperscriptBox[\(\[Sigma]\), \(i\), \(z\)]\)\!\(\*SubsuperscriptBox[\(\[Sigma]\), \(i + 1\), \(z\)]\) with \!\(\*SubscriptBox[\(\[Sigma]\), \(L + 1\)]\) = \!\(\*SubscriptBox[\(\[Sigma]\), \(1\)]\).";
+StyleBox[\"L\",\nFontSlant->\"Italic\"]\)] returns the Hamiltonian \!\(\*UnderoverscriptBox[\(\[Sum]\), \(i = 1\), \(L\)]\)(\!\(\*SubscriptBox[\(h\), \(x\)]\) \!\(\*SubsuperscriptBox[\(\[Sigma]\), \(i\), \(x\)]\) + \!\(\*SubscriptBox[\(h\), \(z\)]\) \!\(\*SubsuperscriptBox[\(\[Sigma]\), \(i\), \(z\)]\)) + \!\(\*UnderoverscriptBox[\(\[Sum]\), \(i = 1\), L]\) \!\(\*SubscriptBox[\(J\), \(i\)]\) \!\(\*SubsuperscriptBox[\(\[Sigma]\), \(i\), \(z\)]\)\!\(\*SubsuperscriptBox[\(\[Sigma]\), \(i + 1\), \(z\)]\) with \!\(\*SubscriptBox[\(\[Sigma]\), \(L + 1\)]\) = \!\(\*SubscriptBox[\(\[Sigma]\), \(1\)]\).";*)
 
 
 ClosedXXZHamiltonian::usage = "ClosedXXZHamiltonian[\!\(\*
@@ -913,7 +919,7 @@ ReplaceAt[ReplaceAt[fockState,x_:>x-1,i],x_:>x+1,i+1]
 (*Secondary routines*)
 
 
-HilbertSpaceDim[args___] := Message[HilbertSpaceDim::deprecated, "HilbertSpaceDim", "BoseHubbardHilbertSpaceDimension"];
+HilbertSpaceDim[args___] := Message[HilbertSpaceDim::replaced, "HilbertSpaceDim", "BoseHubbardHilbertSpaceDimension"];
 
 
 BoseHubbardHilbertSpaceDimension[n_,L_]:=(n+L-1)!/(n!(L-1)!)
@@ -950,7 +956,7 @@ Normalize[SparseArray[{FromDigits[#,2]+1->-1.,FromDigits[Reverse[#],2]+1->1.},2^
 
 
 (* ::Subsubsection:: *)
-(*Spin chains*)
+(*Spin chains hamiltonians*)
 
 
 Options[IsingHamiltonian] = {
@@ -976,20 +982,26 @@ IsingHamiltonian[hx_, hz_, J_, L_, opts:OptionsPattern[]] := Module[
 ]
 
 (*Mensaje de error si la opci\[OAcute]n es inv\[AAcute]lida*)
-IsingNNHamiltonian::badBoundaryCondition = 
-  "La opci\[OAcute]n BoundaryCondition -> `1` no es v\[AAcute]lida. Use \"Open\" o \"Periodic\".";
+IsingHamiltonian::badBoundaryCondition = 
+  "Option BoundaryCondition -> `1` not valid. Valid options: \"Open\" o \"Periodic\".";
 
 
-IsingNNOpenHamiltonian[hx_,hz_,J_,L_] := Module[{NNIndices},
+IsingNNOpenHamiltonian[args___] := Message[
+	IsingNNOpenHamiltonian::replaced, "IsingNNOpenHamiltonian", "IsingHamiltonian"];
+	
+(*IsingNNOpenHamiltonian[hx_,hz_,J_,L_] := Module[{NNIndices},
 	NNIndices=Normal[SparseArray[Thread[{#,#+1}->3],{L}]&/@Range[L-1]];
-	N[Normal[Total[{hx*Pauli[#]+hz*Pauli[3#]&/@IdentityMatrix[L],-J*(Pauli/@NNIndices)},2]]]]
+	N[Normal[Total[{hx*Pauli[#]+hz*Pauli[3#]&/@IdentityMatrix[L],-J*(Pauli/@NNIndices)},2]]]]*)
 
 
-IsingNNClosedHamiltonian[hx_,hz_,J_,L_] := 
+IsingNNClosedHamiltonian[args___] := Message[
+	IsingNNClosedHamiltonian::replaced, "IsingNNClosedHamiltonian", "IsingHamiltonian"];
+
+(*IsingNNClosedHamiltonian[hx_,hz_,J_,L_] := 
 Module[{NNIndices},
 	NNIndices=Normal[SparseArray[Thread[{#,Mod[#+1,L,1]}->3],{L}]&/@Range[L]];
 	Total[{hx*Pauli[#]+hz*Pauli[3#]&/@IdentityMatrix[L],-J*(Pauli/@NNIndices)},2]
-]
+]*)
 
 
 ClosedXXZHamiltonian[L_,\[CapitalDelta]_]:=
