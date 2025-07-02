@@ -1,3 +1,5 @@
+usage_examples/parity_sectors_BH_R.nb  
+usage_examples/parity_sectors_ising.nb
 carlos/
 qubits-CUDA
 */*/*.txt
