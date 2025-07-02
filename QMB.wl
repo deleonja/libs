@@ -271,11 +271,19 @@ FuzzyMeasurement::usage = "FuzzyMeasurement[\[Psi], \!\(\*SubscriptBox[\(p\), \(
 (*Spin chains*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Symmetries*)
 
 
 SpinParityEigenvectors::usage = "SpinParityEigenvectors[L] gives a list of {even, odd} eigenvectors of the L-spin system parity operator P; P\!\(\*TemplateBox[{RowBox[{SubscriptBox[\"k\", \"1\"], \",\", \"\[Ellipsis]\", \",\", SubscriptBox[\"k\", \"L\"]}]},\n\"Ket\"]\) = \!\(\*TemplateBox[{RowBox[{SubscriptBox[\"k\", \"L\"], \",\", \"\[Ellipsis]\", \",\", SubscriptBox[\"k\", \"1\"]}]},\n\"Ket\"]\), \!\(\*SubscriptBox[\(k\), \(i\)]\)=0,1.";
+
+
+TranslationEigenvectorRepresentatives::usage = FormatUsage[
+  "TranslationEigenvectorRepresentatives[L] returns a list of sublists, each containing:\
+  the decimal representation of a bit-string representative eigenvector,\
+  its pseudomomentum k, and the length of its translation orbit,\
+  for a system of ```L``` qubits."
+];
 
 
 (* ::Subsubsection::Closed:: *)
@@ -942,6 +950,10 @@ RenyiEntropy[\[Alpha]_,\[Rho]_]:=1/(1-\[Alpha]) Log[Tr[MatrixPower[\[Rho],\[Alph
 (*Spins*)
 
 
+(* ::Subsubsection:: *)
+(*Symmetries*)
+
+
 SpinParityEigenvectors[L_]:=Module[{tuples,nonPalindromes,palindromes},
 tuples=Tuples[{0,1},L];
 nonPalindromes=Select[tuples,#!=Reverse[#]&];
@@ -952,6 +964,32 @@ Normal[
 Join[SparseArray[FromDigits[#,2]+1->1.,2^L]&/@palindromes,Normalize[SparseArray[{FromDigits[#,2]+1->1.,FromDigits[Reverse[#],2]+1->1.},2^L]]&/@nonPalindromes],
 Normalize[SparseArray[{FromDigits[#,2]+1->-1.,FromDigits[Reverse[#],2]+1->1.},2^L]]&/@nonPalindromes
 }]
+]
+
+
+Translation[state_, L_] := BitShiftRight[state] + BitAnd[state, 1]*2^(L-1)
+BinaryNecklaces[L_Integer] := Module[{tuples=Tuples[{0,1},L]},
+	Union[Table[First[Sort[NestList[RotateLeft, t, L-1]]], {t,tuples}]]
+]
+\[Omega][L_,k_] := Exp[2Pi*k*I/L]
+
+TranslationEigenvectorRepresentatives[L_Integer] := Module[
+	{
+	necklaces = FromDigits[#,2]& /@ BinaryNecklaces[L],
+	orbits
+	},
+	
+	orbits = DeleteDuplicates[
+	Sort[NestWhileList[Translation[#, L]&, #, UnsameQ[##]&, All][[;;-2]]]& /@ necklaces
+	 ];
+	Catenate[
+		Outer[
+			If[Mod[Length[#1]*#2, L]==0, {First[#1], #2, Length[#1]}, Nothing]&, 
+			orbits, 
+			Range[0, L-1], 
+			1
+		]
+	]
 ]
 
 
