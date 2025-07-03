@@ -142,22 +142,48 @@ Qubit::usage = FormatUsage[
 coherentstate::usage = "coherentstate[state,L] Generates a spin coherent state of L spins given a general single qubit state";
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Quantum chaos*)
 
 
 (*buscar la rutina del unfolding para meterla aqu\[IAcute]. Quiz\[AAcute]s tambi\[EAcute]n las cosas de wigner dyson y poisson*)
 
 
-MeanLevelSpacingRatio::usage = "MeanLevelSpacingRatio[\!\(\*
-StyleBox[\"eigenvalues\",\nFontSlant->\"Italic\"]\)] gives \[LeftAngleBracket]\!\(\*SubscriptBox[\(r\), \(n\)]\)\[RightAngleBracket] of \!\(\*
-StyleBox[\"eigenvalues\",\nFontSlant->\"Italic\"]\).";
+MeanLevelSpacingRatio::usage = FormatUsage[
+	"MeanLevelSpacingRatio[eigenvalues] returns \[LeftAngleBracket]r_n\[RightAngleBracket]."
+];
 
 
 Quiet[
 	IPR::usage = 
 		FormatUsage["IPR[\[Psi]] computes the Inverse Participation Ratio of  ```\[Psi]``` in computational basis."];
 , {FrontEndObject::notavail, First::normal}];
+
+
+kthOrderSpacings::usage = FormatUsage[
+	"kthOrderSpacings[spectrum,k] returns the ```k```-th order level spacing of ```spectrum```."
+];
+
+
+SpacingRatios::usage = FormatUsage[
+	"SpacingRatios[spectrum,k] returns the ```k```-th order level spacing ratios of ```spectrum```."
+];
+
+
+(* ::Subsection:: *)
+(*RMT*)
+
+
+RatiosDistribution::usage = FormatUsage[
+	"RatiosDistribution[r,\[Beta]] represents the probability distribution of level spacing \
+	ratios P_\[Beta](r)."
+];
+
+
+RatiosDistributionPoisson::usage = FormatUsage[
+	"RatiosDistributionPoisson[r,k] represents the probability distribution of level spacing \
+	ratios P(r) of a Poissonian spectrum."
+];
 
 
 (* ::Subsection::Closed:: *)
@@ -496,7 +522,7 @@ Qubit[\[Theta]_,\[Phi]_] := {Cos[\[Theta]/2],Exp[I \[Phi]]Sin[\[Theta]/2]}
 coherentstate[state_,L_]:=Flatten[KroneckerProduct@@Table[state,L]]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Quantum chaos*)
 
 
@@ -504,6 +530,24 @@ MeanLevelSpacingRatio[eigenvalues_]:=Mean[Min/@Transpose[{#,1/#}]&[Ratios[Differ
 
 
 IPR[\[Psi]_] := Total[\[Psi]^4]
+
+
+kthOrderSpacings[spectrum_, k_] := RotateLeft[#, k] - # &[Sort[spectrum, Greater]][[;; -(k+1)]]
+
+
+SpacingRatios[spectrum_, k_]:=RotateLeft[#, k]/# &[kthOrderSpacings[spectrum, k]][[;; -(k+1)]]
+
+
+(* ::Subsection:: *)
+(*RMT*)
+
+
+RatiosDistribution[r_,\[Beta]_]:=1/Z[r,\[Beta]]*(r+r^2)^\[Beta]/(1+r+r^2)^(1+3 \[Beta]/2)
+
+Z[r_,\[Beta]_]:=Integrate[(r+r^2)^\[Beta]/(1+r+r^2)^(1 + 3*\[Beta]/2),{r,0,Infinity}]
+
+
+RatiosDistributionPoisson[r_, k_] := (2k -1)!*Power[r, k - 1]/(((k - 1)!)^2 * (1 + r)^(2*k))
 
 
 (* ::Subsection::Closed:: *)
@@ -959,11 +1003,11 @@ Assignationk[M_,N_,n_]:=If[n[[1;;M-1]]==ConstantArray[0,M-1],M-1,FromDigits[Last
 RenyiEntropy[\[Alpha]_,\[Rho]_]:=1/(1-\[Alpha]) Log[Tr[MatrixPower[\[Rho],\[Alpha]]]]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Spins*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Symmetries*)
 
 
