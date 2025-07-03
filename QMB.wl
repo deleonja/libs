@@ -963,7 +963,7 @@ RenyiEntropy[\[Alpha]_,\[Rho]_]:=1/(1-\[Alpha]) Log[Tr[MatrixPower[\[Rho],\[Alph
 (*Spins*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Symmetries*)
 
 
@@ -1006,6 +1006,10 @@ TranslationEigenvectorRepresentatives[L_Integer] := Module[
 ]
 
 
+RepresentativesOddBasis[basis_]:=DeleteDuplicatesBy[Discard[basis,PalindromeQ],Sort[{#,Reverse[#]}]&]
+RepresentativesEvenBasis[basis_]:=DeleteDuplicatesBy[basis,Sort[{#,Reverse[#]}]&]
+
+
 Options[BlockDiagonalize] = {
   Symmetry -> "Translation" (*coming soon: \"Parity\"*)
 };
@@ -1041,6 +1045,21 @@ Switch[OptionValue[Symmetry],
 					
 				BlockDiagonalMatrix[Chop[Conjugate[P] . A . Transpose[P]]]
 		],
+	"Parity",
+		Module[
+		{
+			L = Log[2, Length[A]],
+			basis, reps, rules, Heven, Hodd
+		},
+			basis = Tuples[{0, 1}, L];
+			rules=AssociationThread[basis->Range[Length[basis]]];
+			reps=Comap[{RepresentativesEvenBasis, RepresentativesOddBasis},basis];
+			Heven=1/2 (A[[#1,#1]] + A[[#1,#2]] + A[[#2,#1]] + A[[#2,#2]] & @@ Map[rules, {#, Reverse/@#}&[reps[[1]]], {2}]);
+			Hodd=1/2 (A[[#1,#1]] - A[[#1,#2]] - A[[#2,#1]] + A[[#2,#2]] & @@ Map[rules, {#, Reverse/@#}&[reps[[2]]], {2}]);
+			Heven = # . Heven . #&[DiagonalMatrix[ReplacePart[ConstantArray[1.,Length[reps[[1]]]],Thread[Catenate[Position[reps[[1]],_?PalindromeQ,1]]->1/Sqrt[2.]]],TargetStructure->"Sparse"]];
+			
+			{Heven, Hodd}
+		],
 	_,
 		Message[BlockDiagonalize::badSymmetry, OptionValue[Symmetry]];
 		Return[$Failed];
@@ -1051,7 +1070,7 @@ BlockDiagonalize::badSymmetry =
   "Option badSymmetry -> `1` is not valid. Valid options: \"Translation\".";
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Hamiltonians*)
 
 
