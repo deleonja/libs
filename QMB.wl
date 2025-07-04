@@ -439,7 +439,7 @@ Begin["`Private`"];
 ClearAll[SigmaPlusSigmaMinus, SigmaMinusSigmaPlus];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*General quantum mechanics*)
 
 
@@ -537,11 +537,14 @@ Module[{\[Rho]tilde, R, \[Lambda]},
 Qubit[\[Theta]_,\[Phi]_] := {Cos[\[Theta]/2],Exp[I \[Phi]]Sin[\[Theta]/2]}
 
 
+\[Alpha]
+
+
 coherentstate[state_,L_]:=Flatten[KroneckerProduct@@Table[state,L]]
 
 
 SU2Rotation[sphCoord_List?VectorQ,\[Theta]_]/; Length[sphCoord]==2 :=
-	Module[{n={Cos[#2] Sin[#1], Sin[\[Alpha]] Sin[#2], Cos[#1]} & @@ sphCoord},
+	Module[{n={Sin[#1]Cos[#2], Sin[#1]Sin[#2], Cos[#1]} & @@ sphCoord},
 		MatrixExp[-I * \[Theta]/2 * n . (Pauli /@ Range[3])]
 	]
 
