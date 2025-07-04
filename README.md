@@ -9,7 +9,7 @@ This repository contains two Mathematica packages for quantum physics simulation
 
 ## Table of Contents
 
-- [How to use the packages?](#hot-to-use)
+- [How to use the packages?](#how-to-use-the-packages?)
 - [QuantumWalks Package](#quantumwalks-package)
 - [QMB Package](#qmb-package)
   - [General Quantum Mechanics](#general-quantum-mechanics)
