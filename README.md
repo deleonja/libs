@@ -9,7 +9,7 @@ This repository contains two Mathematica packages for quantum physics simulation
 
 ## Table of Contents
 
-- [Installation](#installation)
+- [How to use the packages?](#hot-to-use)
 - [QuantumWalks Package](#quantumwalks-package)
 - [QMB Package](#qmb-package)
   - [General Quantum Mechanics](#general-quantum-mechanics)
@@ -23,7 +23,7 @@ This repository contains two Mathematica packages for quantum physics simulation
 
 ---
 
-## Installation
+## How to use the packages?
 
 1. Place both `.wl` files and the `ForScience-0.88.45.paclet` in your working directory
 2. Load packages in Mathematica:
