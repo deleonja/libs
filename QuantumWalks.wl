@@ -20,7 +20,7 @@ ClearAll[
 (*Usage definitions*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*DTQW*)
 
 
@@ -35,7 +35,7 @@ PositionProbabilityDistribution::usage = FormatUsage["PositionProbabilityDistrib
 ExpValPosition::usage = FormatUsage["ExpValPosition[\[Psi],t] returns the expected value of position for the state \[Psi] of a 1D DTQW at time ```t```."];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Parrondo's paradox*)
 
 
@@ -51,8 +51,8 @@ W::usage = FormatUsage[
 
 CriticalAngle::usage = FormatUsage[
 	"CriticalAngle[avgPos] takes a list of sublists ```avgPos```, where each subslit \
-	is of the form {\[Theta],\[LeftAngleBracket]x(\[Theta])\[RightAngleBracket]}, and returns the value \[Theta] such that \[LeftAngleBracket]x(\[Theta])\[RightAngleBracket] is the closest \
-	to zero of all sublsists."
+	is of the form '''{\[Theta],\[LeftAngleBracket]x(\[Theta])\[RightAngleBracket]}''', and returns the value '''\[Theta]''' such that \
+	'''\[LeftAngleBracket]x(\[Theta])\[RightAngleBracket]''' is the closest to zero of all sublsists."
 ];
 
 
@@ -136,7 +136,7 @@ PositionProbabilityDistribution[psi_, tmax_] := Chop[
 ExpValPosition[\[Psi]_,t_]:=PositionProbabilityDistribution[\[Psi],t] . Range[-t-1,t+1]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Parrondo's paradox*)
 
 
