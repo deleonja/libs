@@ -33,16 +33,16 @@ Functions for 1D discrete-time quantum walks:
 
 ### General Quantum Mechanics
 
-| Function                      | Description                                   |
-| ----------------------------- | --------------------------------------------- |
-| `DensityMatrix[ψ]`            | Density matrix of state vector `ψ`            |
-| `Pauli[i]`                    | Pauli matrices (supports multi-qubit strings) |
-| `MatrixPartialTrace[mat,n,d]` | Partial trace over subsystem `n`              |
-| `RandomQubitState[]`          | Haar-random qubit state                       |
-| `Commutator[A,B]`             | Computes `AB - BA`                            |
-| `BlochVector[ρ]`              | Bloch vector of single-qubit density matrix   |
-| `Concurrence[ρ]`              | Two-qubit concurrence                         |
-| `Qubit[θ,φ]`                  | State `cos(θ/2)|0⟩ + e^{iφ} sin(θ/2)|1⟩`      |
+| Function                      | Description                                             |
+| ----------------------------- | ------------------------------------------------------- |
+| `DensityMatrix[ψ]`            | Density matrix of state vector `ψ`                      |
+| `Pauli[i]`                    | Pauli matrices (supports multi-qubit strings)           |
+| `MatrixPartialTrace[mat,n,d]` | Partial trace over subsystem `n`                        |
+| `RandomQubitState[]`          | Haar-random qubit state                                 |
+| `Commutator[A,B]`             | Computes `AB - BA`                                      |
+| `BlochVector[ρ]`              | Bloch vector of single-qubit density matrix             |
+| `Concurrence[ρ]`              | Two-qubit concurrence                                   |
+| `Qubit[θ,φ]`                  | Qubit state with parameters `(θ,φ)` in the Bloch sphere |
 
 ---
 
