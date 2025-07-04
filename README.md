@@ -33,16 +33,22 @@ Functions for 1D discrete-time quantum walks:
 
 ### General Quantum Mechanics
 
-| Function                      | Description                                             |
-| ----------------------------- | ------------------------------------------------------- |
-| `DensityMatrix[ψ]`            | Density matrix of state vector `ψ`                      |
-| `Pauli[i]`                    | Pauli matrices (supports multi-qubit strings)           |
-| `MatrixPartialTrace[mat,n,d]` | Partial trace over subsystem `n`                        |
-| `RandomQubitState[]`          | Haar-random qubit state                                 |
-| `Commutator[A,B]`             | Computes `AB - BA`                                      |
-| `BlochVector[ρ]`              | Bloch vector of single-qubit density matrix             |
-| `Concurrence[ρ]`              | Two-qubit concurrence                                   |
-| `Qubit[θ,φ]`                  | Qubit state with parameters `(θ,φ)` in the Bloch sphere |
+| Function                           | Description                                                |
+| ---------------------------------- | ---------------------------------------------------------- |
+| `DensityMatrix[ψ]`                 | Density matrix of state vector `ψ`                         |
+| `Pauli`                            | Pauli matrices (supports multi-qubit strings)              |
+| `MatrixPartialTrace[mat,n,d]`      | Partial trace over subsystem `n`                           |
+| `RandomQubitState[]`               | Haar-random qubit state                                    |
+| `RandomChainProductState[L]`       | Haar-random product state of `L` qubits                    |
+| `Commutator[A,B]`                  | Computes `AB - BA`                                         |
+| `CommutationQ[A,B]`                | Checks if matrices `A` and `B` commute                     |
+| `MutuallyCommutingSetQ[{A,B,...}]` | Checks if set of matrices `{A,B,..}` is mutually commuting |
+| `Braket[ψ,ϕ]`                      | Inner product between state vectors `ψ` and `ϕ`            |
+| `BlochVector[ρ]`                   | Bloch vector of single-qubit density matrix                |
+| `Purity[ρ]`                        | Purity of density matrix `ρ`                               |
+| `Concurrence[ρ]`                   | Two-qubit concurrence                                      |
+| `Qubit[θ,φ]`                       | Qubit state with parameters `(θ,φ)` in the Bloch sphere    |
+| `SU2Rotation`                      | SU(2) rotation matrix                                      |
 
 ---
 
