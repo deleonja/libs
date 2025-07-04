@@ -20,7 +20,7 @@ ClearAll[
 (*Usage definitions*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*DTQW*)
 
 
@@ -49,14 +49,21 @@ W::usage = FormatUsage[
 ];
 
 
-Begin["`Private`"]
+CriticalAngle::usage = FormatUsage[
+	"CriticalAngle[avgPos] takes a list of sublists ```avgPos```, where each subslit \
+	is of the form {\[Theta],\[LeftAngleBracket]x(\[Theta])\[RightAngleBracket]}, and returns the value \[Theta] such that \[LeftAngleBracket]x(\[Theta])\[RightAngleBracket] is the closest \
+	to zero of all sublsists."
+];
 
 
 (* ::Section:: *)
 (*Routine definitions*)
 
 
-(* ::Subsection:: *)
+Begin["`Private`"]
+
+
+(* ::Subsection::Closed:: *)
 (*DTQW*)
 
 
@@ -137,6 +144,13 @@ L[\[Theta]_,\[Theta]a_,\[Theta]b_]:=\[Theta]a<=Mod[\[Theta],2.Pi]<=\[Theta]b
 
 
 W[\[Theta]_,\[Theta]a_,\[Theta]b_]:=Mod[\[Theta],2.Pi]<=\[Theta]a||Mod[\[Theta],2.Pi]>=\[Theta]b
+
+
+CriticalAngle[avgPos_] := 
+	SortBy[
+		Discard[avgPos, Round[#[[1]], 10.^-6] == Round[2Pi, 10.^-6] || Round[#[[1]], 10.^-6] == 0. &],
+		Abs[#[[2]]]&
+	][[1, 1]]
 
 
 End[]
