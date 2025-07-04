@@ -5,7 +5,26 @@ This repository contains two Mathematica packages for quantum physics simulation
 1. **QuantumWalks.wl**: Simulates discrete-time quantum walks (DTQW) on 1D infinite lines.
 2. **QMB.wl**: Provides tools for quantum many-body systems, quantum information, and quantum chaos.
 
+---
+
+## Table of Contents
+
+- [Installation](#installation)
+- [QuantumWalks Package](#quantumwalks-package)
+- [QMB Package](#qmb-package)
+  - [General Quantum Mechanics](#general-quantum-mechanics)
+  - [Quantum Chaos & RMT](#quantum-chaos--rmt)
+  - [Bose-Hubbard Model](#bose-hubbard-model)
+  - [Spin Chains & Symmetries](#spin-chains--symmetries)
+  - [Quantum Channels](#quantum-channels)
+- [Requirements](#requirements)
+- [Usage Examples](#usage-examples)
+- [Contributing](#contributing)
+
+---
+
 ## Installation
+
 1. Place both `.wl` files and the `ForScience-0.88.45.paclet` in your working directory
 2. Load packages in Mathematica:
    ```mathematica
