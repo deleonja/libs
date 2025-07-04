@@ -16,6 +16,14 @@ ClearAll[
 ]
 
 
+(* ::Section:: *)
+(*Usage definitions*)
+
+
+(* ::Subsection::Closed:: *)
+(*DTQW*)
+
+
 Shift::usage = FormatUsage["Shift[t] yields a sparse array of the Shift operator for a 1D DTQW in an infinite line at time ```t```."];
 Coin::usage = FormatUsage["Coin[t] yields a sparse array of the Haddamard Coin operator for a 1D DTQW in an infinite line at time ```t```.
 Coin[t,C] yields a sparse array of the Coin operator ```C``` for a 1D DTQW in an infinite line at time ```t```."];
@@ -27,7 +35,29 @@ PositionProbabilityDistribution::usage = FormatUsage["PositionProbabilityDistrib
 ExpValPosition::usage = FormatUsage["ExpValPosition[\[Psi],t] returns the expected value of position for the state \[Psi] of a 1D DTQW at time ```t```."];
 
 
+(* ::Subsection:: *)
+(*Parrondo's paradox*)
+
+
+L::usage = FormatUsage[
+	"LoosingStrategy[\[Theta], \[Theta]_a, \[Theta]_b] returns the loosing inequality."
+];
+
+
+W::usage = FormatUsage[
+	"WinningStrategy[\[Theta], \[Theta]_a, \[Theta]_b] returns the winning inequality."
+];
+
+
 Begin["`Private`"]
+
+
+(* ::Section:: *)
+(*Routine definitions*)
+
+
+(* ::Subsection:: *)
+(*DTQW*)
 
 
 Shift[t_] := Module[{},
@@ -97,6 +127,16 @@ PositionProbabilityDistribution[psi_, tmax_] := Chop[
 
 
 ExpValPosition[\[Psi]_,t_]:=PositionProbabilityDistribution[\[Psi],t] . Range[-t-1,t+1]
+
+
+(* ::Subsection:: *)
+(*Parrondo's paradox*)
+
+
+L[\[Theta]_,\[Theta]a_,\[Theta]b_]:=\[Theta]a<=Mod[\[Theta],2.Pi]<=\[Theta]b
+
+
+W[\[Theta]_,\[Theta]a_,\[Theta]b_]:=Mod[\[Theta],2.Pi]<=\[Theta]a||Mod[\[Theta],2.Pi]>=\[Theta]b
 
 
 End[]
