@@ -100,9 +100,11 @@ MutuallyCommutingSetQ::usage= FormatUsage[
 , {FrontEndObject::notavail, First::normal}];
 
 
+Quiet[
 Braket::usage = FormatUsage[
 "Braket[\[Psi],\[Phi]] returns \[LeftAngleBracket]```\[Psi]```|```\[Phi]```\[RightAngleBracket]."
 ];
+, {FrontEndObject::notavail, First::normal}];
 
 
 FixCkForStateEvoultion::usage = "FixCkForStateEvoultion[\!\(\*SubscriptBox[\(\[Psi]\), \(0\)]\), { \!\(\*TemplateBox[{SubscriptBox[\"E\", \"k\"]},\n\"Ket\"]\) }] fixes \!\(\*SubscriptBox[\(c\), \(k\)]\) = \!\(\*TemplateBox[{RowBox[{SubscriptBox[\"E\", \"k\"], \" \"}], RowBox[{\" \", SubscriptBox[\"\[Psi]\", \"0\"]}]},\n\"BraKet\"]\) for StateEvolution[]";
@@ -120,19 +122,35 @@ BlochVector::usage = FormatUsage["BlochVector[\[Rho]] returns the Bloch vector o
 KroneckerVectorProduct::usage = "KroneckerVectorProduct[a,b] calculates \!\(\*TemplateBox[{\"a\"},\n\"Ket\"]\)\[CircleTimes]\!\(\*TemplateBox[{\"b\"},\n\"Ket\"]\).";
 
 
+Quiet[
 Purity::usage = FormatUsage[
 "Purity[\[Rho]] calculates the purity of ```\[Rho]```."
 ];
+, {FrontEndObject::notavail, First::normal}];
 
 
+Quiet[
 Concurrence::usage = FormatUsage[
 "Concurrence[\[Rho]] returns the two-qubit concurrence of density matrix ```\[Rho]```."
 ];
+, {FrontEndObject::notavail, First::normal}];
 
 
+Quiet[
 Qubit::usage = FormatUsage[
 "Qubit[\[Theta],\[Phi]] returns the state cos(```\[Theta]```/2)|0\[RightAngleBracket] + \[ExponentialE]^\[Phi] sin(```\[Theta]```/2)|1\[RightAngleBracket]"
 ];
+, {FrontEndObject::notavail, First::normal}];
+
+
+Quiet[
+SU2Rotation::usage = FormatUsage[
+	"SU2Rotation[{\[Theta]_a,\[Phi]_a},\[Theta]_R] the SU(2) matrix rotation with axis ```(\[Theta]_a,\[Phi]_a)``` \
+	and angle rotation ```\[Theta]_R```.
+	'''SU2Rotation[{```x,y,z```},```\[Theta]_R```]''' the SU(2) matrix rotation with axis ```(x,y,z)``` \
+	and angle rotation ```\[Theta]_R```."
+];
+, {FrontEndObject::notavail, First::normal}];
 
 
 (* ::Text:: *)
@@ -142,7 +160,7 @@ Qubit::usage = FormatUsage[
 coherentstate::usage = "coherentstate[state,L] Generates a spin coherent state of L spins given a general single qubit state";
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Quantum chaos*)
 
 
@@ -170,7 +188,7 @@ SpacingRatios::usage = FormatUsage[
 ];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*RMT*)
 
 
@@ -522,7 +540,16 @@ Qubit[\[Theta]_,\[Phi]_] := {Cos[\[Theta]/2],Exp[I \[Phi]]Sin[\[Theta]/2]}
 coherentstate[state_,L_]:=Flatten[KroneckerProduct@@Table[state,L]]
 
 
-(* ::Subsection:: *)
+SU2Rotation[sphCoord_List?VectorQ,\[Theta]_]/; Length[sphCoord]==2 :=
+	Module[{n={Cos[#2] Sin[#1], Sin[\[Alpha]] Sin[#2], Cos[#1]} & @@ sphCoord},
+		MatrixExp[-I * \[Theta]/2 * n . (Pauli /@ Range[3])]
+	]
+
+SU2Rotation[n_List?VectorQ,\[Theta]_]/; Length[n]==3 && Chop[Norm[n]-1]==0 :=
+	MatrixExp[-I * \[Theta]/2 * n . (Pauli /@ Range[3])]
+
+
+(* ::Subsection::Closed:: *)
 (*Quantum chaos*)
 
 
@@ -538,7 +565,7 @@ kthOrderSpacings[spectrum_, k_] := RotateLeft[#, k] - # &[Sort[spectrum, Greater
 SpacingRatios[spectrum_, k_]:=RotateLeft[#, k]/# &[kthOrderSpacings[spectrum, k]][[;; -(k+1)]]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*RMT*)
 
 
