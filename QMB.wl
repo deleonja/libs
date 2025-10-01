@@ -43,6 +43,7 @@ BeginPackage["QMB`"];
    QMB.wl is loaded in a .wls no error about FrontEnd pops up. *)
 
 
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
 Quiet[
 DensityMatrix::usage = FormatUsage[
 "DensityMatrix[\[Psi]] returns the density matrix of state vector ```\[Psi]```."
@@ -51,8 +52,9 @@ DensityMatrix::usage = FormatUsage[
 
 Quiet[
 Pauli::usage = FormatUsage[
-"Pauli[0-3] gives the Pauli matrices. 
-Pauli[{i_1,...,i_N}] returns the ```N```-qubit Pauli string '''Pauli[```i_1```]''' \[CircleTimes] '''...''' \[CircleTimes] '''Pauli[```i_N```]'''."];
+	"Pauli[i] returns the ```i```-th Pauli matrix.\n"<>
+	"Pauli[{i_1,...,i_N}] returns the ```N```-qubit Pauli string \
+	'''Pauli[```i_1```]''' \[CircleTimes] '''...''' \[CircleTimes] '''Pauli[```i_N```]'''."];
 , {FrontEndObject::notavail, First::normal}];
 
 
@@ -160,7 +162,7 @@ SU2Rotation::usage = FormatUsage[
 coherentstate::usage = "coherentstate[state,L] Generates a spin coherent state of L spins given a general single qubit state";
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Quantum chaos*)
 
 
@@ -185,6 +187,11 @@ kthOrderSpacings::usage = FormatUsage[
 
 SpacingRatios::usage = FormatUsage[
 	"SpacingRatios[spectrum,k] returns the ```k```-th order level spacing ratios of ```spectrum```."
+];
+
+
+Unfold::usage = FormatUsage[
+	"Unfold[spectrum] returns the unfolded spectrum."
 ];
 
 
@@ -222,26 +229,24 @@ Quiet[
 
 
 BoseHubbardHamiltonian::usage = FormatUsage[
-  "BoseHubbardHamiltonian[n, L, J, U] returns the Bose-Hubbard Hamiltonian for \
-```n``` bosons and ```L``` sites with hopping parameter ```J``` and interaction \
-parameter ```U```.\n" <>
-  "BoseHubbardHamiltonian[n, L, J, U, SymmetricSubspace] returns the Hamiltonian \
-in a symmetric subspace. Option SymmetricSubspace takes the values \
-\"All\" | \"EvenParity\" | \"OddParity\"."
+	"BoseHubbardHamiltonian[n,L,J,U,opts] returns the Bose-Hubbard Hamiltonian for \
+	```n``` bosons and ```L``` sites with hopping parameter ```J``` and interaction \
+	parameter ```U```. Options: SymmetricSubspace."
 ];
 
 
-SymmetricSubspace::usage = 
-  "SymmetricSubspace is an option for BoseHubbardHamiltonian. Valid values are \
-\"All\", \"EvenParity\", and \"OddParity\".";
+SymmetricSubspace::usage = FormatUsage[
+	"SymmetricSubspace is an option for '''BoseHubbardHamiltonian'''. Valid values are \
+	'''\"All\"''', '''\"EvenParity\"''', and '''\"OddParity\"'''."
+];
 
 
 KineticTermBoseHubbardHamiltonian::usage = FormatUsage[
-"KineticTermBoseHubbardHamiltonian[basis] returns the kinetic term of the BH Hamiltonian \
-with ```basis``` a list with Fock basis elements. \ 
-KineticTermBoseHubbardHamiltonian[basis,SymmetricSubspace] returns the kinetic term of the BH \
-Hamiltonian in a symmetric subspace with ```basis``` a list with Fock basis elements. \
-Option SymmetricSubspace takes the values \"All\" | \"EvenParity\" | \"OddParity\"."
+	"KineticTermBoseHubbardHamiltonian[basis] returns the kinetic term of the BH Hamiltonian \
+	with ```basis``` a list with Fock basis elements.\n"<> 
+	"KineticTermBoseHubbardHamiltonian[basis,SymmetricSubspace] returns the kinetic term of the BH \
+	Hamiltonian in a symmetric subspace with ```basis``` a list with Fock basis elements. \
+	Option SymmetricSubspace takes the values \"All\" | \"EvenParity\" | \"OddParity\"."
 ];
 
 
@@ -439,7 +444,7 @@ Begin["`Private`"];
 ClearAll[SigmaPlusSigmaMinus, SigmaMinusSigmaPlus];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*General quantum mechanics*)
 
 
@@ -552,7 +557,7 @@ SU2Rotation[n_List?VectorQ,\[Theta]_]/; Length[n]==3 && Chop[Norm[n]-1]==0 :=
 	MatrixExp[-I * \[Theta]/2 * n . (Pauli /@ Range[3])]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Quantum chaos*)
 
 
@@ -566,6 +571,33 @@ kthOrderSpacings[spectrum_, k_] := RotateLeft[#, k] - # &[Sort[spectrum, Greater
 
 
 SpacingRatios[spectrum_, k_]:=RotateLeft[#, k]/# &[kthOrderSpacings[spectrum, k]][[;; -(k+1)]]
+
+
+Unfold[eigenvalues_List] := 
+Module[
+	{skd, unfolded, n, smoothCDF, smoothPDF},
+	
+	n=Length[eigenvalues];
+	
+	(*Create smooth kernel distribution for the CDF*)
+	skd=SmoothKernelDistribution[eigenvalues, "StandardGaussian", {
+		"Bounded", {Min[eigenvalues], Max[eigenvalues]}, "Gaussian"
+		}];
+		
+	(*Unfold:\[CurlyEpsilon]_i=N*CDF(E_i)*)
+	unfolded = Table[ n*CDF[skd, eigenvalues[[i]]], {i,n}];
+	
+	(*Define the smooth functions*)
+	smoothCDF=Function[x,n*CDF[skd,x]];
+	smoothPDF=Function[x,n*PDF[skd,x]];
+	
+	(*Return unfolded spectrum and related functions*)
+	<|"UnfoldedLevels"->unfolded,
+	"SmoothCDF"->smoothCDF,(*Cumulative:N(E)*)
+	"SmoothPDF"->smoothPDF,(*Density:\[Rho](E)*)
+	"Bandwidth"->skd["Bandwidth"],
+	"OriginalLevels"->eigenvalues(*Useful for comparison*)|>
+]
 
 
 (* ::Subsection::Closed:: *)
