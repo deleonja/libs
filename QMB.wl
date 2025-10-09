@@ -162,7 +162,7 @@ SU2Rotation::usage = FormatUsage[
 coherentstate::usage = "coherentstate[state,L] Generates a spin coherent state of L spins given a general single qubit state";
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Quantum chaos*)
 
 
@@ -557,7 +557,7 @@ SU2Rotation[n_List?VectorQ,\[Theta]_]/; Length[n]==3 && Chop[Norm[n]-1]==0 :=
 	MatrixExp[-I * \[Theta]/2 * n . (Pauli /@ Range[3])]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Quantum chaos*)
 
 
