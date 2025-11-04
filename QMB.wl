@@ -87,7 +87,7 @@ Dyad[\[Psi],\[Phi]] returns ```|\[Psi]\[RightAngleBracket]\[LeftAngleBracket]\[P
 
 
 Quiet[
-Commutator::usage = FormatUsage["Commutator[A,B] returns AB - BA."];
+MatrixCommutator::usage = FormatUsage["MatrixCommutator[A,B] returns AB - BA."];
 , {FrontEndObject::notavail, First::normal}];
 
 
@@ -508,13 +508,13 @@ Dyad[a_]:=Outer[Times,a,Conjugate[a]]
 Dyad[a_,b_]:=Outer[Times,a,Conjugate[b]]
 
 
-Commutator[A_,B_]:=A . B-B . A
+MatrixCommutator[A_,B_]:=A . B-B . A
 
 
 ZeroMatrix[d_]:=ConstantArray[0,{d,d}]
 
 
-CommutationQ[A_,B_]:=Commutator[A,B]==ZeroMatrix[Length[A]]
+CommutationQ[A_,B_]:=MatrixCommutator[A,B]==ZeroMatrix[Length[A]]
 
 
 MutuallyCommutingSetQ[ListOfMatrices_]:=Module[{SetLength=Length[ListOfMatrices]},
