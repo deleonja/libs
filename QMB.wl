@@ -316,7 +316,7 @@ InitializeVariables::usage = "InitializeVariables[n, L, boundaries, FMmodel] set
 FuzzyMeasurement::usage = "FuzzyMeasurement[\[Psi], \!\(\*SubscriptBox[\(p\), \(fuzzy\)]\)] gives \[ScriptCapitalF](\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Ket\"]\)\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Bra\"]\)) = (1 - \!\(\*SubscriptBox[\(p\), \(fuzzy\)]\))\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Ket\"]\)\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Bra\"]\) + \!\(\*SubscriptBox[\(p\), \(fuzzy\)]\) \!\(\*UnderscriptBox[\(\[Sum]\), \(i\)]\) \!\(\*SubscriptBox[\(S\), \(i\)]\)\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Ket\"]\)\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Bra\"]\)\!\(\*SubsuperscriptBox[\(S\), \(i\), \(\[Dagger]\)]\), where \!\(\*SubscriptBox[\(S\), \(i\)]\) must be initizalized runnning InitializeVariables[n, L, boundaries, FMmodel].";
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Spin chains*)
 
 
@@ -415,6 +415,30 @@ XXZOpenHamiltonian::usage = FormatUsage["XXZOpenHamiltonian[J_{*xy*},J_z,\[Omega
 
 HeisenbergXXXwNoise::usage="HeisenbergXXXwNoise[hz,L] returns the Heisenberg XXX spin 1/2 chain with noise: \!\(\*FormBox[\(H\\\  = \\\ \*FractionBox[\(1\), \(4\)]\\\ \(\*SubsuperscriptBox[\(\[Sum]\), \(i = 1\), \(L - 1\)]\\\ \((\*SubsuperscriptBox[\(\[Sigma]\), \(i\), \(x\)]\\\ \*SubsuperscriptBox[\(\[Sigma]\), \(i + 1\), \(x\)]\\\  + \\\ \*SubsuperscriptBox[\(\[Sigma]\), \(i\), \(y\)]\\\ \*SubsuperscriptBox[\(\[Sigma]\), \(i + 1\), \(y\)]\\\  + \\\ \*SubsuperscriptBox[\(\[Sigma]\), \(i\), \(z\)]\\\ \*SubsuperscriptBox[\(\[Sigma]\), \(i + 1\), \(z\)])\)\)\\\  + \\\ \*FractionBox[\(1\), \(2\)]\\\ \(\*SubsuperscriptBox[\(\[Sum]\), \(i = 1\), \(L\)]\*SubsuperscriptBox[\(h\), \(i\), \(z\)]\\\ \*SubsuperscriptBox[\(\[Sigma]\), \(i\), \(z\)]\\\ \(\((open\\\ boundaries)\)\(.\)\)\)\),
 TraditionalForm]\)";
+
+
+(* ::Subsection::Closed:: *)
+(*Light-matter systems*)
+
+
+ARQMHamiltonian::usage = 
+FormatUsage[
+	"ARQMHamiltonian[\[Omega], \[CapitalDelta], g, \[Epsilon], \[Xi], nMax] calculates \
+	the Hamiltonian matrix for the Anisotropically quantum Rabi \
+	model (AQRM) in a truncated Fock space of dimension nMax + 1.
+
+	The Hamiltonian is:
+	H = \[Omega] a\[Dagger]a + \[CapitalDelta]*Z + g/2*[(1+\[Xi]) (a+a\[Dagger])*X \
+	+ (1-\[Xi]) (a-a\[Dagger]) \[ImaginaryI]*Y] + \[Epsilon] X	
+
+	Parameters are:
+	\[Omega]: bosonic mode frequency (photons).
+	\[CapitalDelta]: qubit energy splitting.
+	g: qubit-boson coupling strength.
+	\[Epsilon]: asymmetry term strength (qubit driving).
+	\[Xi]: anisotropy parameter (ranging from -1 to 1).
+	nMax: maximum photon number (n=0 to nMax)."
+];
 
 
 (* ::Subsection::Closed:: *)
@@ -1066,7 +1090,7 @@ RenyiEntropy[\[Alpha]_,\[Rho]_]:=1/(1-\[Alpha]) Log[Tr[MatrixPower[\[Rho],\[Alph
 
 
 (* ::Subsection::Closed:: *)
-(*Spins*)
+(*Spin chains*)
 
 
 (* ::Subsubsection::Closed:: *)
@@ -1263,6 +1287,54 @@ secondSum=1/2*h . (Pauli/@DiagonalMatrix[ConstantArray[3,L]]);
 
 firstSum+secondSum
 ]
+
+
+(* ::Subsection::Closed:: *)
+(*Light-matter systems*)
+
+
+(* The following definition calculates the Hamiltonian for the Asymmetric quantum 
+Rabi model (AQRM) in a truncated Fock space. Definition from arXiv:2508.00765v2*)
+ARQMHamiltonian[\[Omega]_, \[CapitalDelta]_, g_, \[Epsilon]_, \[Xi]_, nMax_] :=
+    Module[{
+        idQ = IdentityMatrix[2],         (* Identity in the qubit space *)
+        idB = IdentityMatrix[nMax + 1],  (* Identity in the bosonic space *)
+        a, adag, X, Y, Z, H              (* Operators *)
+    },
+
+    (* === PAULI OPERATORS DEFINITION === *)
+    {X, Y, Z} = Pauli /@ Range[3];
+
+    (* === BOSONIC OPERATORS DEFINITION (In the truncated Fock space) === *)
+    adag = 
+    SparseArray[{Band[{2, 1}] -> Table[Sqrt[n], {n, 1, nMax}]}, {nMax + 1, nMax + 1}];
+
+    a = Transpose[adag];
+
+    (* === HAMILTONIAN CONSTRUCTION TERM BY TERM === *)
+
+    (* Term 1: Photon energy (\[Omega] a\[Dagger]a \otimes idQ) *)
+    H1 = \[Omega] * KroneckerProduct[idQ, adag . a];
+
+    (* Term 2: Qubit energy (\[CapitalDelta] Z \otimes idB) *)
+    H2 = \[CapitalDelta] * KroneckerProduct[Z, idB];
+
+    (* Term 3: Coupling term 1 (g/2) (1+\[Xi]) (X \otimes (a + a\[Dagger])) *)
+    H3 = g/2 * (1 + \[Xi]) * KroneckerProduct[X, (a + adag)];
+
+    (* Term 4: Coupling term 2 (g/2) (1-\[Xi]) (iY \otimes (a - a\[Dagger])) *)
+    H4 = g/2 * (1 - \[Xi]) * KroneckerProduct[I * Y, (a - adag)];
+
+    (* Term 5: Asymmetry term (\[Epsilon] X \otimes idB) *)
+    H5 = \[Epsilon] * KroneckerProduct[X, idB];
+
+    (* === TOTAL HAMILTONIAN === *)
+    H = H1 + H2 + H3 + H4 + H5;
+
+    (* Return the Hamiltonian as a dense, numerically evaluated matrix,
+       with small imaginary parts rounded to zero (Chop). *)
+    Return[Chop[N[H]]];
+];
 
 
 (* ::Subsection::Closed:: *)
