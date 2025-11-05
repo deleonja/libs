@@ -201,7 +201,7 @@ where NN and NNN are the nearest and next-to-nearest neighbors in the \
 complex plane."
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*RMT*)
 
 
@@ -217,7 +217,7 @@ RatiosDistributionPoisson::usage = FormatUsage[
 ];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Ginibre matrices*)
 
 
@@ -679,7 +679,7 @@ ComplexSpacingRatios[eigs_List?VectorQ] := Module[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*RMT*)
 
 
@@ -691,7 +691,7 @@ Z[r_,\[Beta]_]:=Integrate[(r+r^2)^\[Beta]/(1+r+r^2)^(1 + 3*\[Beta]/2),{r,0,Infin
 RatiosDistributionPoisson[r_, k_] := (2k -1)!*Power[r, k - 1]/(((k - 1)!)^2 * (1 + r)^(2*k))
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Ginibre matrices*)
 
 
