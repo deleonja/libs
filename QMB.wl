@@ -166,9 +166,6 @@ coherentstate::usage = "coherentstate[state,L] Generates a spin coherent state o
 (*Quantum chaos*)
 
 
-(*buscar la rutina del unfolding para meterla aqu\[IAcute]. Quiz\[AAcute]s tambi\[EAcute]n las cosas de wigner dyson y poisson*)
-
-
 MeanLevelSpacingRatio::usage = FormatUsage[
 	"MeanLevelSpacingRatio[eigenvalues] returns \[LeftAngleBracket]r_n\[RightAngleBracket]."
 ];
@@ -195,7 +192,16 @@ Unfold::usage = FormatUsage[
 ];
 
 
-(* ::Subsection::Closed:: *)
+ComplexSpacingRatios::usage =
+"ComplexSpacingRatios[eigs_List] computes the complex spacing ratios (CSR) \
+for a list of complex eigenvalues. \
+The CSR is defined for each eigenvalue \[Lambda]_k as: \
+z_k = (\[Lambda]_NN - \[Lambda]_k) / (\[Lambda]_NNN - \[Lambda]_k), \
+where NN and NNN are the nearest and next-to-nearest neighbors in the \
+complex plane."
+
+
+(* ::Subsection:: *)
 (*RMT*)
 
 
@@ -209,6 +215,27 @@ RatiosDistributionPoisson::usage = FormatUsage[
 	"RatiosDistributionPoisson[r,k] represents the probability distribution of level spacing \
 	ratios P(r) of a Poissonian spectrum."
 ];
+
+
+(* ::Subsubsection:: *)
+(*Ginibre matrices*)
+
+
+GenerateGinibreMatrix::usage =
+"GenerateGinibreMatrix[n, OptionsPattern[]] generates a non-Hermitian \
+random matrix of dimension n from a Ginibre ensemble.
+
+Options:
+  Ensemble -> \"Unitary\" (default), \"Orthogonal\", or \"Symplectic\".
+
+- \"Unitary\" (GinUE, \[Beta]=2): Returns an n x n complex matrix.
+- \"Orthogonal\" (GinOE, \[Beta]=1): Returns an n x n real matrix.
+- \"Symplectic\" (GinSE, \[Beta]=4): Returns a 2n x 2n complex matrix \
+(representing an n x n quaternion matrix)."
+
+
+GenerateGinibreMatrix::invalidEnsemble = "Ensemble type `1` is not recognized. \
+Use \"Unitary\", \"Orthogonal\", or \"Symplectic\".";
 
 
 (* ::Subsection::Closed:: *)
@@ -624,7 +651,35 @@ Module[
 ]
 
 
-(* ::Subsection::Closed:: *)
+ComplexSpacingRatios[eigs_List?VectorQ] := Module[
+  {
+    nnFunction,    (* The optimized neighbor-search function *)
+    neighborsList  (* List to store the {k, NN, NNN} for each point *)
+  },
+
+  (* 1. Validate input *)
+  If[!AllTrue[eigs, NumericQ] || Length[eigs] < 3,
+    Print["ComplexSpacingRatios::Error: Input must be a list of at least 3 numeric values."];
+    Return[$Failed];
+  ];
+
+  (* 2. Create the NearestFunction. This is the key optimization, built ONCE. *)
+  nnFunction = Nearest[eigs];
+
+  (* 3. Get the 3-neighbor list for EACH eigenvalue. *)
+  neighborsList = nnFunction[#, 3] & /@ eigs;
+
+  (* 4. Calculate ratios: (NN - k) / (NNN - k)
+     Quiet suppresses warnings from degeneracies (e.g., 0/0 -> Indeterminate)
+  *)
+  Quiet[
+    ( (#[[2]] - #[[1]]) / (#[[3]] - #[[1]]) ) & /@ neighborsList,
+    {Power::infy, Infinity::indet}
+  ]
+]
+
+
+(* ::Subsection:: *)
 (*RMT*)
 
 
@@ -634,6 +689,62 @@ Z[r_,\[Beta]_]:=Integrate[(r+r^2)^\[Beta]/(1+r+r^2)^(1 + 3*\[Beta]/2),{r,0,Infin
 
 
 RatiosDistributionPoisson[r_, k_] := (2k -1)!*Power[r, k - 1]/(((k - 1)!)^2 * (1 + r)^(2*k))
+
+
+(* ::Subsubsection:: *)
+(*Ginibre matrices*)
+
+
+(* Default option definition *)
+Options[GenerateGinibreMatrix] = {
+  Ensemble -> "Unitary"
+};
+
+GenerateGinibreMatrix[n_Integer?Positive, opts : OptionsPattern[]] := Module[
+  {
+    type = OptionValue[Ensemble],
+    mat, A, B
+  },
+
+  Switch[type,
+
+    "Unitary",
+    (* GinUE (beta=2): n x n complex.
+       Entries are N(0, 1/2) + i*N(0, 1/2) *)
+    mat = (1/Sqrt[2]) * (
+      RandomVariate[NormalDistribution[], {n, n}] +
+      I*RandomVariate[NormalDistribution[], {n, n}]
+    ),
+
+    "Orthogonal",
+    (* GinOE (beta=1): n x n real. Entries are N(0, 1) *)
+    mat = RandomVariate[NormalDistribution[], {n, n}],
+
+    "Symplectic",
+    (* GinSE (beta=4): 2n x 2n complex representation of n x n quaternion.
+       Built from two independent n x n GinUE matrices A and B. *)
+    A = (1/Sqrt[2]) * (
+      RandomVariate[NormalDistribution[], {n, n}] +
+      I*RandomVariate[NormalDistribution[], {n, n}]
+    );
+    B = (1/Sqrt[2]) * (
+      RandomVariate[NormalDistribution[], {n, n}] +
+      I*RandomVariate[NormalDistribution[], {n, n}]
+    );
+    (* Construct the 2n x 2n matrix: [[A, B], [-B^\[Dagger], A^\[Dagger]]] *)
+    mat = ArrayFlatten[{
+      {A, B},
+      {-ConjugateTranspose[B], ConjugateTranspose[A]}
+    }],
+
+    _,
+    (* Error handling for unknown type *)
+    Message[GenerateGinibreMatrix::invalidEnsemble, type];
+    mat = $Failed
+  ];
+
+  Return[mat]
+]
 
 
 (* ::Subsection::Closed:: *)
@@ -1333,7 +1444,7 @@ ARQMHamiltonian[\[Omega]_, \[CapitalDelta]_, g_, \[Epsilon]_, \[Xi]_, nMax_] :=
 
     (* Return the Hamiltonian as a dense, numerically evaluated matrix,
        with small imaginary parts rounded to zero (Chop). *)
-    Return[Chop[N[H]]];
+    Return[Chop[N[Normal[H]]]];
 ];
 
 
