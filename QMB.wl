@@ -43,7 +43,7 @@ BeginPackage["QMB`"];
    QMB.wl is loaded in a .wls no error about FrontEnd pops up. *)
 
 
-01234567890123456789012345678901234567890123456789012345678901234567890123456789
+(*01234567890123456789012345678901234567890123456789012345678901234567890123456789*)
 Quiet[
 DensityMatrix::usage = FormatUsage[
 "DensityMatrix[\[Psi]] returns the density matrix of state vector ```\[Psi]```."
@@ -201,7 +201,7 @@ where NN and NNN are the nearest and next-to-nearest neighbors in the \
 complex plane."
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*RMT*)
 
 
@@ -215,6 +215,28 @@ RatiosDistributionPoisson::usage = FormatUsage[
 	"RatiosDistributionPoisson[r,k] represents the probability distribution of level spacing \
 	ratios P(r) of a Poissonian spectrum."
 ];
+
+
+NormalizedSpacingRatios::usage = FormatUsage[
+"NormalizedSpacingRatios[spectrum, k] returns the list of spacing ratios \
+mapped to the interval (0, 1] via min(r, 1/r)."
+];
+
+
+Quiet[
+KLDivergence::usage = FormatUsage[
+"KLDivergence[P, Q] computes the Kullback-Leibler divergence D_{*KL*}(P||Q) = \[CapitalSigma]_i P(i) log(P(i)/Q(i)).
+KLDivergence[P, Q, b] computes the KL divergence using logarithms to base ```b```."];
+, {FrontEndObject::notavail, First::normal}];
+
+Quiet[
+EmpiricalKLDivergence::usage = FormatUsage[
+"EmpiricalKLDivergence[data, pdf, bins] computes the KL divergence between the histogram of ```data``` and a theoretical ```pdf``` function using specified ```bins```.
+EmpiricalKLDivergence[data, pdf] automatically determines bins (Freedman-Diaconis rule).
+
+**Example for RMT:**
+EmpiricalKLDivergence[ratios, RatiosDistribution[#, 1]&, {0, 5, 0.1}] measures distance to GOE."];
+, {FrontEndObject::notavail, First::normal}];
 
 
 (* ::Subsubsection::Closed:: *)
@@ -692,16 +714,78 @@ ComplexSpacingRatios[eigs_List?VectorQ] := Module[
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*RMT*)
 
 
-RatiosDistribution[r_,\[Beta]_]:=1/Z[r,\[Beta]]*(r+r^2)^\[Beta]/(1+r+r^2)^(1+3 \[Beta]/2)
+RatiosDistribution[r_, \[Beta]_] := 
+    (r + r^2)^\[Beta] / ((1 + r + r^2)^(1 + 3 \[Beta]/2) * RatiosNormalizationZ[\[Beta]])
 
-Z[r_,\[Beta]_]:=Integrate[(r+r^2)^\[Beta]/(1+r+r^2)^(1 + 3*\[Beta]/2),{r,0,Infinity}]
+(* Helper function for normalization constant using a dummy variable 'x' *)
+(* Uses Memoization: Z[beta] is calculated only once and stored *)
+RatiosNormalizationZ[\[Beta]_] := RatiosNormalizationZ[\[Beta]] = 
+    NIntegrate[(x + x^2)^\[Beta]/(1 + x + x^2)^(1 + 3*\[Beta]/2), {x, 0, Infinity}]
+
+RatiosDistributionPoisson[r_, k_:1] := (2k -1)!*Power[r, k - 1]/(((k - 1)!)^2 * (1 + r)^(2*k))
 
 
-RatiosDistributionPoisson[r_, k_] := (2k -1)!*Power[r, k - 1]/(((k - 1)!)^2 * (1 + r)^(2*k))
+NormalizedSpacingRatios[spectrum_, k_:1] := 
+    Module[{r},
+        r = SpacingRatios[spectrum, k];
+        (* Vectorized Min[r, 1/r] calculation *)
+        Min[#, 1/#] & /@ r
+    ]
+
+
+(* Core KL Divergence calculation *)
+KLDivergence[p_?VectorQ, q_?VectorQ, base_: E] := 
+    Module[{pNorm, qNorm, validIndices, pClean, qClean},
+        (* 1. Normalize vectors to ensure they form probability distributions *)
+        pNorm = N[p / Total[p]];
+        qNorm = N[q / Total[q]];
+        
+        (* 2. Safety Check: Dimensions *)
+        If[Length[pNorm] != Length[qNorm], 
+            Message[KLDivergence::shlen]; Return[$Failed]
+        ];
+        
+        (* 3. Filter: Only indices where P > 0 matter (limit x->0 of x log x is 0) *)
+        (* Using Pick is faster than Select/Cases for packed arrays *)
+        validIndices = Pick[Range[Length[pNorm]], UnitStep[pNorm - $MachineEpsilon], 1];
+        pClean = pNorm[[validIndices]];
+        qClean = qNorm[[validIndices]];
+        
+        (* 4. Safety Check: Absolute continuity. If P > 0 but Q = 0, D_KL is infinity *)
+        If[AnyTrue[qClean, # <= $MachineEpsilon &], 
+            Return[Infinity]
+        ];
+        
+        (* 5. Vectorized Calculation *)
+        pClean . Log[base, pClean / qClean]
+    ];
+
+KLDivergence::shlen = "Vectors P and Q must have the same length.";
+
+
+(* Helper for RMT Data Analysis *)
+EmpiricalKLDivergence[data_List, targetPDF_, binSpec_: "FreedmanDiaconis"] := 
+    Module[{binData, binEdges, binCenters, pEmpirical, qTheoretical},
+        
+        (* 1. Generate Histogram Data from experimental/numerical data *)
+        {binEdges, binData} = HistogramList[data, binSpec];
+        
+        (* 2. Calculate P (Empirical Distribution) *)
+        (* Note: binData contains counts. KLDivergence handles normalization internally. *)
+        pEmpirical = N[binData]; 
+        
+        (* 3. Calculate Q (Theoretical Distribution) *)
+        (* Evaluate PDF at bin centers to approximate the discrete probability mass *)
+        binCenters = MovingAverage[binEdges, 2];
+        qTheoretical = Map[targetPDF, binCenters];
+        
+        (* 4. Compute KL Divergence *)
+        KLDivergence[pEmpirical, qTheoretical]
+    ];
 
 
 (* ::Subsubsection::Closed:: *)
