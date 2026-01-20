@@ -445,6 +445,19 @@ TraditionalForm]\)";
 
 
 (* ::Subsection::Closed:: *)
+(*Spin Hamiltonians*)
+
+
+TwoSpinHamiltonian::usage = FormatUsage[
+	"TwoSpinHamiltonian[s_1, s_2, \[Epsilon]_1, \[Epsilon]_2, \[Theta], g] returns the Hamiltonian \
+	matrix for two spins of magnitude ```s_1``` and ```s_2```.
+	The Hamiltonian is given by:
+	H = ```\[Epsilon]_1``` S_1^z + ```\[Epsilon]_2``` (Cos[```\[Theta]```]S_2^z + Sin[```\[Theta]```]S_2^x) + \
+	(```g```/Sqrt(s_1 s_2)) S_1 \[CenterDot] S_2."
+];
+
+
+(* ::Subsection::Closed:: *)
 (*Light-matter systems*)
 
 
@@ -618,7 +631,7 @@ MeanLevelSpacingRatio[eigenvalues_]:=Mean[Min/@Transpose[{#,1/#}]&[Ratios[Differ
 IPR[\[Psi]_] := Total[\[Psi]^4]
 
 
-kthOrderSpacings[spectrum_, k_] := RotateLeft[#, k] - # &[Sort[spectrum, Greater]][[;; -(k+1)]]
+kthOrderSpacings[spectrum_, k_] := RotateLeft[#, k] - # &[Sort[spectrum]][[;; -(k+1)]]
 
 
 SpacingRatios[spectrum_, k_]:=RotateLeft[#, k]/# &[kthOrderSpacings[spectrum, k]][[;; -(k+1)]]
@@ -1398,6 +1411,96 @@ secondSum=1/2*h . (Pauli/@DiagonalMatrix[ConstantArray[3,L]]);
 
 firstSum+secondSum
 ]
+
+
+(* ::Subsection::Closed:: *)
+(*Spin Hamiltonians*)
+
+
+(* Helper function to generate sparse spin operators for arbitrary S *)
+GenerateSpinOperators[s_] := Module[
+    {d, range, diagonal, upperDiag, Sz, Sp, Sm, Sx, Sy, Id},
+    
+    (* Dimension of the Hilbert space for spin s *)
+    d = Round[2 s + 1];
+    
+    (* Validate s is integer or half-integer *)
+    If[Abs[d - (2 s + 1)] > 10^-10, Return[$Failed]];
+
+    (* Basis range from S to -S *)
+    range = Range[s, -s, -1];
+
+    (* S_z: Diagonal matrix with m values *)
+    Sz = SparseArray[Band[{1, 1}] -> range, {d, d}];
+
+    (* S_plus: Elements Sqrt[s(s+1) - m(m+1)] on superdiagonal *)
+    (* Note: range contains 'm'. The element <m+1|S+|m> is at position corresponding to transition m -> m+1 *)
+    (* In matrix indices 1..d, index i is m_i. i-1 is m_i + 1. So it acts on column i to row i-1 *)
+    upperDiag = Table[
+        Sqrt[(s - m) (s + m + 1)], 
+        {m, range[[2 ;;]]} (* Exclude the first m=s as it cannot be raised from *)
+    ];
+    Sp = SparseArray[Band[{1, 2}] -> upperDiag, {d, d}];
+    
+    (* S_minus: Transpose of S_plus *)
+    Sm = Transpose[Sp];
+
+    (* S_x and S_y *)
+    Sx = (Sp + Sm) / 2;
+    (* Sy = (Sp - Sm) / (2 I); Unused here but standard definition *)
+    
+    (* Identity *)
+    Id = IdentityMatrix[d, SparseArray];
+
+    <| "z" -> Sz, "x" -> Sx, "+" -> Sp, "-" -> Sm, "Id" -> Id |>
+];
+
+(* Main Hamiltonian Function *)
+TwoSpinHamiltonian[s1_, s2_, \[Epsilon]1_, \[Epsilon]2_, \[Theta]_, g_] := Module[
+    {
+        ops1, ops2,
+        term1, term2, interaction,
+        H
+    },
+    
+    (* 1. Generate local operators *)
+    ops1 = GenerateSpinOperators[s1];
+    ops2 = GenerateSpinOperators[s2];
+    
+    If[FailureQ[ops1] || FailureQ[ops2], 
+        Return[Message[TwoSpinHamiltonian::invalidSpin, "{s1, s2}"]]
+    ];
+
+    (* 2. Term 1: \[Epsilon]1 * S1_z (x) Id_2 *)
+    term1 = \[Epsilon]1 * KroneckerProduct[ops1["z"], ops2["Id"]];
+
+    (* 3. Term 2: \[Epsilon]2 * Id_1 (x) (Cos[\[Theta]] S2_z + Sin[\[Theta]] S2_x) *)
+    term2 = \[Epsilon]2 * KroneckerProduct[
+        ops1["Id"], 
+        Cos[\[Theta]] * ops2["z"] + Sin[\[Theta]] * ops2["x"]
+    ];
+
+    (* 4. Interaction Term: (g / Sqrt[S1 S2]) * (S1 . S2) *)
+    (* Decomposed as SzSz + 1/2 (S+S- + S-S+) *)
+    interaction = (g / Sqrt[s1 * s2]) * (
+        KroneckerProduct[ops1["z"], ops2["z"]] + 
+        0.5 * (
+            KroneckerProduct[ops1["+"], ops2["-"]] + 
+            KroneckerProduct[ops1["-"], ops2["+"]]
+        )
+    );
+
+    (* 5. Total Sum *)
+    H = term1 + term2 + interaction;
+
+    (* Return SparseArray, optionally chopped if purely numerical *)
+    If[AllTrue[{s1, s2, \[Epsilon]1, \[Epsilon]2, \[Theta], g}, NumericQ],
+        Chop[H],
+        H
+    ]
+];
+
+TwoSpinHamiltonian::invalidSpin = "Spin values `1` must be integers or half-integers.";
 
 
 (* ::Subsection::Closed:: *)
