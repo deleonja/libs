@@ -201,7 +201,7 @@ where NN and NNN are the nearest and next-to-nearest neighbors in the \
 complex plane."
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*RMT*)
 
 
@@ -365,7 +365,7 @@ InitializeVariables::usage = "InitializeVariables[n, L, boundaries, FMmodel] set
 FuzzyMeasurement::usage = "FuzzyMeasurement[\[Psi], \!\(\*SubscriptBox[\(p\), \(fuzzy\)]\)] gives \[ScriptCapitalF](\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Ket\"]\)\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Bra\"]\)) = (1 - \!\(\*SubscriptBox[\(p\), \(fuzzy\)]\))\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Ket\"]\)\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Bra\"]\) + \!\(\*SubscriptBox[\(p\), \(fuzzy\)]\) \!\(\*UnderscriptBox[\(\[Sum]\), \(i\)]\) \!\(\*SubscriptBox[\(S\), \(i\)]\)\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Ket\"]\)\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Bra\"]\)\!\(\*SubsuperscriptBox[\(S\), \(i\), \(\[Dagger]\)]\), where \!\(\*SubscriptBox[\(S\), \(i\)]\) must be initizalized runnning InitializeVariables[n, L, boundaries, FMmodel].";
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Spin chains*)
 
 
@@ -464,6 +464,26 @@ XXZOpenHamiltonian::usage = FormatUsage["XXZOpenHamiltonian[J_{*xy*},J_z,\[Omega
 
 HeisenbergXXXwNoise::usage="HeisenbergXXXwNoise[hz,L] returns the Heisenberg XXX spin 1/2 chain with noise: \!\(\*FormBox[\(H\\\  = \\\ \*FractionBox[\(1\), \(4\)]\\\ \(\*SubsuperscriptBox[\(\[Sum]\), \(i = 1\), \(L - 1\)]\\\ \((\*SubsuperscriptBox[\(\[Sigma]\), \(i\), \(x\)]\\\ \*SubsuperscriptBox[\(\[Sigma]\), \(i + 1\), \(x\)]\\\  + \\\ \*SubsuperscriptBox[\(\[Sigma]\), \(i\), \(y\)]\\\ \*SubsuperscriptBox[\(\[Sigma]\), \(i + 1\), \(y\)]\\\  + \\\ \*SubsuperscriptBox[\(\[Sigma]\), \(i\), \(z\)]\\\ \*SubsuperscriptBox[\(\[Sigma]\), \(i + 1\), \(z\)])\)\)\\\  + \\\ \*FractionBox[\(1\), \(2\)]\\\ \(\*SubsuperscriptBox[\(\[Sum]\), \(i = 1\), \(L\)]\*SubsuperscriptBox[\(h\), \(i\), \(z\)]\\\ \*SubsuperscriptBox[\(\[Sigma]\), \(i\), \(z\)]\\\ \(\((open\\\ boundaries)\)\(.\)\)\)\),
 TraditionalForm]\)";
+
+
+QuantumGameOfLifeHamiltonian::usage = FormatUsage[
+  "QuantumGameOfLifeHamiltonian[L, opts] returns the Hamiltonian for the Quantum Game of Life (QGL) \
+  model for a spin-1/2 chain of length ```L```.
+  H = \[Sum] \!\(\[Sigma]\_i\^x\) (\!\(\[ScriptN]\_i\^2\) + \!\(\[ScriptN]\_i\^3\)).
+  
+  Options:
+  Momentum -> \"All\" (default) | Integer k (0 <= k < L).
+  Parity -> \"None\" (default) | 1 | -1.
+  
+  Note: Parity projection (Inversion Symmetry) is only valid for Momentum sectors k=0 or k=L/2."
+];
+
+
+Momentum::usage = "Momentum is an option for QuantumGameOfLifeHamiltonian. \
+It specifies the translation symmetry sector (integer k).";
+
+Parity::usage = "Parity is an option for QuantumGameOfLifeHamiltonian. \
+It specifies the inversion symmetry sector (+1 or -1).";
 
 
 (* ::Subsection::Closed:: *)
@@ -714,7 +734,7 @@ ComplexSpacingRatios[eigs_List?VectorQ] := Module[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*RMT*)
 
 
@@ -1495,6 +1515,130 @@ secondSum=1/2*h . (Pauli/@DiagonalMatrix[ConstantArray[3,L]]);
 
 firstSum+secondSum
 ]
+
+
+(* Quantum Game of Life *)
+
+Options[QuantumGameOfLifeHamiltonian] = {
+    Momentum -> "All",
+    Parity -> "None" (* "None", 1, or -1 *)
+};
+
+QuantumGameOfLifeHamiltonian[L_Integer, OptionsPattern[]] := Module[
+    {
+        k = OptionValue[Momentum],
+        p = OptionValue[Parity],
+        dim = 2^L,
+        Hfull,
+        rules,
+        basisVectors,
+        P (* Projection Matrix *)
+    },
+
+    (* 1. VALIDACIONES *)
+    If[k =!= "All" && !IntegerQ[k], Return[Message[QuantumGameOfLifeHamiltonian::invMom, k]; $Failed]];
+    If[p =!= "None" && !MemberQ[{1, -1}, p], Return[Message[QuantumGameOfLifeHamiltonian::invPar, p]; $Failed]];
+    
+    If[IntegerQ[k] && p =!= "None",
+        If[k != 0 && k != L/2,
+            Message[QuantumGameOfLifeHamiltonian::parityWarning, k];
+        ]
+    ];
+
+    (* 2. CONSTRUCCI\[CapitalOAcute]N DEL HAMILTONIANO COMPLETO (Bitwise) *)
+    rules = Flatten @ Table[
+        Module[{n = state, flips = {}, neighborsSum},
+            Do[
+                neighborsSum = 
+                    BitGet[n, Mod[i - 2, L]] + 
+                    BitGet[n, Mod[i - 1, L]] + 
+                    BitGet[n, Mod[i + 1, L]] + 
+                    BitGet[n, Mod[i + 2, L]];
+                
+                If[neighborsSum == 2 || neighborsSum == 3,
+                    AppendTo[flips, {n + 1, BitXor[n, 2^i] + 1} -> 1.0]
+                ],
+                {i, 0, L - 1}
+            ];
+            flips
+        ],
+        {state, 0, dim - 1}
+    ];
+    
+    Hfull = SparseArray[rules, {dim, dim}];
+
+    (* 3. RETORNO SI NO HAY SIMETR\[CapitalIAcute]AS *)
+    If[k === "All", Return[Hfull]];
+
+    (* 4. CONSTRUCCI\[CapitalOAcute]N DE LA BASE DE MOMENTO k *)
+    basisVectors = Module[{necklaces, kBasis},
+        (* Agrupar por collares *)
+        necklaces = GroupBy[Range[0, dim - 1], 
+            Function[x, Min[NestList[RotateLeftBits[#, L]&, x, L-1]]]
+        ];
+        
+        kBasis = Reap[
+            Do[
+                (* AQU\[CapitalIAcute] ESTABA EL ERROR: Elimin\[EAcute] 'T_k' y limpi\[EAcute] variables *)
+                Module[{orbit = members, R, vec},
+                    R = Length[orbit];
+                    
+                    (* Condici\[OAcute]n de compatibilidad de momento *)
+                    If[Divisible[k * R, L],
+                        vec = SparseArray[{}, dim];
+                        Do[
+                            (* Construcci\[OAcute]n del vector de Bloch *)
+                            vec = vec + SparseArray[{orbit[[j+1]] + 1} -> Exp[-I * 2. * Pi * k * j / L], dim];
+                        , {j, 0, R-1}];
+                        
+                        Sow[Normalize[vec]];
+                    ]
+                ],
+                {members, Values[necklaces]}
+            ]
+        ][[2]];
+        
+        If[kBasis === {}, Return[SparseArray[{}, {0, 0}]]];
+        Flatten[kBasis, 1]
+    ];
+
+    (* 5. PROYECCI\[CapitalOAcute]N DE PARIDAD *)
+    If[p =!= "None",
+        basisVectors = Reap[
+            Scan[Function[v,
+                Module[{vInv, vProj},
+                    vInv = SparseArray[
+                        Thread[(ReverseBits[# - 1, L] + 1 & /@ v["NonzeroPositions"][[All, 1]]) -> v["NonzeroValues"]], 
+                        dim
+                    ];
+                    
+                    vProj = v + p * vInv;
+                    
+                    If[Norm[vProj] > 10^-10, Sow[Normalize[vProj]]];
+                ]
+            ], basisVectors]
+        ][[2]];
+        
+        If[basisVectors =!= {},
+             (* Eliminaci\[OAcute]n de duplicados num\[EAcute]ricos *)
+             basisVectors = DeleteDuplicates[Flatten[basisVectors, 1], (Norm[#1 - #2] < 10^-8 || Norm[#1 + #2] < 10^-8) &];
+        ,
+             Return[SparseArray[{}, {0, 0}]]
+        ];
+    ];
+
+    (* 6. CONSTRUCCI\[CapitalOAcute]N FINAL *)
+    P = Transpose[SparseArray[basisVectors]];
+    Chop[ConjugateTranspose[P] . Hfull . P]
+];
+
+(* Mensajes y Funciones Auxiliares *)
+QuantumGameOfLifeHamiltonian::invMom = "Momentum `1` must be \"All\" or an integer 0 <= k < L.";
+QuantumGameOfLifeHamiltonian::invPar = "Parity `1` must be \"None\", 1, or -1.";
+QuantumGameOfLifeHamiltonian::parityWarning = "Warning: Inversion Parity is generally not a good quantum number for momentum k=`1` (unless k=0 or k=L/2).";
+
+RotateLeftBits[n_, L_] := BitOr[BitShiftLeft[BitAnd[n, 2^(L-1)-1], 1], BitShiftRight[n, L-1]];
+ReverseBits[n_, L_] := FromDigits[Reverse[IntegerDigits[n, 2, L]], 2];
 
 
 (* ::Subsection::Closed:: *)
