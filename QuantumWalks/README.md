@@ -66,7 +66,7 @@ This project is licensed under the **CC BY-NC-SA 4.0** (Creative Commons Attribu
 ### 🎓 How to Cite
 If you use **QuantumWalks** for research or published results, please cite this repository (or the associated paper) as follows:
 
-> **de Leon, J. A. (2026).** *QuantumWalks: A Wolfram Language Package for Discrete Time Quantum Walks and Billiards*. GitHub Repository. https://github.com/deleonja/libs/QuantumWalks
+> **de Leon, J. A. (2026).** *QuantumWalks: A Wolfram Language Package for Discrete Time Quantum Walks and Billiards*. GitHub Repository. https://github.com/deleonja/libs/tree/main/QuantumWalks
 
 BibTeX entry:
 ```bibtex
@@ -76,5 +76,5 @@ BibTeX entry:
   year = {2026},
   publisher = {GitHub},
   journal = {GitHub repository},
-  howpublished = {\url{[https://github.com/deleonja/libs/QuantumWalks](https://github.com/deleonja/libs/QuantumWalks)}}
+  howpublished = {\url{[https://github.com/deleonja/libs/tree/main/QuantumWalks](https://github.com/deleonja/libs/tree/main/QuantumWalks)}}
 }
