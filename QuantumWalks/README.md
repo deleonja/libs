@@ -1,4 +1,4 @@
-# QuantumWalks
+# QuantumWalks: a WL package for Discrete-Time quantum walks
 
 **QuantumWalks** is a Wolfram Language (Mathematica) package designed for the efficient simulation of Discrete Time Quantum Walks (DTQW).
 
@@ -66,13 +66,13 @@ This project is licensed under the **CC BY-NC-SA 4.0** (Creative Commons Attribu
 ### 🎓 How to Cite
 If you use **QuantumWalks** for research or published results, please cite this repository (or the associated paper) as follows:
 
-> **de Leon, J. A. (2026).** *QuantumWalks: A Wolfram Language Package for Discrete Time Quantum Walks and Billiards*. GitHub Repository. https://github.com/deleonja/libs/tree/main/QuantumWalks
+> **de Leon, J. A. (2026).** *QuantumWalks: a WL package for Discrete-Time quantum walks*. GitHub Repository. https://github.com/deleonja/libs/tree/main/QuantumWalks
 
 BibTeX entry:
 ```bibtex
 @misc{QuantumWalksJAdeLeon,
   author = {de Leon, Jose Alfredo},
-  title = {QuantumWalks: A Wolfram Language Package for Discrete Time Quantum Walks},
+  title = {QuantumWalks: a WL package for Discrete-Time quantum walks},
   year = {2026},
   publisher = {GitHub},
   journal = {GitHub repository},
