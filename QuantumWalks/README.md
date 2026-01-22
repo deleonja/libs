@@ -50,9 +50,9 @@ QuantumWalks/
 
 ## ⚠️ Technical Notes
 
-* [cite_start]**2D Computational Basis:** The Hilbert space for billiards is organized as $|m, n, s\rangle$, where $(m,n)$ are coordinates and $s \in \{\uparrow, \downarrow\}$[cite: 245, 246, 247].
-* [cite_start]**Boundaries:** The `BuildGridShiftOperators` function automatically handles boundary conditions (perfect reflection) when a node has no neighbor in the direction of movement[cite: 248, 250].
-* [cite_start]**Efficiency:** For large systems, avoid displaying the generated operators using `MatrixForm`, as they are large sparse arrays[cite: 271].
+* **2D Computational Basis:** The Hilbert space for billiards is organized as $|m, n, s\rangle$, where $(m,n)$ are coordinates and $s \in \{\uparrow, \downarrow\}$.
+* **Boundaries:** The `BuildGridShiftOperators` function automatically handles boundary conditions (perfect reflection) when a node has no neighbor in the direction of movement.
+* **Efficiency:** For large systems, avoid displaying the generated operators using `MatrixForm`, as they are large sparse arrays.
 
 ## 📄 License
 
