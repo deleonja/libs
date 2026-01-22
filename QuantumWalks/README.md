@@ -54,6 +54,27 @@ QuantumWalks/
 * **Boundaries:** The `BuildGridShiftOperators` function automatically handles boundary conditions (perfect reflection) when a node has no neighbor in the direction of movement.
 * **Efficiency:** For large systems, avoid displaying the generated operators using `MatrixForm`, as they are large sparse arrays.
 
-## 📄 License
+## 📜 License & Citation
 
-[Insert your preferred license here, e.g., MIT, GPL]
+This project is licensed under the **CC BY-NC-SA 4.0** (Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International).
+
+### Use and Redistribution
+* **You can** modify and redistribute this code for non-commercial purposes.
+* **You must** give appropriate credit to the original author.
+* **You cannot** use this package for commercial purposes (profit-making activities).
+
+### 🎓 How to Cite
+If you use **QuantumWalks** for research or published results, please cite this repository (or the associated paper) as follows:
+
+> **de Leon, J. A. (2026).** *QuantumWalks: A Wolfram Language Package for Discrete Time Quantum Walks and Billiards*. GitHub Repository. https://github.com/deleonja/libs/QuantumWalks
+
+BibTeX entry:
+```bibtex
+@misc{QuantumWalksJAdeLeon,
+  author = {de Leon, Jose Alfredo},
+  title = {QuantumWalks: A Wolfram Language Package for Discrete Time Quantum Walks},
+  year = {2026},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{[https://github.com/deleonja/libs/QuantumWalks](https://github.com/deleonja/libs/QuantumWalks)}}
+}
