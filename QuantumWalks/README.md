@@ -34,6 +34,7 @@ To load the full package:
 
 ```wolfram
 << QuantumWalks`
+```
 
 ## 📂 Package Structure
 
