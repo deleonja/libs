@@ -46,6 +46,7 @@ QuantumWalks/
 │   ├── Common.wl           # Base 2D logic (BuildGridShiftOperators)
 │   └── Bunimovich.wl       # Specific Bunimovich Stadium geometry
 └── DQWL.wl                 # 1D Logic (Shift, Coin, DTQW, Parrondo)
+```
 
 ## ⚠️ Technical Notes
 
