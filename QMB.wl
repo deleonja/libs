@@ -162,6 +162,16 @@ SU2Rotation::usage = FormatUsage[
 coherentstate::usage = "coherentstate[state,L] Generates a spin coherent state of L spins given a general single qubit state";
 
 
+Quiet[
+SU2Rotation::usage = FormatUsage[
+	"SU2Rotation[{\[Theta]_a,\[Phi]_a},\[Theta]_R] devuelve la matriz de rotaci\[OAcute]n SU(2) \
+	correspondiente a una rotaci\[OAcute]n de \[AAcute]ngulo ```\[Theta]_R``` alrededor del eje definido por las coordenadas \
+	esf\[EAcute]ricas ```(\[Theta]_a,\[Phi]_a)```.\n" <>
+	"SU2Rotation[{nx,ny,nz},\[Theta]_R] usa un vector cartesiano como eje."
+];
+, {FrontEndObject::notavail, First::normal}];
+
+
 (* ::Subsection::Closed:: *)
 (*Quantum chaos*)
 
@@ -550,7 +560,7 @@ Begin["`Private`"];
 ClearAll[SigmaPlusSigmaMinus, SigmaMinusSigmaPlus];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*General quantum mechanics*)
 
 
@@ -648,9 +658,6 @@ Module[{\[Rho]tilde, R, \[Lambda]},
 Qubit[\[Theta]_,\[Phi]_] := {Cos[\[Theta]/2],Exp[I \[Phi]]Sin[\[Theta]/2]}
 
 
-\[Alpha]
-
-
 coherentstate[state_,L_]:=Flatten[KroneckerProduct@@Table[state,L]]
 
 
@@ -661,6 +668,33 @@ SU2Rotation[sphCoord_List?VectorQ,\[Theta]_]/; Length[sphCoord]==2 :=
 
 SU2Rotation[n_List?VectorQ,\[Theta]_]/; Length[n]==3 && Chop[Norm[n]-1]==0 :=
 	MatrixExp[-I * \[Theta]/2 * n . (Pauli /@ Range[3])]
+
+
+SU2Rotation[sphCoord_List, \[Theta]R_] /; Length[sphCoord] == 2 := 
+    Module[{nx, ny, nz, c, s, phase},
+        (* Conversi\[OAcute]n Esf\[EAcute]ricas -> Cartesianas (Radio = 1) *)
+        {nx, ny, nz} = {Sin[sphCoord[[1]]] Cos[sphCoord[[2]]], Sin[sphCoord[[1]]] Sin[sphCoord[[2]]], Cos[sphCoord[[1]]]};
+        
+        (* Pre-c\[AAcute]lculo de t\[EAcute]rminos trigonom\[EAcute]tricos *)
+        c = Cos[\[Theta]R / 2];
+        s = Sin[\[Theta]R / 2];
+        
+        (* Construcci\[OAcute]n directa de la matriz (Evita MatrixExp para velocidad) *)
+        (* n . sigma = {{nz, nx - i ny}, {nx + i ny, -nz}} *)
+        {{c - I * s * nz, -I * s * (nx - I * ny)}, 
+         {-I * s * (nx + I * ny), c + I * s * nz}}
+    ]
+
+(* Soporte para vector Cartesiano normalizado *)
+SU2Rotation[n_List, \[Theta]R_] /; Length[n] == 3 := 
+    Module[{c, s, nx, ny, nz},
+        {nx, ny, nz} = Normalize[n]; (* Asegurar normalizaci\[OAcute]n *)
+        c = Cos[\[Theta]R / 2];
+        s = Sin[\[Theta]R / 2];
+        
+        {{c - I * s * nz, -I * s * (nx - I * ny)}, 
+         {-I * s * (nx + I * ny), c + I * s * nz}}
+    ]
 
 
 (* ::Subsection::Closed:: *)
