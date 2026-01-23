@@ -25,13 +25,30 @@ ClearAll[
 
 
 Shift::usage = FormatUsage["Shift[t] yields a sparse array of the Shift operator for a 1D DTQW in an infinite line at time ```t```."];
-Coin::usage = FormatUsage["Coin[t] yields a sparse array of the Haddamard Coin operator for a 1D DTQW in an infinite line at time ```t```.
-Coin[t,C] yields a sparse array of the Coin operator ```C``` for a 1D DTQW in an infinite line at time ```t```."];
+
+Coin::usage = FormatUsage[
+"Coin[t] yields a sparse array of the Haddamard Coin operator for a 1D DTQW in an \
+	infinite line at time ```t```.
+Coin[t,C] yields a sparse array of the Coin operator ```C``` for a 1D DTQW in an \
+	infinite line at time ```t```.
+Coin[\[Alpha], dim] yields a global SU(2) coin operator (rotation \[Alpha]) for a position space \
+	of size ```dim``` (Identity \[CircleTimes] C).
+Coin[matrix, dim] yields a global coin operator using ```matrix``` for a position \
+	space of size ```dim``` (Identity \[CircleTimes] ```matrix```)."
+];
+
+Coin::intarg = "Argument `1` must be an integer (time or dimension).";
+Coin::matarg = "Argument `1` must be a matrix (coin argument).";
+Coin::invArg = "Invalid arguments for Coin.";
+
 DTQWStep::usage = FormatUsage["DTQWStep[t] yields the unitary matrix of a Haddamard 1D DTQW in an infinite line at time ```t```.
 DTQWStep[t,C] yields the unitary matrix of a 1D DTQW in an infinite line, using coin ```C```, at time ```t```."];
+
 DTQW::usage = FormatUsage["DTQW[\[Psi]_0,t] yields the state at time ```t``` of a 1D Haddamard DTQW in an infinite line with initial state ```\[Psi]_0```.
 DTQW[\[Psi]_0,t,C] yields the state at time ```t``` of a 1D DTQW in an infinite line, with coin ```C```, with initial state ```\[Psi]_0```."];
+
 PositionProbabilityDistribution::usage = FormatUsage["PositionProbabilityDistribution[\[Psi],t] yields the position probability distribution of the state ```\[Psi]``` of a 1D DTQW at time ```t```."];
+
 ExpValPosition::usage = FormatUsage["ExpValPosition[\[Psi],t] returns the expected value of position for the state \[Psi] of a 1D DTQW at time ```t```."];
 
 
@@ -60,7 +77,7 @@ CriticalAngle::usage = FormatUsage[
 (*Routine definitions*)
 
 
-Begin["`Private`"]
+Begin["`DQWL`Private`"];
 
 
 (* ::Subsection::Closed:: *)
@@ -84,30 +101,48 @@ Shift[t_] := Module[{},
 Shift::intarg = "Argument `1` must be an integer (time).";
 
 
-Coin::intarg = "Argument `1` must be an integer (time).";
-Coin::matarg = "Argument `1` must be a matrix (coin argument).";
-
-Coin[t_] := Module[{},
-  (* Check if t is an integer *)
-  If[! IntegerQ[t], 
-   Return[Message[Coin::intarg, t]]];
-  
-  (* Proceed with the original implementation *)
+Coin[t_Integer] := 
   KroneckerProduct[IdentityMatrix[2 t + 1, SparseArray], SparseArray[FourierMatrix[2]]]
-]
 
-Coin[t_, c_] := Module[{},
-  (* Check if t is an integer *)
-  If[! IntegerQ[t], 
-   Return[Message[Coin::intarg, t]]];
-  
-  (* Check if c is a matrix *)
-  If[! MatrixQ[c], 
-   Return[Message[Coin::matarg, c]]];
-  
-  (* Proceed with the original implementation *)
+(* Caso 1D: Coin Custom dependiente del tiempo *)
+Coin[t_Integer, c_?MatrixQ] := 
   KroneckerProduct[IdentityMatrix[2 t + 1, SparseArray], c]
-]
+
+(* Caso de dimensi\[OAcute]n arbitraria: *)
+Coin[\[Alpha]_?NumericQ, dim_Integer] := 
+    KroneckerProduct[
+        IdentityMatrix[dim, SparseArray], 
+        SparseArray[{{Cos[\[Alpha]], Sin[\[Alpha]]}, {-Sin[\[Alpha]], Cos[\[Alpha]]}}]
+    ];
+
+(* Caso de dimensi\[OAcute]n arbitraria: *)
+Coin[coinMatrix_?MatrixQ, dim_Integer] := 
+    KroneckerProduct[
+        IdentityMatrix[dim, SparseArray], 
+        SparseArray[coinMatrix]
+    ];
+    
+(* === VALIDACI\[CapitalOAcute]N Y MENSAJES DE ERROR (Fallbacks) === *)
+
+(* Error: El argumento temporal no es entero *)
+Coin[t_] /; !IntegerQ[t] := 
+    (Message[Coin::intarg, t]; $Failed);
+
+(* Error: En el caso 1D con moneda custom, el segundo argumento no es matriz *)
+Coin[t_Integer, c_] /; !MatrixQ[c] := 
+    (Message[Coin::matarg, c]; $Failed);
+
+(* Error: En el caso 2D (Rotaci\[OAcute]n o Matriz), la dimensi\[OAcute]n no es entera *)
+Coin[arg_, dim_] /; (NumericQ[arg] || MatrixQ[arg]) && !IntegerQ[dim] := 
+    (Message[Coin::intarg, dim]; $Failed);
+
+(* Error: Matriz de dimensi\[OAcute]n incorrecta en caso 2D *)
+Coin[m_?MatrixQ, dim_Integer] /; Dimensions[m] =!= {2, 2} := 
+    (Message[Coin::invArg, "La matriz de moneda debe ser 2x2"]; $Failed);
+
+(* Catch-all: Cualquier otra combinaci\[OAcute]n inv\[AAcute]lida *)
+Coin[___] := (Message[Coin::invArg, "Arguments not recognized. Check the usage \
+	function with ?Coin"]; $Failed);
 
 
 DTQWStep[t_] := Shift[t] . Coin[t]
