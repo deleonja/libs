@@ -1,64 +1,58 @@
 (* ::Package:: *)
 
-BeginPackage["QuantumWalks`Billiards`Common`"];
+BeginPackage["QuantumWalks`"];
 
-(* S\[IAcute]mbolos exportados gen\[EAcute]ricos *)
-BuildGridShiftOperators::usage = "BuildGridShiftOperators[gridData] construye los operadores de desplazamiento (Wm, Wn) para cualquier geometr\[IAcute]a de rejilla 2D definida en gridData.";
-GenericSU2Coin::usage = "GenericSU2Coin[\[Alpha], dim] devuelve el operador moneda SU(2) extendido al espacio de Hilbert de dimensi\[OAcute]n dim.";
+BuildShiftOperators::usage = "BuildShiftOperators[gridData] construye los operadores de \
+desplazamiento (Wn, Wm) usando la l\[OAcute]gica com\[UAcute]n de rejilla.";
 
-Begin["`Private`"];
+Begin["`Billiards`Common`Private`"];
 
-(* --- Construcci\[OAcute]n de Operadores (Gen\[EAcute]rico para cualquier Rejilla) --- *)
-BuildGridShiftOperators[gridData_Association] := Module[
+(* --- Construcci\[OAcute]n de Operadores (Gen\[EAcute]rico para cualquier geometr\[IAcute]a) --- *)
+BuildShiftOperators[gridData_Association] := Module[
     {
         coords, map, dim,
         indicesUp, indicesDown,
         destUp, destDown,
-        rulesWm, rulesWn  (* CORREGIDO: Eliminados guiones bajos *)
+        rulesSx, rulesSy  
     },
     
     coords = gridData["Coords"];
     map = gridData["Mapping"];
     dim = gridData["Dimension"];
 
-    (* Estructura del Espacio de Hilbert: \[CapitalIAcute]ndice = 2*(map[{m,n}] - 1) + spin + 1 *)
-    indicesUp = 2 * (Range[dim] - 1) + 1;   (* |m,n, U> *)
-    indicesDown = indicesUp + 1;            (* |m,n, D> *)
+    (* Estructura del Espacio de Hilbert: \[CapitalIAcute]ndice = 2*(map[{x, y}] - 1) + spin + 1 *)
+    indicesUp = 2 * (Range[dim] - 1) + 1;   (* |x,y,0> *)
+    indicesDown = indicesUp + 1;            (* |x,y,1> *)
 
-    (* --- Wm (Horizontal) --- *)
+    (* --- Sx (Horizontal conditional shift) --- *)
     destUp = map /@ (coords + ConstantArray[{1, 0}, dim]);
     destDown = map /@ (coords - ConstantArray[{1, 0}, dim]);
-    
-    rulesWm = Flatten[{
-        (* Spin UP: Si choca (Missing), refleja. Si no, avanza. *)
-        MapThread[If[MissingQ[#2], {#1, #1 + 1} -> 1, {#1, 2*(#2 - 1) + 1} -> 1] &, {indicesUp, destUp}],
+
+    rulesSx = Flatten[{
+        (* Spin UP: Si se sali\[OAcute] del grid (Missing), refleja. Si no, avanza. *)
+        MapThread[If[MissingQ[#2], {#1 + 1, #1} -> 1, {2*(#2 - 1) + 1, #1} -> 1] &, {indicesUp, destUp}],
         (* Spin DOWN *)
-        MapThread[If[MissingQ[#2], {#1, #1 - 1} -> 1, {#1, 2*(#2 - 1) + 2} -> 1] &, {indicesDown, destDown}]
+        MapThread[If[MissingQ[#2], {#1 - 1, #1} -> 1, {2*(#2 - 1) + 2, #1} -> 1] &, {indicesDown, destDown}]
     }];
 
-    (* --- Wn (Vertical) --- *)
+
+    (* --- Sy (Vertical) --- *)
     destUp = map /@ (coords + ConstantArray[{0, 1}, dim]);
     destDown = map /@ (coords - ConstantArray[{0, 1}, dim]);
 
-    rulesWn = Flatten[{
+    rulesSy = Flatten[{
         (* Spin UP *)
-        MapThread[If[MissingQ[#2], {#1, #1 + 1} -> 1, {#1, 2*(#2 - 1) + 1} -> 1] &, {indicesUp, destUp}],
+        MapThread[If[MissingQ[#2], {#1 + 1, #1} -> 1, {2*(#2 - 1) + 1, #1} -> 1] &, {indicesUp, destUp}],
         (* Spin DOWN *)
-        MapThread[If[MissingQ[#2], {#1, #1 - 1} -> 1, {#1, 2*(#2 - 1) + 2} -> 1] &, {indicesDown, destDown}]
+        MapThread[If[MissingQ[#2], {#1 - 1, #1} -> 1, {2*(#2 - 1) + 2, #1} -> 1] &, {indicesDown, destDown}]
     }];
 
     {
-        SparseArray[rulesWm, {2 dim, 2 dim}],
-        SparseArray[rulesWn, {2 dim, 2 dim}]
+        SparseArray[rulesSx, {2 dim, 2 dim}],
+        SparseArray[rulesSy, {2 dim, 2 dim}]
     }
-]
 
-(* --- Moneda Gen\[EAcute]rica --- *)
-GenericSU2Coin[\[Alpha]_, gridDim_Integer] := 
-    KroneckerProduct[
-        IdentityMatrix[gridDim, SparseArray], 
-        SparseArray[{{Cos[\[Alpha]], Sin[\[Alpha]]}, {-Sin[\[Alpha]], Cos[\[Alpha]]}}]
-    ]
+]
 
 End[];
 EndPackage[];
