@@ -1,24 +1,22 @@
 (* ::Package:: *)
 
-(* ::Package:: *)
+BeginPackage["QuantumWalks`"];
 
-(* Cargamos Common para tener acceso a BuildGridShiftOperators y GenericSU2Coin *)
-BeginPackage["QuantumWalks`Billiards`Bunimovich`", {"QuantumWalks`Billiards`Common`"}];
+GenerateStadiumBasis::usage = "GenerateStadiumBasis[xc, nu] genera la base de posiciones\
+y la asociaci\[OAcute]n de b\[UAcute]squeda para el estadio.";
 
-(* S\[IAcute]mbolos espec\[IAcute]ficos del Estadio *)
-GenerateStadiumBasis::usage = "GenerateStadiumBasis[xc, nu] genera la base de posiciones y la asociaci\[OAcute]n de b\[UAcute]squeda para el estadio.";
+GenerateFullStadiumBasis::usage = "GenerateFullStadiumBasis[L, R] genera la base de coordenadas \
+y la asociaci\[OAcute]n de mapeo para el billar de estadio completo (Full Stadium). \
+L: Semilongitud de la parte recta. \
+R: Radio de los semic\[IAcute]rculos.";
 
-(* Wrappers *)
-BuildShiftOperators::usage = "Alias de BuildGridShiftOperators para el contexto Bunimovich.";
-StadiumCoin::usage = "Alias de GenericSU2Coin para el contexto Bunimovich.";
+Begin["`Billiards`Bunimovich`Private`"];
 
-Begin["`Private`"];
+(* --- 1. Geometr\[IAcute]a del Estadio de Bunimovich desimetrizado (1/4) --- *)
 
-(* --- 1. Geometr\[IAcute]a Espec\[IAcute]fica del Estadio --- *)
-
-(* Eqs A7 y A8 del paper *)
-BoundaryF[m_, mc_, nu_] := If[m < mc, nu, Round[Sqrt[nu^2 - (m - mc)^2]]];
-BoundaryW[n_, mc_, nu_] := mc + Round[Sqrt[nu^2 - n^2]];
+(* Eqs A7 y A8 del paper de Alonso-Lobo (2025) *)
+BoundaryY[m_, mc_, nu_] := If[m <= mc, nu, Round[Sqrt[nu^2 - (m - mc)^2]]];
+BoundaryX[n_, mc_, nu_] := mc + Round[Sqrt[nu^2 - n^2]];
 
 GenerateStadiumBasis[xc_Integer, nu_Integer] := Module[
     {coords, stateToIndex},
@@ -28,8 +26,8 @@ GenerateStadiumBasis[xc_Integer, nu_Integer] := Module[
         Flatten[Table[{m, n}, {m, 0, 2 xc + nu}, {n, 0, nu}], 1],
         Function[pos, 
             And[
-                0 <= pos[[1]] <= BoundaryW[pos[[2]], xc, nu],
-                0 <= pos[[2]] <= BoundaryF[pos[[1]], xc, nu]
+                0 <= pos[[1]] <= BoundaryX[pos[[2]], xc, nu],
+                0 <= pos[[2]] <= BoundaryY[pos[[1]], xc, nu]
             ]
         ]
     ];
@@ -46,14 +44,53 @@ GenerateStadiumBasis[xc_Integer, nu_Integer] := Module[
     |>
 ]
 
-(* --- 2. Enlaces a Common (Wrappers) --- *)
+(* --- 2. Geometr\[IAcute]a del Estadio Completo (Full Stadium) --- *)
 
-(* Simplemente pasamos los datos a la funci\[OAcute]n gen\[EAcute]rica optimizada de Common *)
-(* Nota: gridData_ es correcto aqu\[IAcute] porque es un patr\[OAcute]n de argumento *)
-BuildShiftOperators[gridData_] := BuildGridShiftOperators[gridData];
+GenerateFullStadiumBasis[L_Integer, R_Integer] := Module[
+    {
+        coords, 
+        stateToIndex,
+        validRegionQ
+    },
 
-(* Lo mismo para la moneda *)
-StadiumCoin[\[Alpha]_, dim_] := GenericSU2Coin[\[Alpha], dim];
+    (* L\[OAcute]gica basada en Round para consistencia visual y topol\[OAcute]gica *)
+    (* Esto asegura que el ancho del estadio en 'y' coincida con la definici\[OAcute]n de Bunimovich.wl original *)
+    validRegionQ = Function[{x, y},
+        Module[{dx = Abs[x], dy = Abs[y]},
+            If[dx <= L,
+                dy <= R, (* Regi\[OAcute]n Rectangular *)
+                (* Regi\[OAcute]n Semicircular: Usamos Round para determinar la extensi\[OAcute]n en X dada Y *)
+                (* Esto evita que el punto (L+R, 0) quede aislado visualmente *)
+                dx <= L + Round[Sqrt[Max[0, R^2 - dy^2]]] 
+            ]
+        ]
+    ];
+
+    (* Generaci\[OAcute]n de coordenadas: Iteramos sobre el Bounding Box y seleccionamos *)
+    (* El rango de Y es estricto [-R, R] para evitar Ra\[IAcute]ces negativas *)
+    coords = Select[
+        Flatten[
+            Table[
+                {x, y}, 
+                {x, -L - R, L + R}, 
+                {y, -R, R}
+            ], 
+            1
+        ],
+        Apply[validRegionQ]
+    ];
+
+    (* Mapeo O(1) *)
+    stateToIndex = AssociationThread[coords -> Range[Length[coords]]];
+
+    <|
+        "Coords" -> coords,
+        "Mapping" -> stateToIndex,
+        "Dimension" -> Length[coords],
+        "Params" -> <|"L" -> L, "R" -> R, "Symmetry" -> "None"|>,
+        "Type" -> "BunimovichFull"
+    |>
+]
 
 End[];
 EndPackage[];
