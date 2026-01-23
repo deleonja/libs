@@ -1,4 +1,4 @@
-# QuantumWalks: a WL package for Discrete-Time quantum walks
+# QuantumWalks: a WL package for Discrete-Time Quantum Walks
 
 **QuantumWalks** is a Wolfram Language (Mathematica) package designed for the efficient simulation of Discrete Time Quantum Walks (DTQW).
 
@@ -36,22 +36,10 @@ To load the full package:
 << QuantumWalks`
 ```
 
-## 📂 Package Structure
-
-```text
-QuantumWalks/
-├── Kernel/
-│   └── init.m              # Initialization and dependency loader
-├── Billiards/
-│   ├── Common.wl           # Base 2D logic (BuildGridShiftOperators)
-│   └── Bunimovich.wl       # Specific Bunimovich Stadium geometry
-└── DQWL.wl                 # 1D Logic (Shift, Coin, DTQW, Parrondo)
-```
-
 ## ⚠️ Technical Notes
 
 * **2D Computational Basis:** The Hilbert space for billiards is organized as $|m, n, s\rangle$, where $(m,n)$ are coordinates and $s \in \{\uparrow, \downarrow\}$.
-* **Boundaries:** The `BuildGridShiftOperators` function automatically handles boundary conditions (perfect reflection) when a node has no neighbor in the direction of movement.
+* **Boundaries:** The `BuildShiftOperators` function automatically handles boundary conditions (perfect reflection) when a node has no neighbor in the direction of movement.
 * **Efficiency:** For large systems, avoid displaying the generated operators using `MatrixForm`, as they are large sparse arrays.
 
 ## 📜 License & Citation
