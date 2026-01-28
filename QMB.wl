@@ -27,10 +27,6 @@ BeginPackage["QMB`"];
 
 
 (* ::Text:: *)
-(*Hay cosas en los cuadernos del caometro donde hay rutinas para la secci\[OAcute]n de quantum chaos, como el unfolding etc*)
-
-
-(* ::Text:: *)
 (*Hay cosas de Heisenberg meets fuzzy que tambi\[EAcute]n tengo que pasar para ac\[AAcute]*)
 
 
@@ -175,7 +171,7 @@ SU2Rotation::usage = FormatUsage[
 , {FrontEndObject::notavail, First::normal}];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Quantum chaos*)
 
 
@@ -713,7 +709,7 @@ SU2Rotation[n_List, \[Theta]R_] /; Length[n] == 3 :=
     ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Quantum chaos*)
 
 
