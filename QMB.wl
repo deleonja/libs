@@ -175,7 +175,7 @@ SU2Rotation::usage = FormatUsage[
 , {FrontEndObject::notavail, First::normal}];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Quantum chaos*)
 
 
@@ -201,7 +201,20 @@ SpacingRatios::usage = FormatUsage[
 
 
 Unfold::usage = FormatUsage[
-	"Unfold[spectrum] returns the unfolded spectrum."
+  "Unfold[spectrum] returns an Association containing the unfolded ```spectrum``` and \
+smoothed density functions calculated via Kernel Density Estimation (KDE).
+Unfold[spectrum, opts] allows specifying options for the kernel distribution.
+
+**Output Association Keys**
+* \"UnfoldedLevels\": List of unfolded eigenvalues (mean spacing = 1).
+* \"SmoothCDF\": Pure function representing the cumulative mean level number N(E).
+* \"SmoothPDF\": Pure function representing the mean level density \[Rho](E).
+* \"Bandwidth\": The bandwidth parameter used in the KDE.
+* \"OriginalLevels\": The sorted input spectrum.
+
+**Options**
+* \"Bandwidth\": (Default: Automatic) Controls the smoothing scale. Set a Real number to manually tune the separation between secular variation and fluctuations.
+* \"Kernel\": (Default: \"Gaussian\") Specifies the kernel function type (e.g., \"Epanechnikov\", \"Rectangular\")."
 ];
 
 
@@ -378,7 +391,7 @@ InitializeVariables::usage = "InitializeVariables[n, L, boundaries, FMmodel] set
 FuzzyMeasurement::usage = "FuzzyMeasurement[\[Psi], \!\(\*SubscriptBox[\(p\), \(fuzzy\)]\)] gives \[ScriptCapitalF](\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Ket\"]\)\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Bra\"]\)) = (1 - \!\(\*SubscriptBox[\(p\), \(fuzzy\)]\))\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Ket\"]\)\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Bra\"]\) + \!\(\*SubscriptBox[\(p\), \(fuzzy\)]\) \!\(\*UnderscriptBox[\(\[Sum]\), \(i\)]\) \!\(\*SubscriptBox[\(S\), \(i\)]\)\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Ket\"]\)\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Bra\"]\)\!\(\*SubsuperscriptBox[\(S\), \(i\), \(\[Dagger]\)]\), where \!\(\*SubscriptBox[\(S\), \(i\)]\) must be initizalized runnning InitializeVariables[n, L, boundaries, FMmodel].";
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Spin chains*)
 
 
@@ -410,7 +423,7 @@ Symmetry::usage = FormatUsage[
 ];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Hamiltonians*)
 
 
@@ -700,7 +713,7 @@ SU2Rotation[n_List, \[Theta]R_] /; Length[n] == 3 :=
     ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Quantum chaos*)
 
 
@@ -716,31 +729,72 @@ kthOrderSpacings[spectrum_, k_] := RotateLeft[#, k] - # &[Sort[spectrum]][[;; -(
 SpacingRatios[spectrum_, k_]:=RotateLeft[#, k]/# &[kthOrderSpacings[spectrum, k]][[;; -(k+1)]]
 
 
-Unfold[eigenvalues_List] := 
-Module[
-	{skd, unfolded, n, smoothCDF, smoothPDF},
-	
-	n=Length[eigenvalues];
-	
-	(*Create smooth kernel distribution for the CDF*)
-	skd=SmoothKernelDistribution[eigenvalues, "StandardGaussian", {
-		"Bounded", {Min[eigenvalues], Max[eigenvalues]}, "Gaussian"
-		}];
-		
-	(*Unfold:\[CurlyEpsilon]_i=N*CDF(E_i)*)
-	unfolded = Table[ n*CDF[skd, eigenvalues[[i]]], {i,n}];
-	
-	(*Define the smooth functions*)
-	smoothCDF=Function[x,n*CDF[skd,x]];
-	smoothPDF=Function[x,n*PDF[skd,x]];
-	
-	(*Return unfolded spectrum and related functions*)
-	<|"UnfoldedLevels"->unfolded,
-	"SmoothCDF"->smoothCDF,(*Cumulative:N(E)*)
-	"SmoothPDF"->smoothPDF,(*Density:\[Rho](E)*)
-	"Bandwidth"->skd["Bandwidth"],
-	"OriginalLevels"->eigenvalues(*Useful for comparison*)|>
-]
+(*Unfold*)
+
+(* Options for Unfold allow tuning the kernel smoothness *)
+Options[Unfold] = {
+    "Bandwidth" -> Automatic, (* Can be set to a real number for manual control *)
+    "Kernel" -> "Gaussian"
+};
+
+Unfold[spectrum_List, opts : OptionsPattern[]] := Module[
+    {
+        sortedSpectrum, 
+        nLevels, 
+        skd, 
+        unfoldedLevels, 
+        smoothCDFFunc, 
+        smoothPDFFunc,
+        bwParam,
+        kernelType
+    },
+
+    (* 1. Validation and Preparation *)
+    (* RMT requires sorted, numeric eigenvalues *)
+    sortedSpectrum = Sort[Select[spectrum, NumericQ]];
+    nLevels = Length[sortedSpectrum];
+
+    If[nLevels < 3, 
+        Message[Unfold::notEnoughLevels, nLevels]; 
+        Return[$Failed]
+    ];
+
+    (* 2. Algorithmic Logic: Kernel Density Estimation (KDE) *)
+    (* We model the secular (smooth) part of the density of states.
+       The cumulative mapping \[CurlyEpsilon]_i = N_smooth(E_i) gives the unfolded spectrum. *)
+    
+    bwParam = OptionValue["Bandwidth"];
+    kernelType = OptionValue["Kernel"];
+
+    (* Construct the distribution object *)
+    skd = SmoothKernelDistribution[
+        sortedSpectrum, 
+        bwParam, 
+        kernelType
+    ];
+
+    (* 3. Compute Unfolded Levels *)
+    (* Map physics eigenvalues to mean level spacing of 1 *)
+    unfoldedLevels = nLevels * CDF[skd, sortedSpectrum];
+
+    (* 4. Functional Construction with Scope Injection *)
+    With[{distObject = skd, n = nLevels},
+        smoothCDFFunc = Function[e, n * CDF[distObject, e]];
+        smoothPDFFunc = Function[e, n * PDF[distObject, e]];
+    ];
+
+    (* 5. Return Structured Data *)
+    <|
+        "UnfoldedLevels" -> unfoldedLevels,
+        "SmoothCDF" -> smoothCDFFunc,      (* Cumulative Mean Level Number *)
+        "SmoothPDF" -> smoothPDFFunc,      (* Mean Level Density *)
+        "Bandwidth" -> skd["Bandwidth"],
+        "OriginalLevels" -> sortedSpectrum
+    |>
+];
+
+(* Error Message definition *)
+Unfold::notEnoughLevels = "Spectrum length `1` is too short for unfolding. At least 3 levels are required.";
 
 
 ComplexSpacingRatios[eigs_List?VectorQ] := Module[
@@ -1354,7 +1408,7 @@ Assignationk[M_,N_,n_]:=If[n[[1;;M-1]]==ConstantArray[0,M-1],M-1,FromDigits[Last
 RenyiEntropy[\[Alpha]_,\[Rho]_]:=1/(1-\[Alpha]) Log[Tr[MatrixPower[\[Rho],\[Alpha]]]]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Spin chains*)
 
 
