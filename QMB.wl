@@ -1,7 +1,10 @@
 (* ::Package:: *)
 
-(* If ForScience paclet not installed, install it. See https://github.com/MMA-ForScience/ForScience *)
-If[Length[PacletFind["ForScience"]]==0, PacletInstall[FileNameJoin[{DirectoryName[$InputFileName], "ForScience-0.88.45.paclet"}]]];
+(*  If ForScience paclet not installed, install it. 
+	See https://github.com/MMA-ForScience/ForScience *)
+If[Length[PacletFind["ForScience"]] == 0, 
+	PacletInstall[FileNameJoin[{DirectoryName[$InputFileName], "ForScience-0.88.45.paclet"}]]
+];
 
 
 (* ::Section:: *)
@@ -407,7 +410,7 @@ Symmetry::usage = FormatUsage[
 ];
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Hamiltonians*)
 
 
@@ -478,7 +481,7 @@ TraditionalForm]\)";
 
 QuantumGameOfLifeHamiltonian::usage = FormatUsage[
   "QuantumGameOfLifeHamiltonian[L, opts] returns the Hamiltonian for the Quantum Game of Life (QGL) \
-  model for a spin-1/2 chain of length ```L```.
+  model for a spin-1/2 chain of length ```L``` (arXiv:2510.16570):
   H = \[Sum] \!\(\[Sigma]\_i\^x\) (\!\(\[ScriptN]\_i\^2\) + \!\(\[ScriptN]\_i\^3\)).
   
   Options:
@@ -560,7 +563,7 @@ Begin["`Private`"];
 ClearAll[SigmaPlusSigmaMinus, SigmaMinusSigmaPlus];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*General quantum mechanics*)
 
 
