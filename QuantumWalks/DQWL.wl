@@ -80,7 +80,7 @@ CriticalAngle::usage = FormatUsage[
 Begin["`DQWL`Private`"];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*DTQW*)
 
 
@@ -112,7 +112,7 @@ Coin[t_Integer, c_?MatrixQ] :=
 Coin[\[Alpha]_?NumericQ, dim_Integer] := 
     KroneckerProduct[
         IdentityMatrix[dim, SparseArray], 
-        SparseArray[{{Cos[\[Alpha]], Sin[\[Alpha]]}, {-Sin[\[Alpha]], Cos[\[Alpha]]}}]
+        SparseArray[{{Cos[\[Alpha]], Sin[\[Alpha]]}, {-Exp[I*Pi/4.]*Sin[\[Alpha]], Exp[I*Pi/4.]*Cos[\[Alpha]]}}]
     ];
 
 (* Caso de dimensi\[OAcute]n arbitraria: *)
