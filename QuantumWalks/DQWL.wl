@@ -29,10 +29,10 @@ Shift::usage = FormatUsage["Shift[t] yields a sparse array of the Shift operator
 Coin::usage = FormatUsage[
 "Coin[t] yields a sparse array of the Haddamard Coin operator for a 1D DTQW in an \
 	infinite line at time ```t```.
-Coin[t,C] yields a sparse array of the Coin operator ```C``` for a 1D DTQW in an \
+Coin[t,coinOperator] yields a sparse array of the Coin operator ```coinOperator``` for a 1D DTQW in an \
 	infinite line at time ```t```.
 Coin[\[Alpha], dim] yields a global SU(2) coin operator (rotation \[Alpha]) for a position space \
-	of size ```dim``` (Identity \[CircleTimes] C).
+	of size ```dim``` (Idenity \[CircleTimes] C).
 Coin[matrix, dim] yields a global coin operator using ```matrix``` for a position \
 	space of size ```dim``` (Identity \[CircleTimes] ```matrix```)."
 ];
@@ -41,11 +41,17 @@ Coin::intarg = "Argument `1` must be an integer (time or dimension).";
 Coin::matarg = "Argument `1` must be a matrix (coin argument).";
 Coin::invArg = "Invalid arguments for Coin.";
 
-DTQWStep::usage = FormatUsage["DTQWStep[t] yields the unitary matrix of a Haddamard 1D DTQW in an infinite line at time ```t```.
-DTQWStep[t,C] yields the unitary matrix of a 1D DTQW in an infinite line, using coin ```C```, at time ```t```."];
+DTQWStep::usage = FormatUsage[
+"DTQWStep[t] yields the unitary matrix of a Haddamard 1D DTQW in an infinite line at \
+	time ```t```.
+DTQWStep[t,coinOperator] yields the unitary matrix of a 1D DTQW in an infinite line, using coin \
+	```coinOperator```, at time ```t```."];
 
-DTQW::usage = FormatUsage["DTQW[\[Psi]_0,t] yields the state at time ```t``` of a 1D Haddamard DTQW in an infinite line with initial state ```\[Psi]_0```.
-DTQW[\[Psi]_0,t,C] yields the state at time ```t``` of a 1D DTQW in an infinite line, with coin ```C```, with initial state ```\[Psi]_0```."];
+DTQW::usage = FormatUsage[
+"DTQW[\[Psi]_0,t] yields the state at time ```t``` of a 1D Haddamard DTQW in an infinite \
+	line with initial state ```\[Psi]_0```.
+DTQW[\[Psi]_0,t,coinOperator] yields the state at time ```t``` of a 1D DTQW in an infinite line, with \
+	coin ```coinOperator```, with initial state ```\[Psi]_0```."];
 
 PositionProbabilityDistribution::usage = FormatUsage["PositionProbabilityDistribution[\[Psi],t] yields the position probability distribution of the state ```\[Psi]``` of a 1D DTQW at time ```t```."];
 
@@ -80,7 +86,7 @@ CriticalAngle::usage = FormatUsage[
 Begin["`DQWL`Private`"];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*DTQW*)
 
 
@@ -168,7 +174,7 @@ PositionProbabilityDistribution[psi_, tmax_] := Chop[
 ]
 
 
-ExpValPosition[\[Psi]_,t_]:=PositionProbabilityDistribution[\[Psi],t] . Range[-t-1,t+1]
+ExpValPosition[\[Psi]_, t_]:=PositionProbabilityDistribution[\[Psi],t] . Range[-t-1,t+1]
 
 
 (* ::Subsection::Closed:: *)
