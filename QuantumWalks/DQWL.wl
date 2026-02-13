@@ -86,7 +86,7 @@ CriticalAngle::usage = FormatUsage[
 Begin["`DQWL`Private`"];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*DTQW*)
 
 
@@ -141,10 +141,6 @@ Coin[t_Integer, c_] /; !MatrixQ[c] :=
 (* Error: En el caso 2D (Rotaci\[OAcute]n o Matriz), la dimensi\[OAcute]n no es entera *)
 Coin[arg_, dim_] /; (NumericQ[arg] || MatrixQ[arg]) && !IntegerQ[dim] := 
     (Message[Coin::intarg, dim]; $Failed);
-
-(* Error: Matriz de dimensi\[OAcute]n incorrecta en caso 2D *)
-Coin[m_?MatrixQ, dim_Integer] /; Dimensions[m] =!= {2, 2} := 
-    (Message[Coin::invArg, "La matriz de moneda debe ser 2x2"]; $Failed);
 
 (* Catch-all: Cualquier otra combinaci\[OAcute]n inv\[AAcute]lida *)
 Coin[___] := (Message[Coin::invArg, "Arguments not recognized. Check the usage \

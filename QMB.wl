@@ -572,7 +572,7 @@ Begin["`Private`"];
 ClearAll[SigmaPlusSigmaMinus, SigmaMinusSigmaPlus];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*General quantum mechanics*)
 
 
@@ -608,8 +608,8 @@ RandomChainProductState[1] := RandomQubitState[]
 RandomChainProductState[L_] := Flatten[KroneckerProduct@@Table[RandomQubitState[],L]]
 
 
-Dyad[a_]:=Outer[Times,a,Conjugate[a]]
-Dyad[a_,b_]:=Outer[Times,a,Conjugate[b]]
+Dyad[a_] := Outer[Times,a,Conjugate[a]]
+Dyad[a_,b_] := Outer[Times,a,Conjugate[b]]
 
 
 MatrixCommutator[A_,B_]:=A . B-B . A
