@@ -10,6 +10,7 @@ Module[{rootPath},
     
     (* 1. Cargar Core *)
     Get[FileNameJoin[{rootPath, "DQWL.wl"}]];
+    Get[FileNameJoin[{rootPath, "CTQW.wl"}]];
     
     (* 2. Cargar Utilidades *)
     Get[FileNameJoin[{rootPath, "Billiards", "Common.wl"}]];

@@ -2,8 +2,8 @@
 
 BeginPackage["QuantumWalks`Billiards`", {"QuantumWalks`"}];
 
-GenerateStadiumBasis::usage = "GenerateStadiumBasis[xc, nu] genera la base de posiciones\
-y la asociaci\[OAcute]n de b\[UAcute]squeda para el estadio.";
+GenerateBunimovichBasis::usage = "GenerateBunimovichBasis[L, R] generates de position basis\
+and association map for a stadium of lenght L and radius R.";
 
 GenerateFullStadiumBasis::usage = "GenerateFullStadiumBasis[L, R] genera la base de coordenadas \
 y la asociaci\[OAcute]n de mapeo para el billar de estadio completo (Full Stadium). \
@@ -18,7 +18,7 @@ Begin["`Bunimovich`Private`"];
 BoundaryY[m_, mc_, nu_] := If[m <= mc, nu, Round[Sqrt[nu^2 - (m - mc)^2]]];
 BoundaryX[n_, mc_, nu_] := mc + Round[Sqrt[nu^2 - n^2]];
 
-GenerateStadiumBasis[xc_Integer, nu_Integer] := Module[
+GenerateBunimovichBasis[xc_Integer, nu_Integer] := Module[
     {coords, stateToIndex},
     
     (* Generaci\[OAcute]n optimizada de coordenadas *)
