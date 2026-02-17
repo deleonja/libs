@@ -1,12 +1,12 @@
 (* ::Package:: *)
 
-BeginPackage["QuantumWalks`"];
+BeginPackage["QuantumWalks`Billiards`", {"QuantumWalks`"}];
 
 GenerateCardioidBasis::usage = "GenerateCardioidBasis[R] genera la base de coordenadas \
 para un billar con forma de cardioide definido por r = 2R(1 - cos(\[Theta])). \
 R: Par\[AAcute]metro de escala (Radio base).";
 
-Begin["`Billiards`Cardioid`Private`"];
+Begin["`Cardioid`Private`"];
 
 (* --- Geometr\[IAcute]a del Cardioide --- *)
 (* Definici\[OAcute]n polar: r = 2R(1 - Cos[\[Theta]]) *)

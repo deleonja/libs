@@ -1,6 +1,6 @@
 (* ::Package:: *)
 
-BeginPackage["QuantumWalks`"];
+BeginPackage["QuantumWalks`Billiards`", {"QuantumWalks`"}];
 
 GenerateStadiumBasis::usage = "GenerateStadiumBasis[xc, nu] genera la base de posiciones\
 y la asociaci\[OAcute]n de b\[UAcute]squeda para el estadio.";
@@ -10,7 +10,7 @@ y la asociaci\[OAcute]n de mapeo para el billar de estadio completo (Full Stadiu
 L: Semilongitud de la parte recta. \
 R: Radio de los semic\[IAcute]rculos.";
 
-Begin["`Billiards`Bunimovich`Private`"];
+Begin["`Bunimovich`Private`"];
 
 (* --- 1. Geometr\[IAcute]a del Estadio de Bunimovich desimetrizado (1/4) --- *)
 

@@ -1,6 +1,6 @@
 (* ::Package:: *)
 
-BeginPackage["QuantumWalks`"];
+BeginPackage["QuantumWalks`Billiards`", {"QuantumWalks`"}];
 
 GenerateEllipseBasis::usage = "GenerateEllipseBasis[A, B] genera la base de coordenadas para un billar \
 el\[IAcute]ptico. 
@@ -8,7 +8,7 @@ A: Semieje mayor (Horizontal).
 B: Semieje menor (Vertical). 
 Si A == B, genera un billar circular.";
 
-Begin["`Billiards`Ellipse`Private`"];
+Begin["`Ellipse`Private`"];
 
 (* --- Billar El\[IAcute]ptico --- *)
 (* Ecuaci\[OAcute]n: (x/A)^2 + (y/B)^2 <= 1 *)

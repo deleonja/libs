@@ -1,6 +1,6 @@
 (* ::Package:: *)
 
-BeginPackage["QuantumWalks`"];
+BeginPackage["QuantumWalks`Billiards`", {"QuantumWalks`"}];
 
 GenerateSinaiBasis::usage = "GenerateSinaiBasis[L, R] genera la base de coordenadas y \
 la asociaci\[OAcute]n de mapeo para el dominio fundamental (1/8) del billar de Sinai.
@@ -12,7 +12,7 @@ para el billar de Sinai completo (Cuadrado menos disco central). \
 L: Semilado del cuadrado (Lado total = 2L). \
 R: Radio del disco central (obst\[AAcute]culo).";
 
-Begin["`Billiards`Sinai`Private`"];
+Begin["`Sinai`Private`"];
 
 (* --- 1. Geometr\[IAcute]a del Dominio Fundamental (1/8 Sinai) --- *)
 

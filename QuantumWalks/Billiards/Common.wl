@@ -1,6 +1,6 @@
 (* ::Package:: *)
 
-BeginPackage["QuantumWalks`"];
+BeginPackage["QuantumWalks`Billiards`", {"QuantumWalks`"}];
 
 BuildShiftOperators::usage = "BuildShiftOperators[gridData, opts] construye \
 los operadores de desplazamiento para la rejilla dada.
@@ -19,7 +19,7 @@ Options[BuildShiftOperators] = {
 GetSymmetrySectorBasis::usage = "GetSymmetrySectorBasis[gridData, sector] construye \
 la matriz de isometr\[IAcute]a V.";
 
-Begin["`Billiards`Common`Private`"];
+Begin["`Common`Private`"];
 
 (*Dispatcher*)
 BuildShiftOperators[gridData_Association, opts:OptionsPattern[]] := 

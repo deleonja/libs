@@ -1,13 +1,13 @@
 (* ::Package:: *)
 
-BeginPackage["QuantumWalks`"];
+BeginPackage["QuantumWalks`Billiards`", {"QuantumWalks`"}];
 
 GenerateRectangleBasis::usage = "GenerateRectangleBasis[Lx, Ly] genera la base de coordenadas \
 para un billar rectangular (sistema integrable). \
 Lx: Ancho (o semiancho si se centra en 0, aqu\[IAcute] definimos longitud total Nx = Lx). \
 Ly: Alto.";
 
-Begin["`Billiards`Rectangle`Private`"];
+Begin["`Rectangle`Private`"];
 
 (* --- Billar Rectangular (Integrable) --- *)
 (* Definici\[OAcute]n: 0 <= x <= Lx, 0 <= y <= Ly *)
