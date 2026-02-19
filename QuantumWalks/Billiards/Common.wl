@@ -2,6 +2,7 @@
 
 BeginPackage["QuantumWalks`Billiards`", {"QuantumWalks`"}];
 
+
 BuildShiftOperators::usage = "BuildShiftOperators[gridData, opts] construye \
 los operadores de desplazamiento para la rejilla dada.
 
@@ -16,10 +17,20 @@ Options[BuildShiftOperators] = {
     CoinDimension -> 2
 };
 
-GetSymmetrySectorBasis::usage = "GetSymmetrySectorBasis[gridData, sector] construye \
-la matriz de isometr\[IAcute]a V.";
+
+BuildSymmetryIsometry::usage = 
+"BuildSymmetryIsometry[gridData, \"sector\"] construye la isometria V \
+para el subespacio \"sector\" (\"A1\", \"B2\", \"Even\", etc.).
+BuildSymmetryIsometry[gridData, {sx, sy}] construye la isometria para \
+simetria C2v (2 ejes), con paridades espaciales sx y sy (1 o -1).
+BuildSymmetryIsometry[gridData, sy] construye la isometria para Cs \
+(eje Y), con paridad sy (1 o -1).
+BuildSymmetryIsometry[gridData, chars] construye la isometria para C4v \
+(8 isometrias) usando una Association de 8 caracteres.";
+
 
 Begin["`Common`Private`"];
+
 
 (*Dispatcher*)
 BuildShiftOperators[gridData_Association, opts:OptionsPattern[]] := 
@@ -129,122 +140,494 @@ BuildShiftOperators4State[gridData_] := Module[
     SparseArray[rules, {4 dim, 4 dim}]
 ];
 
-(* Helpers de Permutaci\[OAcute]n *)
-GetCoinPermutations[] := <|
-  "Px" -> {1, 2, 4, 3}, (* x->-x: Right<->Left *)
-  "Py" -> {2, 1, 3, 4}  (* y->-y: Up<->Down *)
-|>;
 
-GetSectorSigns[sector_String] := Switch[sector,
-  "A1", {1, 1},   "A2", {-1, -1},
-  "B1", {1, -1},  "B2", {-1, 1},
-  _, Print["Sector inv\[AAcute]lido"]; {$Failed, $Failed}
-];
+BuildSymmetryIsometry::invSector = "Sector invalido. Usa etiquetas \
+(A1, Even, C4v_B1), signos (1, -1) o tuplas ({1, -1}).";
 
-GetSymmetrySectorBasis[gridData_Association, sector_String] := Module[
-  {
-    coords, map, dim,
-    signX, signY,
-    permCoinX, permCoinY,
-    seeds, rules, 
-    colCounter, V
-  },
-
-  coords = gridData["Coords"];
-  map = gridData["Mapping"];
-  dim = gridData["Dimension"];
-  
-  {signX, signY} = GetSectorSigns[sector];
-  If[FailureQ[signX], Return[$Failed]];
-
-  {permCoinX, permCoinY} = Values[GetCoinPermutations[]];
-
-  (* 1. Seleccionar Semillas (Dominio Fundamental: 1er Cuadrante) *)
-  seeds = Select[coords, #[[1]] >= 0 && #[[2]] >= 0 &];
-
-  colCounter = 0;
-  
-  rules = Reap[
-    Do[
-      Module[{
-        seedCoord = seedPos,
-        seedIdx = map[seedPos],
-        localCandidates = {}
-      },
+(* ---------------------------------------------------------------------- *)
+(* 1. INTERFAZ POLIMORFICA UNIFICADA (STRINGS)                            *)
+(* ---------------------------------------------------------------------- *)
+BuildSymmetryIsometry[gridData_Association, sector_String] := Module[
+    {SignosTraducidos},
+    
+    SignosTraducidos = Lookup[<|
+        "A1" -> {1, 1},   "++" -> {1, 1},
+        "A2" -> {-1, -1}, "--" -> {-1, -1},
+        "B1" -> {1, -1},  "+-" -> {1, -1},
+        "B2" -> {-1, 1},  "-+" -> {-1, 1},
+        "Even" -> 1, "Odd" -> -1, "+" -> 1, "-" -> -1,
         
-        (* 2. Generar vectores candidatos para los 4 estados de la moneda *)
-        Do[
-            Module[{rawVec = {}},
-                (* T1: Identidad *)
-                AppendTo[rawVec, {seedIdx, coin} -> 1];
-                
-                (* T2: Px *)
-                With[{p = {-seedCoord[[1]], seedCoord[[2]]}, c = permCoinX[[coin]]},
-                    If[!MissingQ[map[p]], AppendTo[rawVec, {map[p], c} -> signX]]
-                ];
-                
-                (* T3: Py *)
-                With[{p = {seedCoord[[1]], -seedCoord[[2]]}, c = permCoinY[[coin]]},
-                    If[!MissingQ[map[p]], AppendTo[rawVec, {map[p], c} -> signY]]
-                ];
-                
-                (* T4: PxPy *)
-                With[{p = {-seedCoord[[1]], -seedCoord[[2]]}, c = permCoinY[[permCoinX[[coin]]]]},
-                    If[!MissingQ[map[p]], AppendTo[rawVec, {map[p], c} -> signX * signY]]
-                ];
-                
-                (* Consolidar amplitudes: {key, val} *)
-                rawVec = GatherBy[rawVec, First];
-                rawVec = {First[#][[1]], Total[Last /@ #]} & /@ rawVec;
-                
-                (* Filtro num\[EAcute]rico b\[AAcute]sico *)
-                rawVec = Select[rawVec, Abs[Last[#]] > 10^-8 &];
-                
-                If[Length[rawVec] > 0, AppendTo[localCandidates, rawVec]];
-            ],
-            {coin, 1, 4}
-        ];
-
-        (* 3. Ortogonalizaci\[OAcute]n Local (Correcci\[OAcute]n de BUG) *)
-        If[Length[localCandidates] > 0,
-            Module[{allKeys, denseMat, orthoDense, restoredRules},
-                
-                (* CORRECCI\[CapitalOAcute]N CR\[CapitalIAcute]TICA: Flatten nivel 1 para preservar llaves {idx, c} *)
-                allKeys = Union[Flatten[localCandidates[[All, All, 1]], 1]];
-                
-                (* Construir matriz densa peque\[NTilde]a (aprox 4x16) *)
-                (* Rule @@@ vec convierte {{k,v}...} a {k->v...} *)
-                denseMat = Table[
-                    Lookup[Association[Rule @@@ vec], allKeys, 0.],
-                    {vec, localCandidates}
-                ];
-                
-                (* Ortogonalizar sin Method espec\[IAcute]fico (usa default robusto) *)
-                orthoDense = Orthogonalize[denseMat, Tolerance -> 10^-6];
-                (* Eliminar vectores nulos resultantes *)
-                orthoDense = Select[orthoDense, Norm[#] > 10^-6 &];
-                
-                (* Restaurar a reglas dispersas y sembrar *)
-                Do[
-                    colCounter++;
-                    restoredRules = Transpose[{allKeys, orthoDense[[k]]}];
-                    restoredRules = Select[restoredRules, Abs[Last[#]] > 10^-8 &];
-                    
-                    Sow[
-                        ({4*(#[[1, 1]] - 1) + #[[1, 2]], colCounter} -> #[[2]]) & /@ restoredRules
-                    ];
-                , {k, Length[orthoDense]}]
-            ]
-        ];
-      ],
-      {seedPos, seeds}
-    ]
-  ][[2]]; (* Parte 2 del Reap contiene las listas sembradas *)
-
-  (* Flatten[rules] fusiona las listas de reglas sembradas en cada paso *)
-  V = SparseArray[Flatten[rules], {4 * dim, colCounter}];
-  V
+        "C4v_A1" -> <|"E"->1, "Px"->1,  "Py"->1,  "Pxy"->1,  "Pd"->1,  "Pad"->1,  "C4"->1,  "C4inv"->1|>,
+        "C4v_A2" -> <|"E"->1, "Px"->-1, "Py"->-1, "Pxy"->1,  "Pd"->-1, "Pad"->-1, "C4"->1,  "C4inv"->1|>,
+        "C4v_B1" -> <|"E"->1, "Px"->1,  "Py"->1,  "Pxy"->1,  "Pd"->-1, "Pad"->-1, "C4"->-1, "C4inv"->-1|>,
+        "C4v_B2" -> <|"E"->1, "Px"->-1, "Py"->-1, "Pxy"->1,  "Pd"->1,  "Pad"->1,  "C4"->-1, "C4inv"->-1|>,
+        "C4v_Ex" -> {1, -1},
+        "C4v_Ey" -> {-1, 1}
+    |>, sector, $Failed];
+    
+    If[FailureQ[SignosTraducidos], 
+        Message[BuildSymmetryIsometry::invSector]; Return[$Failed]
+    ];
+    
+    BuildSymmetryIsometry[gridData, SignosTraducidos]
 ];
+
+(* ------------------------------------------------------------------------- *)
+(* 2. L\[CapitalOAcute]GICA MATEM\[CapitalAAcute]TICA: SIMETR\[CapitalIAcute]A 2 EJES (C2v)                               *)
+(* ------------------------------------------------------------------------- *)
+BuildSymmetryIsometry[gridData_Association, {SignoX_Integer, SignoY_Integer}] := Module[
+    {
+        Coordenadas = gridData["Coords"], 
+        Mapeo = gridData["Mapping"], 
+        Dim = gridData["Dimension"],
+        PermMonedaX = {1, 2, 4, 3}, PermMonedaY = {2, 1, 3, 4},
+        Semillas, ReglasV, ContadorColumnas = 0, ReglasLimpias
+    },
+    
+    Semillas = Select[Coordenadas, #[[1]] >= 0 && #[[2]] >= 0 &];
+    
+    ReglasV = Reap[
+        Do[
+            Module[{IndiceSemilla = Mapeo[PosicionSemilla], CandidatosLocales = {}},
+                Do[
+                    Module[{VectorCrudo = {}, Px, Py, Cx, Cy, Cxy},
+                        Px = {-PosicionSemilla[[1]], PosicionSemilla[[2]]};
+                        Py = {PosicionSemilla[[1]], -PosicionSemilla[[2]]};
+                        Cx = PermMonedaX[[EstadoMoneda]];
+                        Cy = PermMonedaY[[EstadoMoneda]];
+                        Cxy = PermMonedaY[[Cx]];
+                        
+                        AppendTo[VectorCrudo, {IndiceSemilla, EstadoMoneda} -> 1.];
+                        If[!MissingQ[Mapeo[Px]], AppendTo[VectorCrudo, {Mapeo[Px], Cx} -> SignoX]];
+                        If[!MissingQ[Mapeo[Py]], AppendTo[VectorCrudo, {Mapeo[Py], Cy} -> SignoY]];
+                        If[!MissingQ[Mapeo[-PosicionSemilla]], AppendTo[VectorCrudo, {Mapeo[-PosicionSemilla], Cxy} -> SignoX * SignoY]];
+                        
+                        VectorCrudo = {First[#][[1]], Total[Last /@ #]} & /@ GatherBy[VectorCrudo, First];
+                        VectorCrudo = Select[VectorCrudo, Abs[Last[#]] > 10^-8 &];
+                        If[Length[VectorCrudo] > 0, AppendTo[CandidatosLocales, VectorCrudo]];
+                    ], {EstadoMoneda, 1, 4}
+                ];
+                ContadorColumnas = OrtogonalizarYSembrar[CandidatosLocales, ContadorColumnas];
+            ], {PosicionSemilla, Semillas}
+        ]
+    ][[2]];
+    
+    ReglasLimpias = Cases[Flatten[ReglasV], _Rule];
+    If[Length[ReglasLimpias] == 0, Return[SparseArray[{}, {4 * Dim, 0}]]];
+    SparseArray[ReglasLimpias, {4 * Dim, ContadorColumnas}]
+];
+
+(* ------------------------------------------------------------------------- *)
+(* 3. L\[CapitalOAcute]GICA MATEM\[CapitalAAcute]TICA: SIMETR\[CapitalIAcute]A 1 EJE (Bilateral)                          *)
+(* ------------------------------------------------------------------------- *)
+BuildSymmetryIsometry[gridData_Association, SignoY_Integer] := Module[
+    {
+        Coordenadas = gridData["Coords"], 
+        Mapeo = gridData["Mapping"], 
+        Dim = gridData["Dimension"],
+        PermMonedaY = {2, 1, 3, 4},
+        Semillas, ReglasV, ContadorColumnas = 0, ReglasLimpias
+    },
+    
+    Semillas = Select[Coordenadas, #[[2]] >= 0 &];
+    
+    ReglasV = Reap[
+        Do[
+            Module[{IndiceSemilla = Mapeo[PosicionSemilla], CandidatosLocales = {}},
+                Do[
+                    Module[{VectorCrudo = {}, Py, Cy},
+                        Py = {PosicionSemilla[[1]], -PosicionSemilla[[2]]};
+                        Cy = PermMonedaY[[EstadoMoneda]];
+                        
+                        AppendTo[VectorCrudo, {IndiceSemilla, EstadoMoneda} -> 1.];
+                        If[!MissingQ[Mapeo[Py]], AppendTo[VectorCrudo, {Mapeo[Py], Cy} -> SignoY]];
+                        
+                        VectorCrudo = {First[#][[1]], Total[Last /@ #]} & /@ GatherBy[VectorCrudo, First];
+                        VectorCrudo = Select[VectorCrudo, Abs[Last[#]] > 10^-8 &];
+                        If[Length[VectorCrudo] > 0, AppendTo[CandidatosLocales, VectorCrudo]];
+                    ], {EstadoMoneda, 1, 4}
+                ];
+                ContadorColumnas = OrtogonalizarYSembrar[CandidatosLocales, ContadorColumnas];
+            ], {PosicionSemilla, Semillas}
+        ]
+    ][[2]];
+    
+    ReglasLimpias = Cases[Flatten[ReglasV], _Rule];
+    If[Length[ReglasLimpias] == 0, Return[SparseArray[{}, {4 * Dim, 0}]]];
+    SparseArray[ReglasLimpias, {4 * Dim, ContadorColumnas}]
+];
+
+(* ========================================================================= *)
+(* 4. L\[CapitalOAcute]GICA MATEM\[CapitalAAcute]TICA: SIMETR\[CapitalIAcute]A C4v (8 Isometr\[IAcute]as como el Billar de Sina\[IAcute]) *)
+(* ========================================================================= *)
+BuildSymmetryIsometry[gridData_Association, chars_Association] /; Length[chars] == 8 := Module[
+    {
+        Coordenadas = gridData["Coords"], 
+        Mapeo = gridData["Mapping"], 
+        Dim = gridData["Dimension"],
+        PermMoneda, Semillas, ReglasV, ContadorColumnas = 0, ReglasLimpias
+    },
+    
+    PermMoneda = <|
+        "E"     -> {1, 2, 3, 4}, "Px"  -> {1, 2, 4, 3}, 
+        "Py"    -> {2, 1, 3, 4}, "Pxy" -> {2, 1, 4, 3},
+        "Pd"    -> {3, 4, 1, 2}, "Pad" -> {4, 3, 2, 1}, 
+        "C4"    -> {4, 3, 1, 2}, "C4inv"->{3, 4, 2, 1}
+    |>;
+    
+    Semillas = Select[
+        Coordenadas, 
+        #[[1]] >= 0 && #[[2]] >= 0 && #[[2]] <= #[[1]] &
+    ];
+    
+    ReglasV = Reap[
+        Map[
+            Function[{PosicionSemilla},
+                Module[{CandidatosLocales},
+                    CandidatosLocales = DeleteMissing[
+                        Map[
+                            Function[{EstadoMoneda},
+                                GenerarVectorC4v[PosicionSemilla, EstadoMoneda, Mapeo, PermMoneda, chars]
+                            ],
+                            {1, 2, 3, 4}
+                        ]
+                    ];
+                    ContadorColumnas = OrtogonalizarYSembrar[CandidatosLocales, ContadorColumnas];
+                ]
+            ],
+            Semillas
+        ]
+    ][[2]];
+    
+    (* El escudo definitivo: Cases garantiza que SparseArray NUNCA reciba artefactos *)
+    ReglasLimpias = Cases[Flatten[ReglasV], _Rule];
+    If[Length[ReglasLimpias] == 0, Return[SparseArray[{}, {4 * Dim, 0}]]];
+    SparseArray[ReglasLimpias, {4 * Dim, ContadorColumnas}]
+];
+
+(* --- Funci\[OAcute]n pura delegada para generar vectores sin AppendTo --- *)
+GenerarVectorC4v[Posicion_, Moneda_, Mapeo_, PermMoneda_, chars_] := 
+  Module[
+    {VectorCrudo, TransEspaciales},
+    
+    TransEspaciales = <|
+        "E"     -> {Posicion[[1]], Posicion[[2]]},
+        "Px"    -> {-Posicion[[1]], Posicion[[2]]},
+        "Py"    -> {Posicion[[1]], -Posicion[[2]]},
+        "Pxy"   -> {-Posicion[[1]], -Posicion[[2]]},
+        "Pd"    -> {Posicion[[2]], Posicion[[1]]},
+        "Pad"   -> {-Posicion[[2]], -Posicion[[1]]},
+        "C4"    -> {-Posicion[[2]], Posicion[[1]]},
+        "C4inv" -> {Posicion[[2]], -Posicion[[1]]}
+    |>;
+    
+    VectorCrudo = DeleteMissing[
+        Map[
+            Function[{Operacion},
+                Module[{IndiceTrans, MonedaTrans, Caracter},
+                    IndiceTrans = Mapeo[TransEspaciales[Operacion]];
+                    MonedaTrans = PermMoneda[Operacion][[Moneda]];
+                    Caracter = chars[Operacion];
+                    
+                    If[MissingQ[IndiceTrans], Missing[], {IndiceTrans, MonedaTrans} -> Caracter]
+                ]
+            ],
+            Keys[chars]
+        ]
+    ];
+    
+    VectorCrudo = {First[#][[1]], Total[Last /@ #]} & /@ GatherBy[VectorCrudo, First];
+    VectorCrudo = Select[VectorCrudo, Abs[Last[#]] > 10^-8 &];
+    
+    If[Length[VectorCrudo] > 0, VectorCrudo, Missing[]]
+];
+
+(* --- Funci\[OAcute]n Auxiliar Blindada --- *)
+OrtogonalizarYSembrar[CandidatosLocales_List, ContadorActual_Integer] := Module[
+    {LlavesGlobales, MatrizDensa, MatrizOrto, NuevoContador = ContadorActual},
+    
+    If[Length[CandidatosLocales] == 0, Return[NuevoContador]];
+    
+    LlavesGlobales = Union[Flatten[CandidatosLocales[[All, All, 1]], 1]];
+    MatrizDensa = Table[Lookup[Association[Rule @@@ vec], LlavesGlobales, 0.], {vec, CandidatosLocales}];
+    
+    (* Evita procesar si la matriz es completamente nula (ruido de m\[AAcute]quina) *)
+    If[Total[Abs[Flatten[MatrizDensa]]] < 10^-8, Return[NuevoContador]];
+    
+    MatrizOrto = Select[Orthogonalize[MatrizDensa, Tolerance -> 10^-6], Norm[#] > 10^-6 &];
+    
+    Do[
+        NuevoContador++;
+        Sow[
+            (* Chop remueve partes imaginarias o ruidos min\[UAcute]sculos garantizando n\[UAcute]meros puros *)
+            ({4*(#[[1, 1]] - 1) + #[[1, 2]], NuevoContador} -> Chop[#[[2]]]) & /@ 
+            Select[Transpose[{LlavesGlobales, MatrizOrto[[k]]}], Abs[Last[#]] > 10^-8 &]
+        ];
+    , {k, Length[MatrizOrto]}];
+    
+    NuevoContador
+];
+
+
+(*BuildSymmetryIsometry::invSector = "Sector invalido. Usa etiquetas \
+(A1, Even, C4v_B1), signos (1, -1) o tuplas ({1, -1}).";
+
+(* ---------------------------------------------------------------------- *)
+(* 1. INTERFAZ POLIMORFICA UNIFICADA (STRINGS)                            *)
+(* Traduce todas las etiquetas a representaciones matematicas             *)
+(* ---------------------------------------------------------------------- *)
+BuildSymmetryIsometry[gridData_Association, sector_String] := Module[
+    {SignosTraducidos},
+    
+    SignosTraducidos = Lookup[<|
+        (* Sectores de 2 ejes (C2v) *)
+        "A1" -> {1, 1},   "++" -> {1, 1},
+        "A2" -> {-1, -1}, "--" -> {-1, -1},
+        "B1" -> {1, -1},  "+-" -> {1, -1},
+        "B2" -> {-1, 1},  "-+" -> {-1, 1},
+        
+        (* Sectores de 1 eje (Bilateral en Y) *)
+        "Even" -> 1, "Odd" -> -1, "+" -> 1, "-" -> -1,
+        
+        (* Sectores de 4 ejes (C4v - 8 isometrias) *)
+        "C4v_A1" -> <|"E"->1, "Px"->1,  "Py"->1,  "Pxy"->1, 
+                      "Pd"->1,  "Pad"->1,  "C4"->1,  "C4inv"->1|>,
+        "C4v_A2" -> <|"E"->1, "Px"->-1, "Py"->-1, "Pxy"->1, 
+                      "Pd"->-1, "Pad"->-1, "C4"->1,  "C4inv"->1|>,
+        "C4v_B1" -> <|"E"->1, "Px"->1,  "Py"->1,  "Pxy"->1, 
+                      "Pd"->-1, "Pad"->-1, "C4"->-1, "C4inv"->-1|>,
+        "C4v_B2" -> <|"E"->1, "Px"->-1, "Py"->-1, "Pxy"->1, 
+                      "Pd"->1,  "Pad"->1,  "C4"->-1, "C4inv"->-1|>,
+        "C4v_E"  -> <|"E"->2, "Px"->0,  "Py"->0,  "Pxy"->-2, 
+                      "Pd"->0,  "Pad"->0,  "C4"->0,  "C4inv"->0|>
+    |>, sector, $Failed];
+    
+    If[FailureQ[SignosTraducidos], 
+        Message[BuildSymmetryIsometry::invSector]; Return[$Failed]
+    ];
+    
+    (* Recursion polimorfica: llama a la logica matematica exacta *)
+    BuildSymmetryIsometry[gridData, SignosTraducidos]
+];
+
+(* ------------------------------------------------------------------------- *)
+(* 2. L\[CapitalOAcute]GICA MATEM\[CapitalAAcute]TICA: SIMETR\[CapitalIAcute]A 2 EJES (C2v)                               *)
+(* Se activa autom\[AAcute]ticamente si el sector es una lista de 2 enteros          *)
+(* ------------------------------------------------------------------------- *)
+BuildSymmetryIsometry[gridData_Association, {SignoX_Integer, SignoY_Integer}] := Module[
+    {
+        Coordenadas = gridData["Coords"], 
+        Mapeo = gridData["Mapping"], 
+        Dim = gridData["Dimension"],
+        PermMonedaX = {1, 2, 4, 3}, PermMonedaY = {2, 1, 3, 4},
+        Semillas, ReglasV, ContadorColumnas = 0
+    },
+    
+    (* Dominio Fundamental: Primer Cuadrante *)
+    Semillas = Select[Coordenadas, #[[1]] >= 0 && #[[2]] >= 0 &];
+    
+    ReglasV = Reap[
+        Do[
+            Module[{IndiceSemilla = Mapeo[PosicionSemilla], CandidatosLocales = {}},
+                Do[
+                    Module[{VectorCrudo = {}, Px, Py, Cx, Cy, Cxy},
+                        (* Transformaciones C2v *)
+                        Px = {-PosicionSemilla[[1]], PosicionSemilla[[2]]};
+                        Py = {PosicionSemilla[[1]], -PosicionSemilla[[2]]};
+                        Cx = PermMonedaX[[EstadoMoneda]];
+                        Cy = PermMonedaY[[EstadoMoneda]];
+                        Cxy = PermMonedaY[[Cx]];
+                        
+                        AppendTo[VectorCrudo, {IndiceSemilla, EstadoMoneda} -> 1.];
+                        If[!MissingQ[Mapeo[Px]], AppendTo[VectorCrudo, {Mapeo[Px], Cx} -> SignoX]];
+                        If[!MissingQ[Mapeo[Py]], AppendTo[VectorCrudo, {Mapeo[Py], Cy} -> SignoY]];
+                        If[!MissingQ[Mapeo[-PosicionSemilla]], AppendTo[VectorCrudo, {Mapeo[-PosicionSemilla], Cxy} -> SignoX * SignoY]];
+                        
+                        VectorCrudo = {First[#][[1]], Total[Last /@ #]} & /@ GatherBy[VectorCrudo, First];
+                        VectorCrudo = Select[VectorCrudo, Abs[Last[#]] > 10^-8 &];
+                        If[Length[VectorCrudo] > 0, AppendTo[CandidatosLocales, VectorCrudo]];
+                    ], {EstadoMoneda, 1, 4}
+                ];
+                
+                (* Ortogonalizaci\[OAcute]n local delegada a rutina auxiliar (para no repetir c\[OAcute]digo) *)
+                ContadorColumnas = OrtogonalizarYSembrar[CandidatosLocales, ContadorColumnas];
+            ], {PosicionSemilla, Semillas}
+        ]
+    ][[2]];
+    
+    SparseArray[Flatten[ReglasV], {4 * Dim, ContadorColumnas}]
+];
+
+(* ------------------------------------------------------------------------- *)
+(* 3. L\[CapitalOAcute]GICA MATEM\[CapitalAAcute]TICA: SIMETR\[CapitalIAcute]A 1 EJE (Bilateral)                          *)
+(* Se activa autom\[AAcute]ticamente si el sector es un solo entero                  *)
+(* ------------------------------------------------------------------------- *)
+BuildSymmetryIsometry[gridData_Association, SignoY_Integer] := Module[
+    {
+        Coordenadas = gridData["Coords"], 
+        Mapeo = gridData["Mapping"], 
+        Dim = gridData["Dimension"],
+        PermMonedaY = {2, 1, 3, 4},
+        Semillas, ReglasV, ContadorColumnas = 0
+    },
+    
+    (* Dominio Fundamental: Semiplano Superior *)
+    Semillas = Select[Coordenadas, #[[2]] >= 0 &];
+    
+    ReglasV = Reap[
+        Do[
+            Module[{IndiceSemilla = Mapeo[PosicionSemilla], CandidatosLocales = {}},
+                Do[
+                    Module[{VectorCrudo = {}, Py, Cy},
+                        (* Transformaciones Cs *)
+                        Py = {PosicionSemilla[[1]], -PosicionSemilla[[2]]};
+                        Cy = PermMonedaY[[EstadoMoneda]];
+                        
+                        AppendTo[VectorCrudo, {IndiceSemilla, EstadoMoneda} -> 1.];
+                        If[!MissingQ[Mapeo[Py]], AppendTo[VectorCrudo, {Mapeo[Py], Cy} -> SignoY]];
+                        
+                        VectorCrudo = {First[#][[1]], Total[Last /@ #]} & /@ GatherBy[VectorCrudo, First];
+                        VectorCrudo = Select[VectorCrudo, Abs[Last[#]] > 10^-8 &];
+                        If[Length[VectorCrudo] > 0, AppendTo[CandidatosLocales, VectorCrudo]];
+                    ], {EstadoMoneda, 1, 4}
+                ];
+                
+                (* Ortogonalizaci\[OAcute]n local delegada *)
+                ContadorColumnas = OrtogonalizarYSembrar[CandidatosLocales, ContadorColumnas];
+            ], {PosicionSemilla, Semillas}
+        ]
+    ][[2]];
+    
+    If[ReglasV === {}, Return[SparseArray[{}, {4 * Dim, 0}]]];
+    SparseArray[Flatten[ReglasV], {4 * Dim, ContadorColumnas}]
+];
+
+(* ========================================================================= *)
+(* 4. L\[CapitalOAcute]GICA MATEM\[CapitalAAcute]TICA: SIMETR\[CapitalIAcute]A C4v (8 Isometr\[IAcute]as como el Billar de Sina\[IAcute]) *)
+(* Se activa si recibe una Association con exactamente 8 caracteres          *)
+(* ========================================================================= *)
+
+BuildSymmetryIsometry[gridData_Association, chars_Association] /; 
+  Length[chars] == 8 := Module[
+    {
+        Coordenadas = gridData["Coords"], 
+        Mapeo = gridData["Mapping"], 
+        Dim = gridData["Dimension"],
+        PermMoneda, Semillas, ReglasV, ContadorColumnas = 0
+    },
+    
+    PermMoneda = <|
+        "E"     -> {1, 2, 3, 4}, "Px"  -> {1, 2, 4, 3}, 
+        "Py"    -> {2, 1, 3, 4}, "Pxy" -> {2, 1, 4, 3},
+        "Pd"    -> {3, 4, 1, 2}, "Pad" -> {4, 3, 2, 1}, 
+        "C4"    -> {4, 3, 1, 2}, "C4inv"->{3, 4, 2, 1}
+    |>;
+    
+    Semillas = Select[
+        Coordenadas, 
+        #[[1]] >= 0 && #[[2]] >= 0 && #[[2]] <= #[[1]] &
+    ];
+    
+    ReglasV = Reap[
+        Map[
+            Function[{PosicionSemilla},
+                Module[
+                    {CandidatosLocales},
+                    
+                    (* Flujo puro: Mapeamos los 4 estados y eliminamos nulos *)
+                    CandidatosLocales = DeleteMissing[
+                        Map[
+                            Function[{EstadoMoneda},
+                                GenerarVectorC4v[
+                                    PosicionSemilla, 
+                                    EstadoMoneda, 
+                                    Mapeo, 
+                                    PermMoneda, 
+                                    chars
+                                ]
+                            ],
+                            {1, 2, 3, 4}
+                        ]
+                    ];
+                    
+                    ContadorColumnas = OrtogonalizarYSembrar[
+                        CandidatosLocales, 
+                        ContadorColumnas
+                    ];
+                ]
+            ],
+            Semillas
+        ]
+    ][[2]];
+    
+    SparseArray[Flatten[ReglasV], {4 * Dim, ContadorColumnas}]
+];
+
+(* --- Funci\[OAcute]n pura delegada para generar vectores sin AppendTo --- *)
+GenerarVectorC4v[Posicion_, Moneda_, Mapeo_, PermMoneda_, chars_] := 
+  Module[
+    {VectorCrudo, TransEspaciales},
+    
+    TransEspaciales = <|
+        "E"     -> {Posicion[[1]], Posicion[[2]]},
+        "Px"    -> {-Posicion[[1]], Posicion[[2]]},
+        "Py"    -> {Posicion[[1]], -Posicion[[2]]},
+        "Pxy"   -> {-Posicion[[1]], -Posicion[[2]]},
+        "Pd"    -> {Posicion[[2]], Posicion[[1]]},
+        "Pad"   -> {-Posicion[[2]], -Posicion[[1]]},
+        "C4"    -> {-Posicion[[2]], Posicion[[1]]},
+        "C4inv" -> {Posicion[[2]], -Posicion[[1]]}
+    |>;
+    
+    VectorCrudo = DeleteMissing[
+        Map[
+            Function[{Operacion},
+                Module[
+                    {IndiceTrans, MonedaTrans, Caracter},
+                    IndiceTrans = Mapeo[TransEspaciales[Operacion]];
+                    MonedaTrans = PermMoneda[Operacion][[Moneda]];
+                    Caracter = chars[Operacion];
+                    
+                    If[MissingQ[IndiceTrans],
+                        Missing[],
+                        {IndiceTrans, MonedaTrans} -> Caracter
+                    ]
+                ]
+            ],
+            Keys[chars]
+        ]
+    ];
+    
+    (* Agrupamos amplitudes de sitios que coinciden *)
+    VectorCrudo = {First[#][[1]], Total[Last /@ #]} & /@ 
+        GatherBy[VectorCrudo, First];
+        
+    VectorCrudo = Select[VectorCrudo, Abs[Last[#]] > 10^-8 &];
+    
+    If[Length[VectorCrudo] > 0, VectorCrudo, Missing[]]
+];
+
+(* --- Funci\[OAcute]n Auxiliar para la Ortogonalizaci\[OAcute]n y Siembra (DRY) --- *)
+OrtogonalizarYSembrar[CandidatosLocales_List, ContadorActual_Integer] := Module[
+    {LlavesGlobales, MatrizDensa, MatrizOrto, NuevoContador = ContadorActual},
+    
+    If[Length[CandidatosLocales] == 0, Return[NuevoContador]];
+    
+    LlavesGlobales = Union[Flatten[CandidatosLocales[[All, All, 1]], 1]];
+    MatrizDensa = Table[Lookup[Association[Rule @@@ vec], LlavesGlobales, 0.], {vec, CandidatosLocales}];
+    MatrizOrto = Select[Orthogonalize[MatrizDensa, Tolerance -> 10^-6], Norm[#] > 10^-6 &];
+    
+    Do[
+        NuevoContador++;
+        Sow[
+            ({4*(#[[1, 1]] - 1) + #[[1, 2]], NuevoContador} -> #[[2]]) & /@ 
+            Select[Transpose[{LlavesGlobales, MatrizOrto[[k]]}], Abs[Last[#]] > 10^-8 &]
+        ];
+    , {k, Length[MatrizOrto]}];
+    
+    NuevoContador
+];*)
+
 
 End[];
 EndPackage[];

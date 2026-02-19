@@ -2,15 +2,35 @@
 
 BeginPackage["QuantumWalks`Billiards`", {"QuantumWalks`"}];
 
-GenerateSinaiBasis::usage = "GenerateSinaiBasis[L, R] genera la base de coordenadas y \
-la asociaci\[OAcute]n de mapeo para el dominio fundamental (1/8) del billar de Sinai.
-L: Longitud del lado del cuadrado.
-R: Radio del disco central.";
 
-GenerateFullSinaiBasis::usage = "GenerateFullSinaiBasis[L, R] genera la base de coordenadas \
-para el billar de Sinai completo (Cuadrado menos disco central). \
-L: Semilado del cuadrado (Lado total = 2L). \
-R: Radio del disco central (obst\[AAcute]culo).";
+<<ForScience`;
+
+
+GenerateSinaiBasis::usage = FormatUsage[
+"GenerateSinaiBasis[L, R] generates the coordinate basis and the mapping \
+association for the fundamental domain (1/8) of the Sinai billiard \
+with semi-side ```L``` of the square (total side is 2L), and \
+radius ```R```." ];
+
+GenerateFullSinaiBasis::usage = FormatUsage[
+"GenerateFullSinaiBasis[L, R] generates the coordinate basis for the full \
+Sinai billiard with semi-side ```L``` of the square (total side is 2L), and \
+radius ```R```." ];
+
+
+GenerateSinaiBasis::usage = FormatUsage[
+"GenerateSinaiBasis[L,R] returns an ///Association/// with the \
+grid data for the fundamental domain (1/8) of the Sinai billiard \
+with semi-side ```L``` of the square (total side is 2L), and \
+radius ```R```. The keys are: \"Coords\", \"Mapping\" , \"Dimension\" \
+, \"Params\", \"Type\"."];
+
+GenerateFullSinaiBasis::usage = FormatUsage[
+"GenerateFullSinaiBasis[L,R] returns an ///Association/// with the \
+grid data for the full Sinai billiard with semi-side ```L``` of \
+the square (total side is 2L), and radius ```R```. The keys are: \
+\"Coords\", \"Mapping\" , \"Dimension\" , \"Params\", \"Type\"."];
+
 
 Begin["`Sinai`Private`"];
 
