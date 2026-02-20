@@ -223,6 +223,39 @@ where NN and NNN are the nearest and next-to-nearest neighbors in the \
 complex plane."
 
 
+SpectralFormFactor::usage = FormatUsage[
+"SpectralFormFactor[spectrum, t] computes the Spectral Form Factor K(t) \
+for a given energy ```spectrum``` at time ```t```.\nSpectralFormFactor[spectrum, tList] \
+computes K(t) vectorized over a list of times."];
+
+
+TimeAveragedSFF::usage = FormatUsage[
+"TimeAveragedSFF[tList, sffValues, windowSize] returns \
+the time-averaged SFF as a list of coordinate pairs {```tAveraged```, \
+```sffAveraged```} using a moving window to smooth out rapid fluctuations."];
+
+
+NumberVariance::usage = FormatUsage[
+"NumberVariance[unfoldedSpectrum, L, numSamples] computes the spectral number variance \
+\[CapitalSigma]^2(L) of an unfolded spectrum by sampling ```numSamples``` windows of length ```L```."
+];
+
+AnalyticalNumberVariancePoisson::usage = FormatUsage[
+"AnalyticalNumberVariancePoisson[L] returns the analytical number \
+variance for a Poissonian spectrum: L."
+];
+
+AnalyticalNumberVarianceGOE::usage = FormatUsage[
+"AnalyticalNumberVarianceGOE[L] returns the asymptotic analytical \
+number variance for the Gaussian Orthogonal Ensemble."
+];
+
+AnalyticalNumberVarianceGUE::usage = FormatUsage[
+"AnalyticalNumberVarianceGUE[L] returns the asymptotic analytical \
+number variance for the Gaussian Unitary Ensemble."
+];
+
+
 (* ::Subsection::Closed:: *)
 (*RMT*)
 
@@ -572,7 +605,7 @@ Begin["`Private`"];
 ClearAll[SigmaPlusSigmaMinus, SigmaMinusSigmaPlus];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*General quantum mechanics*)
 
 
@@ -709,7 +742,7 @@ SU2Rotation[n_List, \[Theta]R_] /; Length[n] == 3 :=
     ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Quantum chaos*)
 
 
@@ -819,6 +852,68 @@ ComplexSpacingRatios[eigs_List?VectorQ] := Module[
     {Power::infy, Infinity::indet}
   ]
 ]
+
+
+(* Base calculation for a single time step *)
+(* O(N) complexity using packed array vectorization *)
+SpectralFormFactor[spectrumList_List, t_?NumericQ] := 
+    Abs[Total[Exp[-I * spectrumList * t]]]^2 / Length[spectrumList];
+
+(* Vectorized and memory-efficient calculation for a list of times *)
+(* Map is preferred over Outer here to prevent massive RAM spikes for large spectra *)
+SpectralFormFactor[spectrumList_List, tList_List] := 
+    Map[SpectralFormFactor[spectrumList, #] &, tList];
+
+
+(* Time Averaging using purely functional, built-in C-level routines *)
+TimeAveragedSFF[tList_List, sffValues_List, windowSize_Integer?Positive] := Module[
+    {tAvg, sffAvg},
+    
+    (* MovingAverage perfectly handles the sliding window without For loops *)
+    tAvg = MovingAverage[tList, windowSize];
+    sffAvg = MovingAverage[sffValues, windowSize];
+    
+    (* Return as coordinate pairs ready for ListPlot *)
+    Transpose[{tAvg, sffAvg}]
+];
+
+
+NumberVariance[unfoldedSpectrum_List, l_?NumericQ, numSamples_Integer : 1000] := Module[
+    {
+        sortedSpectrum, minEnergy, maxEnergy, validMax, 
+        empiricalDist, starts, counts, totalLevels
+    },
+    
+    sortedSpectrum = Sort[unfoldedSpectrum];
+    totalLevels = Length[sortedSpectrum];
+    minEnergy = First[sortedSpectrum];
+    maxEnergy = Last[sortedSpectrum];
+    validMax = maxEnergy - l;
+    
+    (* Validaci\[OAcute]n para asegurar que el intervalo L cabe en el espectro *)
+    If[validMax <= minEnergy, 
+        Return[Missing["NotEnoughLevels"]]
+    ];
+    
+    (* Optimizaci\[OAcute]n O(1) usando la CDF emp\[IAcute]rica vectorizada pura *)
+    empiricalDist = EmpiricalDistribution[sortedSpectrum];
+    
+    (* Muestreo uniforme de los puntos de inicio *)
+    starts = Subdivide[minEnergy, validMax, numSamples];
+    
+    (* C\[AAcute]lculo vectorizado del n\[UAcute]mero de niveles en cada intervalo [x, x + L] *)
+    counts = totalLevels * (CDF[empiricalDist, starts + l] - CDF[empiricalDist, starts]);
+    
+    Variance[counts]
+];
+
+AnalyticalNumberVariancePoisson[l_?NumericQ] := l;
+
+AnalyticalNumberVarianceGOE[l_?NumericQ] := 
+    (2.0 / Pi^2) * (Log[2.0 * Pi * l] + EulerGamma + 1.0 - Pi^2 / 8.0);
+
+AnalyticalNumberVarianceGUE[l_?NumericQ] := 
+    (1.0 / Pi^2) * (Log[2.0 * Pi * l] + EulerGamma + 1.0);
 
 
 (* ::Subsection::Closed:: *)
