@@ -3,6 +3,9 @@
 BeginPackage["QuantumWalks`Billiards`", {"QuantumWalks`"}];
 
 
+<<ForScience`
+
+
 BuildShiftOperators::usage = "BuildShiftOperators[gridData, opts] construye \
 los operadores de desplazamiento para la rejilla dada.
 
@@ -27,6 +30,26 @@ BuildSymmetryIsometry[gridData, sy] construye la isometria para Cs \
 (eje Y), con paridad sy (1 o -1).
 BuildSymmetryIsometry[gridData, chars] construye la isometria para C4v \
 (8 isometrias) usando una Association de 8 caracteres.";
+
+
+GeneralizedGroverCoin::usage = FormatUsage[
+"GeneralizedGroverCoin[\[Theta]] yields the 4\[Times]4 anisotropic Grover coin matrix. \
+The parameter ```\[Theta]``` tunes the coupling between longitudinal and \
+transverse degrees of freedom, recovering the standard Grover diffusion coin at ```\[Theta]``` = \[Pi]/4."];
+
+
+BlockDiagonalCoin::usage = FormatUsage[
+"BlockDiagonalCoin[\[Phi]] yields the 4\[Times]4 block-diagonal rotation coin matrix. \
+The parameter ```\[Phi]``` controls the chirality and phase accumulation, isolating \
+the geometric chaos by creating no entanglement between longitudinal and transverse \
+degrees of freedom in the bulk."];
+
+
+GeneralizedHadamardCoin::usage = FormatUsage[
+"GeneralizedHadamardCoin[\[Xi]] yields the 4\[Times]4 generalized Hadamard coin matrix. \
+This coin maximizes quantum interference and is useful for analyzing the transition \
+from constructive interference (localization) to uniform distribution (ergodicity) \
+as the parameter ```\[Xi]``` varies."];
 
 
 Begin["`Common`Private`"];
@@ -627,6 +650,42 @@ OrtogonalizarYSembrar[CandidatosLocales_List, ContadorActual_Integer] := Module[
     
     NuevoContador
 ];*)
+
+
+(* Rutina para generar la moneda de Grover generalizada (anisotr\[OAcute]pica) para DTQWs *)
+
+GeneralizedGroverCoin[theta_] := Module[
+    {SuperpositionState, ProjectorMatrix},
+    
+    (* 1. Vector de estado en la base {Up, Down, Right, Left} *)
+    SuperpositionState = {Cos[theta], Cos[theta], Sin[theta], Sin[theta]} / Sqrt[2];
+    
+    (* 2. Proyector |s(\theta)><s(\theta)| usando el producto externo di\[AAcute]dico *)
+    ProjectorMatrix = Outer[Times, #, Conjugate[#]]&[SuperpositionState];
+    
+    (* 3. Operador de reflexi\[OAcute]n Householder C_G(\theta) = 2|s><s| - I *)
+    2 * ProjectorMatrix - IdentityMatrix[4]
+];
+
+
+BlockDiagonalCoin[phi_] := 
+    KroneckerProduct[
+        IdentityMatrix[2, SparseArray],
+        SparseArray[{
+            {Cos[phi], I * Sin[phi]},
+            {I * Sin[phi], Cos[phi]}
+        }]
+    ];
+
+
+GeneralizedHadamardCoin[AngleXi_] := 
+    KroneckerProduct[
+        SparseArray[{{1, 1}, {1, -1}} / Sqrt[2]],
+        SparseArray[{
+            {Cos[AngleXi], Sin[AngleXi]},
+            {Sin[AngleXi], -Cos[AngleXi]}
+        }]
+    ];
 
 
 End[];

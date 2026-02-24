@@ -294,6 +294,13 @@ EmpiricalKLDivergence[ratios, RatiosDistribution[#, 1]&, {0, 5, 0.1}] measures d
 , {FrontEndObject::notavail, First::normal}];
 
 
+LevelSpacingDistribution::usage = FormatUsage[
+"LevelSpacingDistribution[s, \[Beta]] returns the Wigner surmise probability \
+density function P(s) for the normalized nearest-neighbor level spacings. \
+The Dyson index ```\[Beta]``` determines the ensemble: 0 (Poisson), 1 (GOE), \
+2 (GUE), or 4 (GSE)."];
+
+
 (* ::Subsubsection::Closed:: *)
 (*Ginibre matrices*)
 
@@ -742,7 +749,7 @@ SU2Rotation[n_List, \[Theta]R_] /; Length[n] == 3 :=
     ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Quantum chaos*)
 
 
@@ -916,7 +923,7 @@ AnalyticalNumberVarianceGUE[l_?NumericQ] :=
     (1.0 / Pi^2) * (Log[2.0 * Pi * l] + EulerGamma + 1.0);
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*RMT*)
 
 
@@ -988,6 +995,24 @@ EmpiricalKLDivergence[data_List, targetPDF_, binSpec_: "FreedmanDiaconis"] :=
         (* 4. Compute KL Divergence *)
         KLDivergence[pEmpirical, qTheoretical]
     ];
+
+
+LevelSpacingDistribution[Spacing_, DysonIndex_] := 
+    Switch[DysonIndex,
+        0, 
+            Exp[-Spacing],
+        1, 
+            (Pi / 2) * Spacing * Exp[-(Pi / 4) * Spacing^2],
+        2, 
+            (32 / Pi^2) * Spacing^2 * Exp[-(4 / Pi) * Spacing^2],
+        4, 
+            (262144 / (729 * Pi^3)) * Spacing^4 * Exp[-(64 / (9 * Pi)) * Spacing^2],
+        _, 
+            Message[LevelSpacingDistribution::invBeta, DysonIndex]; $Failed
+    ];
+
+LevelSpacingDistribution::invBeta = "Dyson index \[Beta]=`1` is not supported. \
+Valid values are 0 (Poisson), 1 (GOE), 2 (GUE), and 4 (GSE).";
 
 
 (* ::Subsubsection::Closed:: *)
