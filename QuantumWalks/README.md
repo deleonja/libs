@@ -20,6 +20,10 @@ The package offers optimized tools for simulations on 1D infinite lines and 2D c
     
     Make sure to change `route/to/libs/` by the route in your machine to `libs/`.
 
+## Functions details and usage examples
+
+See the notebooks in `UsageExamples/`.
+
 ## 🛠️ Dependencies
 
 This package requires the **ForScience** library for usage message formatting.
