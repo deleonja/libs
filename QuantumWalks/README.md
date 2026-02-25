@@ -17,6 +17,8 @@ The package offers optimized tools for simulations on 1D infinite lines and 2D c
     ```mathematica
     Get["route/to/libs/QuantumWalks/Kernel/init.m"]
     ```
+    
+    Make sure to change `route/to/libs/` by the route in your machine to `libs/`.
 
 ## 🛠️ Dependencies
 
