@@ -1,40 +1,28 @@
-# QuantumWalks: a WL package for Discrete-Time Quantum Walks
+# QuantumWalks: a Wolfram Language package
 
-**QuantumWalks** is a Wolfram Language (Mathematica) package designed for the efficient simulation of Discrete Time Quantum Walks (DTQW).
-
-The package offers optimized tools for simulations on 1D infinite lines and 2D confined geometries (quantum billiards), leveraging `SparseArray` and vectorized operations to maximize computational performance and memory efficiency.
+The package offers optimized tools for simulations on 1D infinite lines and 2D confined geometries (like quantum billiards).
 
 ## 🚀 Key Features
 
-* **1D DTQW:** Implementation of walks on infinite lines with standard Hadamard coins and arbitrary SU(2) coins. Includes analysis tools for Parrondo's paradox (`L`, `W` inequalities).
-* **2D Quantum Billiards:** Modular framework for defining confined geometries.
+* **1D DTQW:** Optimized implementation for the state evolution of a discrete-time quantum walk on an infinite line.
+* **2D quantum billiards:** Modular framework for defining confined geometries.
     * Built-in support for the **Bunimovich Stadium**.
     * Automatic generation of shift operators ($W_m, W_n$) based on coordinate mapping.
-* **High Performance:** Extensive use of sparse linear algebra (`SparseArray`) and `KroneckerProduct` to handle large Hilbert spaces efficiently.
-* **Analysis:** Integrated tools to calculate position probability distributions and expected values.
 
-## 📦 Installation
+## 📦 How to use the package?
 
-1.  Download the `QuantumWalks` folder.
-2.  Move the folder to your Mathematica user applications directory. You can find this path by running the following command in a notebook:
-    ```wolfram
-    FileNameJoin[{$UserBaseDirectory, "Applications"}]
+1. Clone the `libs/` repository in your machine. 
+
+2.  Load the package in your notebook:
+    ```mathematica
+    Get["route/to/libs/QuantumWalks/Kernel/init.m"]
     ```
-3.  Restart Mathematica or the Kernel so the package is recognized.
 
 ## 🛠️ Dependencies
 
 This package requires the **ForScience** library for usage message formatting.
 * The package attempts to install it automatically if not found (`PacletInstall["ForScience"]`).
 * Repository: [MMA-ForScience on GitHub](https://github.com/MMA-ForScience/ForScience).
-
-## 💻 Quick Start Guide
-
-To load the full package:
-
-```wolfram
-<< QuantumWalks`
-```
 
 ## ⚠️ Technical Notes
 
