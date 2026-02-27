@@ -110,6 +110,10 @@ GCoupling] returns the Hamiltonian matrix for two arbitrary spins."
 (*Floquet (kicked) chains*)
 
 
+(* ::Text:: *)
+(*ApplyIsingStarEnvironment, ApplyMagnetickKickStarEnvironment, ApplyIsingStarInteractionQubitEnvironment*)
+
+
 Quiet[
 ApplyMagneticKick::usage = FormatUsage[
     "ApplyMagneticKick[State, bVector, Target] applies a local magnetic " <>
@@ -140,6 +144,11 @@ ApplyCommonEnvironment::usage = FormatUsage[
     "topology of an n-body common environment."
 ];
 
+ApplyIsingStar::usage = FormatUsage[
+"ApplyIsingStar[state, Jenv, Jint] applies Ising interactions of \
+strength J in a star topology and returns the new quantum state. QMB"
+];
+
 ApplyDephasingChain::usage = FormatUsage[
     "ApplyDephasingChain[State, Delta, JEnv, bEnv, JInt] applies a chain " <>
     "topology that only causes dephasing."
@@ -163,6 +172,24 @@ ApplyMagneticKickInhomogeneous::usage = FormatUsage[
 ApplyIsingAllVsAll::usage = 
     "ApplyIsingAllVsAll[State, JCoupling] applies Ising interactions " <>
     "between all possible pairs of qubits.";
+    
+ApplyIsingStarEnvironment::usage = FormatUsage[
+    "ApplyIsingStarEnvironment[State, JEnv] applies Ising interactions of " <>
+    "strength ```JEnv``` in the environment, which is the chain part of " <>
+    "the star topology."
+];
+
+ApplyMagneticKickStarEnvironment::usage = FormatUsage[
+    "ApplyMagneticKickStarEnvironment[State, bVector] applies the magnetic " <>
+    "kick to all but the first qubit. Think of all but the first as an " <>
+    "environment typically."
+];
+
+ApplyIsingStarInteractionQubitEnvironment::usage = FormatUsage[
+    "ApplyIsingStarInteractionQubitEnvironment[State, JInt] applies the " <>
+    "Ising interaction between the central qubit (Target 0) and the " <>
+    "environment qubits."
+];
 
 , {FrontEndObject::notavail, First::normal}];
 
@@ -691,6 +718,43 @@ ApplyIsingAllVsAll[State_, JCoupling_] := Module[
     M = DigitCount[Indices, 2, 1];
     NetPairs = ((2 * M - NumQ)^2 - NumQ) / 2;
     Exp[-I * JCoupling * NetPairs] * State
+];
+
+ApplyMagneticKickStarEnvironment[State_?VectorQ, bVector_] := Module[
+    {NumQ = Log2[Length[State]]},
+    (* Aprovechamos la sobrecarga que procesa multiples targets matricialmente *)
+    ApplyMagneticKick[State, bVector, Range[1, NumQ - 1]]
+];
+
+(* 2. Ising Environment (Anillo cerrado en qubits 1 a N-1) *)
+ApplyIsingStarEnvironment[State_?VectorQ, JEnv_] := Module[
+    {NumQ = Log2[Length[State]], Indices, SubChain, Shifted, XorSum, Phases},
+    If[!IntegerQ[NumQ], Return[$Failed]];
+    Indices = Range[0, Length[State] - 1];
+    
+    (* Ignoramos el qubit central (LSB) desplazando los bits *)
+    SubChain = BitShiftRight[Indices, 1];
+    (* Logica circular sobre subcadena de tamano NumQ - 1 *)
+    Shifted = BitAnd[BitOr[BitShiftLeft[SubChain, 1], 
+        BitShiftRight[SubChain, NumQ - 2]], 2^(NumQ - 1) - 1];
+    XorSum = Total[IntegerDigits[BitXor[SubChain, Shifted], 2, NumQ - 1], {2}];
+    
+    Phases = Exp[-I * JEnv * ((NumQ - 1) - 2 * XorSum)];
+    Phases * State
+];
+
+(* 3. Ising Interaction Central-Environment *)
+ApplyIsingStarInteractionQubitEnvironment[State_?VectorQ, JInt_] := Module[
+    {NumQ = Log2[Length[State]], Indices, Center, MEnv, NetPairs},
+    If[!IntegerQ[NumQ], Return[$Failed]];
+    Indices = Range[0, Length[State] - 1];
+    
+    Center = BitAnd[Indices, 1]; (* Bit del centro *)
+    MEnv = DigitCount[BitShiftRight[Indices, 1], 2, 1]; (* 1s en entorno *)
+    
+    (* Numero neto de pares paralelos vs antiparalelos O(1) *)
+    NetPairs = (2 * Center - 1) * (2 * MEnv - (NumQ - 1));
+    Exp[-I * JInt * NetPairs] * State
 ];
 
 
