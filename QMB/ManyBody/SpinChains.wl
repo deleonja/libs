@@ -1,0 +1,508 @@
+(* ::Package:: *)
+
+BeginPackage["QMB`ManyBody`", {"QMB`"}];
+
+
+Get["ForScience`"];
+
+
+(* ::Section:: *)
+(*Public definitions*)
+
+
+(* ::Subsection::Closed:: *)
+(*Symmetries and bases*)
+
+
+Quiet[
+SpinParityEigenvectors::usage = 
+"SpinParityEigenvectors[NumSites] gives a list of {Even, Odd} \
+eigenvectors of the parity operator.";
+
+TranslationEigenvectorRepresentatives::usage = FormatUsage[
+"TranslationEigenvectorRepresentatives[NumSites] returns a list of \
+sublists, each containing: the decimal representation of a bit-string \
+representative eigenvector, its pseudomomentum k, and the length of \
+its translation orbit."
+];
+
+BlockDiagonalize::usage = FormatUsage[
+"BlockDiagonalize[Matrix, Opts] returns ```Matrix``` in block-diagonal \
+form. Only option is '''Symmetry'''."
+];
+
+Symmetry::usage = FormatUsage[
+"Symmetry is an option for '''BlockDiagonalize'''. Takes the value \
+\"Translation\" (default)."
+];
+, {FrontEndObject::notavail, First::normal}];
+
+
+(* ::Subsection::Closed:: *)
+(*1D Hamiltonians*)
+
+
+Quiet[
+IsingHamiltonian::usage = FormatUsage[
+"IsingHamiltonian[Hx, Hz, JCoupling, NumSites, Opts] returns the \
+Hamiltonian H = \[Sum] (Hx \[Sigma]_i^x + Hz \[Sigma]_i^z) - \
+JCoupling \[Sum] \[Sigma]^z_i \[Sigma]^z_{i+1}. Option \
+BoundaryConditions (default \"Open\")."
+];
+
+BoundaryConditions::usage = FormatUsage[
+"BoundaryConditions specifies boundary conditions. \"Open\" or \
+\"Periodic\"."
+];
+
+ClosedXXZHamiltonian::usage = 
+"ClosedXXZHamiltonian[NumSites, Delta] returns the closed XXZ chain.";
+
+OpenXXZHamiltonian::usage = 
+"OpenXXZHamiltonian[NumSites, Delta, H1, H2] returns the open XXZ chain.";
+
+LeaSpinChainHamiltonian::usage = FormatUsage[
+"LeaSpinChainHamiltonian[Jxy, Jz, Omega, EpsilonD, NumSites, DSite] \
+returns the spin-1/2 chain with local defect."
+];
+
+XXZOpenHamiltonian::usage = FormatUsage[
+"XXZOpenHamiltonian[Jxy, Jz, Omega, EpsilonD, NumSites, DSite] \
+returns the open XXZ chain."
+];
+
+HeisenbergXXXwNoise::usage = 
+"HeisenbergXXXwNoise[HList, NumSites] returns the Heisenberg XXX \
+spin 1/2 chain with local noise.";
+, {FrontEndObject::notavail, First::normal}];
+
+
+(* ::Subsection::Closed:: *)
+(*Quantum Game of Life*)
+
+
+Quiet[
+QuantumGameOfLifeHamiltonian::usage = FormatUsage[
+"QuantumGameOfLifeHamiltonian[NumSites, Opts] returns the Hamiltonian \
+for the Quantum Game of Life. Options: Momentum -> \"All\" (default) \
+| Integer k. Parity -> \"None\" (default) | 1 | -1."
+];
+
+Momentum::usage = "Momentum is an option for QuantumGameOfLifeHamiltonian.";
+
+Parity::usage = "Parity is an option for QuantumGameOfLifeHamiltonian.";
+, {FrontEndObject::notavail, First::normal}];
+
+
+(* ::Subsection::Closed:: *)
+(*Arbitrary spin systems*)
+
+
+Quiet[
+TwoSpinHamiltonian::usage = FormatUsage[
+"TwoSpinHamiltonian[Spin1, Spin2, Epsilon1, Epsilon2, ThetaAngle, \
+GCoupling] returns the Hamiltonian matrix for two arbitrary spins."
+];
+, {FrontEndObject::notavail, First::normal}];
+
+
+(* ::Section:: *)
+(*Private definitions*)
+
+
+Begin["`SpinChains`Private`"];
+
+
+(* ::Subsection::Closed:: *)
+(*Symmetries and bases*)
+
+
+SpinParityEigenvectors[NumSites_Integer] := Module[
+    {TuplesList, NonPalindromes, Palindromes},
+    TuplesList = Tuples[{0, 1}, NumSites];
+    
+    (* Filter states invariant under spatial inversion (palindromes) *)
+    NonPalindromes = Select[TuplesList, # != Reverse[#] &];
+    Palindromes = Complement[TuplesList, NonPalindromes];
+    
+    (* Keep only one representative per mirrored pair *)
+    NonPalindromes = DeleteDuplicatesBy[NonPalindromes, 
+        Sort[{#, Reverse[#]}] &];
+        
+    Normal[{
+        Join[
+            SparseArray[FromDigits[#, 2] + 1 -> 1., 2^NumSites] & /@ 
+                Palindromes,
+            Normalize[SparseArray[{FromDigits[#, 2] + 1 -> 1., 
+                FromDigits[Reverse[#], 2] + 1 -> 1.}, 2^NumSites]] & /@ 
+                NonPalindromes
+        ],
+        Normalize[SparseArray[{FromDigits[#, 2] + 1 -> -1., 
+            FromDigits[Reverse[#], 2] + 1 -> 1.}, 2^NumSites]] & /@ 
+            NonPalindromes
+    }]
+];
+
+(* Shifts bits for translation symmetry via fast bitwise operations *)
+Translation[StateVector_, NumSites_Integer] := 
+    BitShiftRight[StateVector] + BitAnd[StateVector, 1] * 2^(NumSites - 1);
+
+BinaryNecklaces[NumSites_Integer] := Module[
+    {TuplesList = Tuples[{0, 1}, NumSites]},
+    Union[Table[First[Sort[NestList[RotateLeft, TList, NumSites - 1]]], 
+        {TList, TuplesList}]]
+];
+
+OmegaFactor[NumSites_, MomentumValue_] := 
+    Exp[2 * Pi * MomentumValue * I / NumSites];
+
+TranslationEigenvectorRepresentatives[NumSites_Integer] := Module[
+    {Necklaces, OrbitsList},
+    Necklaces = FromDigits[#, 2] & /@ BinaryNecklaces[NumSites];
+    
+    (* Group states into cyclic orbits *)
+    OrbitsList = DeleteDuplicates[
+        Sort[NestWhileList[Translation[#, NumSites] &, #, 
+            UnsameQ[##] &, All][[;; -2]]] & /@ Necklaces
+    ];
+    
+    Catenate[
+        Outer[
+            If[Mod[Length[#1] * #2, NumSites] == 0, 
+                {First[#1], #2, Length[#1]}, 
+                Nothing
+            ] &, 
+            OrbitsList, 
+            Range[0, NumSites - 1], 
+            1
+        ]
+    ]
+];
+
+RepresentativesOddBasis[BasisList_] := DeleteDuplicatesBy[
+    Discard[BasisList, PalindromeQ], Sort[{#, Reverse[#]}] &];
+
+RepresentativesEvenBasis[BasisList_] := DeleteDuplicatesBy[
+    BasisList, Sort[{#, Reverse[#]}] &];
+
+Options[BlockDiagonalize] = {Symmetry -> "Translation"};
+
+BlockDiagonalize[MatrixObject_, Opts:OptionsPattern[]] := 
+    Switch[OptionValue[Symmetry],
+        "Translation",
+            Module[{DimL = Log[2, Length[MatrixObject]], RepsG, ProjMat},
+                RepsG = GatherBy[
+                    TranslationEigenvectorRepresentatives[DimL], #[[2]] &];
+                
+                (* Construct change-of-basis matrix into momentum sectors *)
+                ProjMat = SparseArray[
+                    Catenate[
+                        Apply[
+                            Normalize[SparseArray[
+                                Thread[FoldList[Translation[#, DimL] &, #1, 
+                                    Range[#3 - 1]] + 1 -> 
+                                    Power[OmegaFactor[DimL, #2], 
+                                        Range[0., #3 - 1]]
+                                ], 2^DimL
+                            ]] &,
+                            RepsG, {2}
+                        ]
+                    ]
+                ];
+                BlockDiagonalMatrix[Chop[
+                    Conjugate[ProjMat] . MatrixObject . Transpose[ProjMat]]]
+            ],
+        "Parity",
+            Module[{DimL = Log[2, Length[MatrixObject]], BasisL, RepsL, 
+                RulesL, Heven, Hodd},
+                BasisL = Tuples[{0, 1}, DimL];
+                RulesL = AssociationThread[BasisL -> Range[Length[BasisL]]];
+                RepsL = Comap[{RepresentativesEvenBasis, 
+                    RepresentativesOddBasis}, BasisL];
+                
+                (* Evaluate symmetric and antisymmetric superpositions *)
+                Heven = 1/2 * (MatrixObject[[#1, #1]] + 
+                    MatrixObject[[#1, #2]] + MatrixObject[[#2, #1]] + 
+                    MatrixObject[[#2, #2]] & @@ 
+                    Map[RulesL, {#, Reverse /@ #} &[RepsL[[1]]], {2}]);
+                    
+                Hodd = 1/2 * (MatrixObject[[#1, #1]] - 
+                    MatrixObject[[#1, #2]] - MatrixObject[[#2, #1]] + 
+                    MatrixObject[[#2, #2]] & @@ 
+                    Map[RulesL, {#, Reverse /@ #} &[RepsL[[2]]], {2}]);
+                    
+                Heven = # . Heven . # &[DiagonalMatrix[
+                    ReplacePart[ConstantArray[1., Length[RepsL[[1]]]], 
+                        Thread[Catenate[Position[RepsL[[1]], _?PalindromeQ, 
+                            1]] -> 1/Sqrt[2.]]], 
+                    TargetStructure -> "Sparse"]];
+                {Heven, Hodd}
+            ],
+        _,
+            Message[BlockDiagonalize::badSymmetry, OptionValue[Symmetry]];
+            $Failed
+    ];
+
+BlockDiagonalize::badSymmetry = 
+    "Option badSymmetry -> `1` is not valid. Valid options: \"Translation\".";
+
+
+(* ::Subsection::Closed:: *)
+(*1D Hamiltonians*)
+
+
+Options[IsingHamiltonian] = {BoundaryConditions -> "Open"};
+
+IsingHamiltonian[Hx_, Hz_, JCoupling_, NumSites_, Opts:OptionsPattern[]] := 
+    Module[{NNIndices},
+        NNIndices = Switch[OptionValue[BoundaryConditions],
+            "Open",
+                Normal[SparseArray[Thread[{#, # + 1} -> 3], {NumSites}] & /@ 
+                    Range[NumSites - 1]],
+            "Periodic",
+                Normal[SparseArray[Thread[{#, Mod[# + 1, NumSites, 1]} -> 3], 
+                    {NumSites}] & /@ Range[NumSites]],
+            _,
+                Message[IsingHamiltonian::badBoundaryCondition, 
+                    OptionValue[BoundaryConditions]];
+                Return[$Failed];
+        ];
+        Total[{Hx * Pauli[#] + Hz * Pauli[3 * #] & /@ 
+            IdentityMatrix[NumSites], -JCoupling * (Pauli /@ NNIndices)}, 2]
+    ];
+
+IsingHamiltonian::badBoundaryCondition = 
+    "Option BoundaryConditions -> `1` not valid. \"Open\" or \"Periodic\".";
+
+
+ClosedXXZHamiltonian[NumSites_, Delta_] := Module[{NNIndices},
+    NNIndices = Normal[SparseArray[Thread[{#, Mod[# + 1, NumSites, 1]} -> 1], 
+        {NumSites}] & /@ Range[NumSites]];
+    N[Normal[-1/2 * Total[Join[Pauli /@ NNIndices, Pauli /@ (2 * NNIndices), 
+        Delta * (Pauli[#] - IdentityMatrix[2^NumSites]) & /@ (3 * NNIndices)]]]]
+];
+
+
+
+OpenXXZHamiltonian[NumSites_, Delta_, H1_, H2_] := Module[{NNIndices},
+    NNIndices = Normal[SparseArray[Thread[{#, Mod[# + 1, NumSites, 1]} -> 1], 
+        {NumSites}] & /@ Range[NumSites - 1]];
+    N[Normal[-1/2 * Total[Join[Pauli /@ NNIndices, Pauli /@ (2 * NNIndices), 
+        Delta * (Pauli[#] - IdentityMatrix[2^NumSites]) & /@ 
+        (3 * NNIndices)]] - 1/2 * (H1 * Pauli[Join[{1}, 
+        ConstantArray[0, NumSites - 1]]] + H2 * Pauli[Join[
+        ConstantArray[0, NumSites - 1], {1}]]) + 
+        1/2 * (H1 + H2) * IdentityMatrix[2^NumSites]]]
+];
+
+
+
+HamiltonianNN[Jxy_, Jz_, NumSites_] := Module[{NNIndices},
+    NNIndices = Normal[SparseArray[Thread[{#, Mod[# + 1, NumSites, 1]} -> 1], 
+        {NumSites}] & /@ Range[NumSites - 1]];
+    N[Normal[(1/4) * Total[Join[Jxy * (Pauli /@ NNIndices), 
+        Jxy * (Pauli /@ (2 * NNIndices)), 
+        Jz * (Pauli[#] & /@ (3 * NNIndices))]]]]
+];
+
+HamiltonianZ[Omega_, EpsilonD_, NumSites_, DSite_] := N[(1/2) * (Omega * Total[Pauli /@ (3 * IdentityMatrix[NumSites])] + EpsilonD * Pauli[Normal[SparseArray[DSite -> 3, NumSites]]])];
+
+LeaSpinChainHamiltonian[Jxy_, Jz_, Omega_, EpsilonD_, NumSites_, DSite_] := 
+    HamiltonianNN[Jxy, Jz, NumSites] + 
+    HamiltonianZ[Omega, EpsilonD, NumSites, DSite];
+
+XXZOpenHamiltonian[Jxy_, Jz_, Omega_, EpsilonD_, NumSites_, DSite_] := 
+    HamiltonianNN[Jxy, Jz, NumSites] + 
+    HamiltonianZ[Omega, EpsilonD, NumSites, DSite];
+
+
+HeisenbergXXXwNoise[HList_List, NumSites_] := Module[
+    {NNIndices, FirstSum, SecondSum},
+    NNIndices = Normal[SparseArray[Thread[{#, # + 1} -> 1], {NumSites}] & /@ 
+        Range[NumSites - 1]];
+    FirstSum = 1/4 * Total[Table[Pauli[i * #] & /@ NNIndices, {i, 3}], 2];
+    SecondSum = 1/2 * HList . 
+        (Pauli /@ DiagonalMatrix[ConstantArray[3, NumSites]]);
+    FirstSum + SecondSum
+];
+
+
+(* ::Subsection::Closed:: *)
+(*Quantum Game of Life*)
+
+
+Options[QuantumGameOfLifeHamiltonian] = {Momentum -> "All", Parity -> "None"};
+
+QuantumGameOfLifeHamiltonian[NumSites_Integer, Opts:OptionsPattern[]] := 
+    Module[{
+        MomVal = OptionValue[Momentum],
+        ParVal = OptionValue[Parity],
+        DimHilbert = 2^NumSites,
+        HFull, RulesList, BasisVecs, ProjMatrix
+    },
+
+    If[MomVal =!= "All" && !IntegerQ[MomVal], 
+        Return[Message[QuantumGameOfLifeHamiltonian::invMom, MomVal]; 
+        $Failed]
+    ];
+    If[ParVal =!= "None" && !MemberQ[{1, -1}, ParVal], 
+        Return[Message[QuantumGameOfLifeHamiltonian::invPar, ParVal]; 
+        $Failed]
+    ];
+    If[IntegerQ[MomVal] && ParVal =!= "None",
+        If[MomVal != 0 && MomVal != NumSites/2, 
+            Message[QuantumGameOfLifeHamiltonian::parityWarning, MomVal]]
+    ];
+
+    (* 1. PURE FUNCTIONAL HAMILTONIAN CONSTRUCTION *)
+    (* Calculates sum of next-nearest neighbors dynamically per basis state *)
+    RulesList = Flatten @ Table[
+        Module[{NeighborsSum},
+            Map[
+                Function[i,
+                    NeighborsSum = BitGet[StateVar, Mod[i - 2, NumSites]] + 
+                        BitGet[StateVar, Mod[i - 1, NumSites]] + 
+                        BitGet[StateVar, Mod[i + 1, NumSites]] + 
+                        BitGet[StateVar, Mod[i + 2, NumSites]];
+                    If[NeighborsSum == 2 || NeighborsSum == 3,
+                        {StateVar + 1, BitXor[StateVar, 2^i] + 1} -> 1.0,
+                        Nothing
+                    ]
+                ],
+                Range[0, NumSites - 1]
+            ]
+        ],
+        {StateVar, 0, DimHilbert - 1}
+    ];
+
+    HFull = SparseArray[RulesList, {DimHilbert, DimHilbert}];
+    If[MomVal === "All", Return[HFull]];
+
+    (* 2. MOMENTUM BASIS CONSTRUCTION *)
+    BasisVecs = Module[{NecklacesDict, KBasisList},
+        NecklacesDict = GroupBy[Range[0, DimHilbert - 1], 
+            Function[x, Min[NestList[RotateLeftBits[#, NumSites] &, x, 
+                NumSites - 1]]]
+        ];
+        
+        KBasisList = DeleteMissing @ Map[
+            Function[OrbitList,
+                Module[{OrbitLength = Length[OrbitList], VecState},
+                    If[Divisible[MomVal * OrbitLength, NumSites],
+                        VecState = Total @ MapIndexed[
+                            SparseArray[{OrbitList[[First[#2]]] + 1} -> 
+                                Exp[-I * 2. * Pi * MomVal * (#2[[1]] - 1) / NumSites], DimHilbert] &,
+                            OrbitList
+                        ];
+                        Normalize[VecState],
+                        Missing[]
+                    ]
+                ]
+            ],
+            Values[NecklacesDict]
+        ];
+        
+        If[KBasisList === {}, Return[SparseArray[{}, {0, 0}]]];
+        Flatten[KBasisList, 1]
+    ];
+
+    (* 3. PARITY PROJECTION *)
+    If[ParVal =!= "None",
+        BasisVecs = DeleteMissing @ Map[
+            Function[VecBasis,
+                Module[{VecInv, VecProj},
+                    (* Fast spatial inversion using position bit reversal *)
+                    VecInv = SparseArray[
+                        Thread[(ReverseBits[# - 1, NumSites] + 1 & /@ 
+                            VecBasis["NonzeroPositions"][[All, 1]]) -> 
+                            VecBasis["NonzeroValues"]], 
+                        DimHilbert
+                    ];
+                    VecProj = VecBasis + ParVal * VecInv;
+                    If[Norm[VecProj] > 10^-10, Normalize[VecProj], Missing[]]
+                ]
+            ], 
+            BasisVecs
+        ];
+
+        If[BasisVecs =!= {},
+             BasisVecs = DeleteDuplicates[Flatten[BasisVecs, 1], 
+                 (Norm[#1 - #2] < 10^-8 || Norm[#1 + #2] < 10^-8) &];
+        ,
+             Return[SparseArray[{}, {0, 0}]]
+        ];
+    ];
+
+    ProjMatrix = Transpose[SparseArray[BasisVecs]];
+    Chop[ConjugateTranspose[ProjMatrix] . HFull . ProjMatrix]
+];
+
+QuantumGameOfLifeHamiltonian::invMom = 
+    "Momentum `1` must be \"All\" or an integer 0 <= k < L.";
+QuantumGameOfLifeHamiltonian::invPar = 
+    "Parity `1` must be \"None\", 1, or -1.";
+QuantumGameOfLifeHamiltonian::parityWarning = 
+    "Warning: Inversion Parity is not a good quantum number for momentum `1`.";
+
+RotateLeftBits[IntObj_, NumSites_] := 
+    BitOr[BitShiftLeft[BitAnd[IntObj, 2^(NumSites - 1) - 1], 1], 
+        BitShiftRight[IntObj, NumSites - 1]];
+
+ReverseBits[IntObj_, NumSites_] := 
+    FromDigits[Reverse[IntegerDigits[IntObj, 2, NumSites]], 2];
+
+
+(* ::Subsection::Closed:: *)
+(*Arbitrary spin systems*)
+
+
+TwoSpinHamiltonian[Spin1_, Spin2_, Eps1_, Eps2_, Theta_, GCoup_] := Module[
+    {Ops1, Ops2, Term1, Term2, IntTerm, HTotal},
+    Ops1 = GenerateSpinOperators[Spin1];
+    Ops2 = GenerateSpinOperators[Spin2];
+    
+    If[FailureQ[Ops1] || FailureQ[Ops2], 
+        Return[Message[TwoSpinHamiltonian::invalidSpin, "{Spin1, Spin2}"]]];
+    
+    Term1 = Eps1 * KroneckerProduct[Ops1["z"], Ops2["Id"]];
+    Term2 = Eps2 * KroneckerProduct[Ops1["Id"], 
+        Cos[Theta] * Ops2["z"] + Sin[Theta] * Ops2["x"]];
+        
+    (* Interaction expanded as SzSz + 1/2(S+S- + S-S+) *)
+    IntTerm = (GCoup / Sqrt[Spin1 * Spin2]) * (
+        KroneckerProduct[Ops1["z"], Ops2["z"]] + 
+        0.5 * (KroneckerProduct[Ops1["+"], Ops2["-"]] + 
+        KroneckerProduct[Ops1["-"], Ops2["+"]])
+    );
+    
+    HTotal = Term1 + Term2 + IntTerm;
+    If[AllTrue[{Spin1, Spin2, Eps1, Eps2, Theta, GCoup}, NumericQ], 
+        Chop[HTotal], HTotal]
+];
+
+TwoSpinHamiltonian::invalidSpin = 
+    "Spin values `1` must be integers or half-integers.";
+    
+GenerateSpinOperators[SpinMag_] := Module[
+    {DimSpace, RangeVals, SzMat, SpMat, SmMat, SxMat, IdMat, UpperDiag},
+    DimSpace = Round[2 * SpinMag + 1];
+    If[Abs[DimSpace - (2 * SpinMag + 1)] > 10^-10, Return[$Failed]];
+    
+    RangeVals = Range[SpinMag, -SpinMag, -1];
+    SzMat = SparseArray[Band[{1, 1}] -> RangeVals, {DimSpace, DimSpace}];
+    
+    (* Raising operator entries given by standard angular momentum rules *)
+    UpperDiag = Table[Sqrt[(SpinMag - MagM) * (SpinMag + MagM + 1)], 
+        {MagM, RangeVals[[2 ;;]]}];
+        
+    SpMat = SparseArray[Band[{1, 2}] -> UpperDiag, {DimSpace, DimSpace}];
+    SmMat = Transpose[SpMat];
+    SxMat = (SpMat + SmMat) / 2;
+    IdMat = IdentityMatrix[DimSpace, SparseArray];
+    
+    <| "z" -> SzMat, "x" -> SxMat, "+" -> SpMat, "-" -> SmMat, "Id" -> IdMat |>
+];
+
+
+End[];
+EndPackage[];
