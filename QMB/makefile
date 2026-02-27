@@ -23,9 +23,9 @@ clean:
 	rm -f $(OutputSource)
 
 # Uso: 
-# make Bump TYPE=major
-# make Bump TYPE=minor
-# make Bump TYPE=patch
+# make bump type=major
+# make bump type=minor
+# make bump type=patch
 
 bump:
 	@CurrentVersion=$$(cat version.txt); \
@@ -39,10 +39,10 @@ bump:
 	elif [ "$(type)" = "patch" ]; then \
 		Patch=$$((Patch + 1)); \
 	else \
-		echo "Error: Define TYPE como 'major', 'minor' o 'patch'"; \
+		echo "Error: Define type como 'major', 'minor' o 'patch'"; \
 		exit 1; \
 	fi; \
 	NewVersion="$$Major.$$Minor.$$Patch"; \
 	echo $$NewVersion > version.txt; \
-	sed -i "s/Version -> \"[^\"]*\"/Version -> \"$$NewVersion\"/" PacletInfo.wl; \
+	sed -i "s/^\([ \t]*\)Version -> \"[^\"]*\"/\1Version -> \"$$NewVersion\"/" PacletInfo.wl; \
 	echo "Actualización $(type) exitosa. Nueva versión: $$NewVersion"
