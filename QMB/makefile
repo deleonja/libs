@@ -21,3 +21,28 @@ $(OutputSource):
 clean:
 	@echo "Eliminando $(OutputSource)..."
 	rm -f $(OutputSource)
+
+# Uso: 
+# make Bump TYPE=major
+# make Bump TYPE=minor
+# make Bump TYPE=patch
+
+bump:
+	@CurrentVersion=$$(cat version.txt); \
+	Major=$$(echo $$CurrentVersion | cut -d. -f1); \
+	Minor=$$(echo $$CurrentVersion | cut -d. -f2); \
+	Patch=$$(echo $$CurrentVersion | cut -d. -f3); \
+	if [ "$(type)" = "major" ]; then \
+		Major=$$((Major + 1)); Minor=0; Patch=0; \
+	elif [ "$(type)" = "minor" ]; then \
+		Minor=$$((Minor + 1)); Patch=0; \
+	elif [ "$(type)" = "patch" ]; then \
+		Patch=$$((Patch + 1)); \
+	else \
+		echo "Error: Define TYPE como 'major', 'minor' o 'patch'"; \
+		exit 1; \
+	fi; \
+	NewVersion="$$Major.$$Minor.$$Patch"; \
+	echo $$NewVersion > version.txt; \
+	sed -i "s/Version -> \"[^\"]*\"/Version -> \"$$NewVersion\"/" PacletInfo.wl; \
+	echo "Actualización $(type) exitosa. Nueva versión: $$NewVersion"
