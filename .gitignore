@@ -1,5 +1,6 @@
 QuantumWalks/UsageExamples/tmp/
-*.txt
+QMB/QMB_Source.txt
+QuantumWalks/QuantumWalks_Source.txt
 to_add/
 docs/
 usage_examples/parity_sectors_BH_R.nb  
