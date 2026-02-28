@@ -1,0 +1,3244 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[    125231,       3236]
+NotebookOptionsPosition[    106368,       2908]
+NotebookOutlinePosition[    112151,       3028]
+CellTagsIndexPosition[    112108,       3025]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Pruebas unitarias", "Title",
+ CellChangeTimes->{{3.98120924543184*^9, 3.981209248442069*^9}, {
+  3.981226574321357*^9, 3.9812265945732107`*^9}, {3.981226839504505*^9, 
+  3.981226843903975*^9}},ExpressionUUID->"cfcb92bb-b7fd-4267-8404-\
+24b8155c9efa"],
+
+Cell["\<\
+Se integraron y optimizaron las funciones de libs/SpinChain.m a QMB`ManyBody. \
+Aqu\[IAcute] hacemos pruebas unitarias para revisar que devuelvan la misma \
+salida que las antiguas funciones y cuantificamos la optimzaci\[OAcute]n. En \
+tiempo de c\[OAcute]mputo todas las funciones son ahora de 1 a 3 \
+\[OAcute]rdenes de magnitud m\[AAcute]s r\[AAcute]pidas.\
+\>", "Abstract",
+ CellChangeTimes->{{3.981226644241497*^9, 
+  3.981226802856324*^9}},ExpressionUUID->"4512168d-be7a-4149-9503-\
+efe0384f607d"],
+
+Cell[BoxData[
+ RowBox[{"Quiet", "[", 
+  RowBox[{"Get", "[", "\"\<QMB`\>\"", "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.981224518723638*^9, 3.981224521361072*^9}},
+ CellLabel->"In[1]:=",ExpressionUUID->"69478c71-37c2-4de7-8f29-832b47bb2b6e"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+   "Cambiar", " ", "por", " ", "la", " ", "ruta", " ", "local", " ", "en", " ",
+     "su", " ", "m\[AAcute]quina", " ", "a", " ", "libs"}], "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"Quiet", "[", 
+   RowBox[{
+   "Get", "[", "\"\</home/jadeleon/Documents/libs/carlos/SpinChain.m\>\"", 
+    "]"}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.981122547140258*^9, 3.981122549119322*^9}, {
+  3.9811374947639217`*^9, 3.98113750062859*^9}, {3.981143367693348*^9, 
+  3.9811433691692677`*^9}, {3.981209253100412*^9, 3.981209253375558*^9}, {
+  3.98120928358267*^9, 3.981209283801886*^9}, {3.981226814054323*^9, 
+  3.981226833397243*^9}},
+ CellLabel->"In[2]:=",ExpressionUUID->"733e62f6-ef39-455a-9d96-c16e95f56ad1"],
+
+Cell[CellGroupData[{
+
+Cell["ApplyMagneticKick", "Section",
+ CellChangeTimes->{{3.981209059379648*^9, 
+  3.981209071106469*^9}},ExpressionUUID->"c3178516-ced3-4bb2-b0a4-\
+c8e9e8cbc1cb"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{"1.", " ", "Par\[AAcute]metros", " ", "de", " ", "prueba"}], " ", 
+   "*)"}], "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"numQubits", " ", "=", " ", "14"}], ";"}], " ", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "Aumentamos", " ", "para", " ", "notar", " ", "el", " ", "impacto", " ", 
+     "de", " ", "la", " ", "vectorizaci\[OAcute]n"}], " ", "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"targetQubit", " ", "=", " ", "2"}], ";"}], " ", "\n", 
+   RowBox[{
+    RowBox[{"bVec", " ", "=", " ", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "1"}], ",", " ", "1"}], "}"}], ",", " ", "3"}], "]"}]}],
+     ";"}], "\n", "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{"Estado", " ", "aleatorio", " ", "normalizado", " ", "complejo"}],
+     " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"state", " ", "=", " ", 
+     RowBox[{"RandomChainProductState", "[", "numQubits", "]"}]}], 
+    ";"}]}]}]], "Input",
+ CellChangeTimes->{
+  3.981209438986136*^9, 3.981210166419097*^9, {3.981210243224876*^9, 
+   3.981210244047017*^9}, 3.9812102876507*^9, {3.981210336451643*^9, 
+   3.9812103657437057`*^9}, {3.981210407257346*^9, 3.981210407376131*^9}, {
+   3.981210493384562*^9, 3.981210493607678*^9}, {3.981210576908883*^9, 
+   3.981210577040587*^9}, {3.981210626328917*^9, 3.981210626387808*^9}, {
+   3.981211998201119*^9, 3.9812119983518248`*^9}, {3.9812120404398527`*^9, 
+   3.9812120405036697`*^9}, {3.981219469508275*^9, 3.98121946956742*^9}, {
+   3.9812196856145763`*^9, 3.9812196857126007`*^9}, {3.981219785352169*^9, 
+   3.981219785454479*^9}, {3.981219959427371*^9, 3.981219981421*^9}, {
+   3.981220831312167*^9, 3.981220832024746*^9}},
+ CellLabel->"In[3]:=",ExpressionUUID->"851410b0-ae66-412d-bd38-d1c8a2044d71"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+     "===", "===", "==="}], " ", "*)"}], "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"TEST", " ", "1"}], ":", " ", 
+    RowBox[{"KICK", " ", "LOCAL"}]}], "                         ", "*)"}], 
+  "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+     "===", "===", "==="}], " ", "*)"}], "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<--- TEST KICK LOCAL (Qubit \>\"", ",", " ", "targetQubit", ",",
+       " ", "\"\<) ---\>\""}], "]"}], ";"}], "\n", "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{" ", "A", ")"}], " ", "Paquete", " ", "Original", " ", 
+     RowBox[{"(", 
+      RowBox[{"con", " ", "bucle", " ", "For"}], ")"}]}], " ", "*)"}], "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tOld", ",", "oldStateLocal"}], "}"}], "=", 
+     RowBox[{"RepeatedTiming", "[", 
+      RowBox[{"SpinChain`ApplyMagnetickKick", "[", 
+       RowBox[{"state", ",", " ", "bVec", ",", " ", "targetQubit"}], "]"}], 
+      "]"}]}], ";"}], "\n", "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{" ", "B", ")"}], " ", "Nuevo", " ", "Paquete", " ", "QMB", " ", 
+     RowBox[{"(", 
+      RowBox[{"con", " ", "tensores", " ", "optimizados"}], ")"}]}], " ", 
+    "*)"}], "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tNew", ",", "newStateLocal"}], "}"}], "=", 
+     RowBox[{"RepeatedTiming", "[", 
+      RowBox[{"QMB`ManyBody`ApplyMagneticKick", "[", 
+       RowBox[{"state", ",", " ", "bVec", ",", " ", "targetQubit"}], "]"}], 
+      "]"}]}], ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{"Resultados", " ", "Test", " ", "1"}], " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"diffLocal", " ", "=", " ", 
+     RowBox[{"Norm", "[", 
+      RowBox[{"newStateLocal", " ", "-", " ", "oldStateLocal"}], "]"}]}], 
+    ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Diferencia (Norma): \>\"", ",", " ", "diffLocal"}], "]"}], 
+    ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<\[DownQuestion]Resultados id\[EAcute]nticos?: \>\"", ",", 
+      " ", 
+      RowBox[{
+       RowBox[{"Chop", "[", "diffLocal", "]"}], " ", "==", " ", "0"}]}], 
+     "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Tiempo promedio vieja rutina: \>\"", ",", " ", "tOld", ",", 
+      " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Tiempo promedio nueva rutina: \>\"", ",", " ", "tNew", ",", 
+      " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"tNew", " ", "<", " ", "tOld"}], ",", " ", 
+      RowBox[{"Print", "[", 
+       RowBox[{"\"\<\[DownExclamation]El nuevo es \>\"", ",", " ", 
+        RowBox[{"Round", "[", 
+         RowBox[{"tOld", "/", 
+          RowBox[{"Max", "[", 
+           RowBox[{"tNew", ",", " ", 
+            RowBox[{"10", "^", 
+             RowBox[{"-", "6"}]}]}], "]"}]}], "]"}], ",", 
+        " ", "\"\<x m\[AAcute]s r\[AAcute]pido!\\n\>\""}], "]"}], ",", " ", 
+      RowBox[{"Print", "[", "\"\<\\n\>\"", "]"}]}], "]"}], ";"}]}]}]], "Input",\
+
+ CellChangeTimes->{{3.981209469126457*^9, 3.981209488573353*^9}, {
+  3.981210207115367*^9, 3.981210209235097*^9}, {3.981220050378026*^9, 
+  3.981220080823937*^9}, {3.981220122789372*^9, 3.981220126127087*^9}, {
+  3.98122022074234*^9, 3.98122022101103*^9}},
+ CellLabel->"In[7]:=",ExpressionUUID->"f5e35842-1980-451e-a70b-bd4ffd43de6a"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+     "===", "===", "==="}], " ", "*)"}], "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"TEST", " ", "2"}], ":", " ", 
+    RowBox[{"GLOBAL", " ", "KICK", " ", 
+     RowBox[{"(", 
+      RowBox[{"All", " ", "qubits"}], ")"}]}]}], "     ", "*)"}], "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+     "===", "===", "==="}], " ", "*)"}], "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Print", "[", "\"\<--- TEST KICK GLOBAL ---\>\"", "]"}], ";"}], 
+   "\n", "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{" ", "A", ")"}], " ", "Paquete", " ", "Original"}], " ", "*)"}], 
+   "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tOld", ",", "oldStateGlobal"}], "}"}], "=", 
+     RowBox[{"RepeatedTiming", "[", " ", 
+      RowBox[{"SpinChain`ApplyMagnetickKick", "[", 
+       RowBox[{"state", ",", " ", "bVec"}], "]"}], "]"}]}], ";"}], "\n", "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{" ", "B", ")"}], " ", "Nuevo", " ", "Paquete", " ", "QMB"}], 
+    "  ", "*)"}], "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tNew", ",", "newStateGlobal"}], "}"}], "=", 
+     RowBox[{"RepeatedTiming", "[", 
+      RowBox[{"QMB`ManyBody`ApplyMagneticKick", "[", 
+       RowBox[{"state", ",", " ", "bVec"}], "]"}], "]"}]}], ";"}], "\n", "\n", 
+   RowBox[{
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"!", 
+       RowBox[{"VectorQ", "[", 
+        RowBox[{"newStateGlobal", ",", " ", "NumericQ"}], "]"}]}], ",", "\n", 
+      "    ", 
+      RowBox[{
+      "Print", "[", "\"\<\[WarningSign] ERROR: La funci\[OAcute]n nueva no se \
+evalu\[OAcute].\>\"", "]"}], ",", "\n", "    ", "\n", "    ", 
+      RowBox[{"(*", " ", 
+       RowBox[{"Resultados", " ", "Test", " ", "2"}], " ", "*)"}], "\n", 
+      "    ", 
+      RowBox[{
+       RowBox[{"diffGlobal", " ", "=", " ", 
+        RowBox[{"Norm", "[", 
+         RowBox[{"newStateGlobal", " ", "-", " ", "oldStateGlobal"}], "]"}]}],
+        ";", "\n", "    ", 
+       RowBox[{"Print", "[", 
+        RowBox[{"\"\<Diferencia (Norma): \>\"", ",", " ", "diffGlobal"}], 
+        "]"}], ";", "\n", "    ", 
+       RowBox[{"Print", "[", 
+        RowBox[{"\"\<\[DownQuestion]Resultados id\[EAcute]nticos?: \>\"", ",",
+          " ", 
+         RowBox[{
+          RowBox[{"Chop", "[", "diffGlobal", "]"}], " ", "==", " ", "0"}]}], 
+        "]"}], ";", "\n", "    ", 
+       RowBox[{"Print", "[", 
+        RowBox[{"\"\<Tiempo Original: \>\"", ",", " ", "tOld", ",", 
+         " ", "\"\< s\>\""}], "]"}], ";", "\n", "    ", 
+       RowBox[{"Print", "[", 
+        RowBox[{"\"\<Tiempo Optimizado: \>\"", ",", " ", "tNew", ",", 
+         " ", "\"\< s\>\""}], "]"}], ";", "\n", "    ", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"tNew", " ", "<", " ", "tOld"}], ",", " ", "\n", "        ", 
+         
+         RowBox[{"Print", "[", 
+          RowBox[{"\"\<\[DownExclamation]El nuevo es \>\"", ",", " ", 
+           RowBox[{"Round", "[", 
+            RowBox[{"tOld", "/", 
+             RowBox[{"Max", "[", 
+              RowBox[{"tNew", ",", " ", 
+               RowBox[{"10", "^", 
+                RowBox[{"-", "6"}]}]}], "]"}]}], "]"}], ",", 
+           " ", "\"\<x m\[AAcute]s r\[AAcute]pido!\>\""}], "]"}]}], "\n", 
+        "    ", "]"}], ";"}]}], "\n", "]"}], ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.981220556196591*^9, 3.981220699614314*^9}, {
+  3.981220731322221*^9, 3.981220732561655*^9}},
+ CellLabel->"In[16]:=",ExpressionUUID->"541643ad-9ed7-4412-aec5-c49a740a06c8"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["\<\"--- TEST KICK GLOBAL ---\"\>"], "Print",
+ CellChangeTimes->{3.981220654793379*^9, 3.981220700753277*^9, 
+  3.981220733120219*^9, 3.981226896449*^9, 3.981227110467332*^9},
+ CellLabel->
+  "During evaluation of \
+In[16]:=",ExpressionUUID->"cf363d85-6051-4bbd-bcb8-9da5345ddffd"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Diferencia (Norma): \"\>", "\[InvisibleSpace]", 
+   "3.915822341395615`*^-16"}],
+  SequenceForm["Diferencia (Norma): ", 3.915822341395615*^-16],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981220654793379*^9, 3.981220700753277*^9, 
+  3.981220733120219*^9, 3.981226896449*^9, 3.981227126456108*^9},
+ CellLabel->
+  "During evaluation of \
+In[16]:=",ExpressionUUID->"60704963-86f2-47b8-acbb-5ca74c2054e0"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownQuestion]Resultados id\[EAcute]nticos?: \"\>", "\[InvisibleSpace]",
+    "True"}],
+  SequenceForm["\[DownQuestion]Resultados id\[EAcute]nticos?: ", True],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981220654793379*^9, 3.981220700753277*^9, 
+  3.981220733120219*^9, 3.981226896449*^9, 3.981227126457965*^9},
+ CellLabel->
+  "During evaluation of \
+In[16]:=",ExpressionUUID->"6cce8bf2-6726-4532-8e82-6610a9de7dac"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo Original: \"\>", "\[InvisibleSpace]", "7.449521`", 
+   "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo Original: ", 7.449521, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981220654793379*^9, 3.981220700753277*^9, 
+  3.981220733120219*^9, 3.981226896449*^9, 3.981227126458828*^9},
+ CellLabel->
+  "During evaluation of \
+In[16]:=",ExpressionUUID->"d95f6f2a-bb16-4a38-9f04-a397e3dca9b4"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo Optimizado: \"\>", "\[InvisibleSpace]", 
+   "0.02010053125`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo Optimizado: ", 0.02010053125, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981220654793379*^9, 3.981220700753277*^9, 
+  3.981220733120219*^9, 3.981226896449*^9, 3.981227126459682*^9},
+ CellLabel->
+  "During evaluation of \
+In[16]:=",ExpressionUUID->"f0bafcbb-e8f4-43a6-8dac-dbd0c546263c"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownExclamation]El nuevo es \"\>", "\[InvisibleSpace]", 
+   "371", "\[InvisibleSpace]", "\<\"x m\[AAcute]s r\[AAcute]pido!\"\>"}],
+  SequenceForm[
+  "\[DownExclamation]El nuevo es ", 371, "x m\[AAcute]s r\[AAcute]pido!"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981220654793379*^9, 3.981220700753277*^9, 
+  3.981220733120219*^9, 3.981226896449*^9, 3.98122712646056*^9},
+ CellLabel->
+  "During evaluation of \
+In[16]:=",ExpressionUUID->"4b46e3ba-a3a9-40c0-8085-5a2bd7ef6a53"]
+}, Open  ]]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["ApplyIsingInteraction (previously ApplyIsing)", "Section",
+ CellChangeTimes->{
+  3.981221053595098*^9, 3.981225476446743*^9, {3.9812255144838247`*^9, 
+   3.981225519324347*^9}},ExpressionUUID->"c1982358-1de9-44ca-bdd2-\
+9eaabfdec54d"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{"1.", " ", "Par\[AAcute]metros", " ", "de", " ", "prueba"}], " ", 
+   "*)"}], "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"numQubits", " ", "=", " ", "14"}], ";"}], " ", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "Aumentamos", " ", "para", " ", "notar", " ", "el", " ", "impacto", " ", 
+     "de", " ", "la", " ", "vectorizaci\[OAcute]n"}], " ", "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"targetQubit", " ", "=", " ", "2"}], ";"}], " ", "\n", 
+   RowBox[{
+    RowBox[{"bVec", " ", "=", " ", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "1"}], ",", " ", "1"}], "}"}], ",", " ", "3"}], "]"}]}],
+     ";"}], "\[IndentingNewLine]", "\n", 
+   RowBox[{"(*", " ", 
+    RowBox[{"Estado", " ", "aleatorio", " ", "normalizado", " ", "complejo"}],
+     " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"state", " ", "=", " ", 
+     RowBox[{"RandomChainProductState", "[", "numQubits", "]"}]}], ";"}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"JCoupling", " ", "=", " ", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", " ", 
+        RowBox[{"2", " ", "Pi"}]}], "}"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"pos1", " ", "=", " ", "2"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"pos2", " ", "=", " ", "5"}], ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Print", "[", "\"\<--- TEST KICK ISING LOCAL ---\>\"", "]"}], 
+    ";"}], "\[IndentingNewLine]", "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{" ", "A", ")"}], " ", "Paquete", " ", "Original", " ", 
+     RowBox[{"(", 
+      RowBox[{
+      "con", " ", "bucle", " ", "For", " ", "evaluando", " ", "bit", " ", "a",
+        " ", "bit"}], ")"}]}], " ", "*)"}], "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tOldIsing", ",", " ", "oldStateIsing"}], "}"}], " ", "=", " ", 
+     "\n", "  ", 
+     RowBox[{"RepeatedTiming", "[", "\n", "   ", 
+      RowBox[{"SpinChain`ApplyIsing", "[", 
+       RowBox[{
+       "state", ",", " ", "JCoupling", ",", " ", "pos1", ",", " ", "pos2"}], 
+       "]"}], "]"}]}], ";"}], "\n", "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{" ", "B", ")"}], " ", "Nuevo", " ", "Paquete", " ", "QMB", " ", 
+     RowBox[{"(", 
+      RowBox[{
+      "con", " ", "operaciones", " ", "vectorizadas", " ", "de", " ", 
+       "bits"}], ")"}]}], " ", "*)"}], "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tNewIsing", ",", " ", "newStateIsing"}], "}"}], " ", "=", " ", 
+     "\n", "  ", 
+     RowBox[{"RepeatedTiming", "[", "\n", "   ", 
+      RowBox[{"QMB`ManyBody`ApplyIsingInteraction", "[", 
+       RowBox[{
+       "state", ",", " ", "JCoupling", ",", " ", "pos1", ",", " ", "pos2"}], 
+       "]"}], "]"}]}], ";"}], "\n", "\n", 
+   RowBox[{"(*", " ", 
+    RowBox[{"Resultados", " ", "Test", " ", "3"}], " ", "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"diffIsing", " ", "=", " ", 
+     RowBox[{"Norm", "[", 
+      RowBox[{"newStateIsing", " ", "-", " ", "oldStateIsing"}], "]"}]}], 
+    ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Diferencia (Norma): \>\"", ",", " ", "diffIsing"}], "]"}], 
+    ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<\[DownQuestion]Resultados id\[EAcute]nticos?: \>\"", ",", 
+      " ", 
+      RowBox[{
+       RowBox[{"Chop", "[", "diffIsing", "]"}], " ", "==", " ", "0"}]}], 
+     "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Tiempo promedio vieja rutina: \>\"", ",", " ", "tOldIsing", 
+      ",", " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Tiempo promedio nueva rutina: \>\"", ",", " ", "tNewIsing", 
+      ",", " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"tNewIsing", " ", "<", " ", "tOldIsing"}], ",", " ", "\n", "  ", 
+      RowBox[{"Print", "[", 
+       RowBox[{"\"\<\[DownExclamation]El nuevo es \>\"", ",", " ", 
+        RowBox[{"Round", "[", 
+         RowBox[{"tOldIsing", "/", 
+          RowBox[{"Max", "[", 
+           RowBox[{"tNewIsing", ",", " ", 
+            RowBox[{"10", "^", 
+             RowBox[{"-", "6"}]}]}], "]"}]}], "]"}], ",", " ", "\n", 
+        "   ", "\"\<x m\[AAcute]s r\[AAcute]pido!\\n\>\""}], "]"}], ",", " ", 
+      
+      RowBox[{"Print", "[", "\"\<\\n\>\"", "]"}]}], "]"}], ";"}]}]}]], "Input",\
+
+ CellChangeTimes->{{3.981221045997884*^9, 3.981221050589617*^9}, {
+  3.9812219586527*^9, 3.981221960718533*^9}, {3.981227023794477*^9, 
+  3.981227081165039*^9}},
+ CellLabel->"In[20]:=",ExpressionUUID->"7ddb229a-f8fb-4835-981b-eec4fab0d096"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["\<\"--- TEST KICK ISING LOCAL ---\"\>"], "Print",
+ CellChangeTimes->{3.981227150883297*^9},
+ CellLabel->
+  "During evaluation of \
+In[20]:=",ExpressionUUID->"f8ed8614-6cee-40a1-b9f8-da39a660244b"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Diferencia (Norma): \"\>", "\[InvisibleSpace]", 
+   "7.859771751940704`*^-17"}],
+  SequenceForm["Diferencia (Norma): ", 7.859771751940704*^-17],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981227153675391*^9},
+ CellLabel->
+  "During evaluation of \
+In[20]:=",ExpressionUUID->"704a06e4-9b4c-4166-aa57-071c4fab7254"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownQuestion]Resultados id\[EAcute]nticos?: \"\>", "\[InvisibleSpace]",
+    "True"}],
+  SequenceForm["\[DownQuestion]Resultados id\[EAcute]nticos?: ", True],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981227153676991*^9},
+ CellLabel->
+  "During evaluation of \
+In[20]:=",ExpressionUUID->"9db8d93e-8f59-4d45-a09f-3cc766ea93c3"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio vieja rutina: \"\>", "\[InvisibleSpace]", 
+   "0.039776`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio vieja rutina: ", 0.039776, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.98122715367797*^9},
+ CellLabel->
+  "During evaluation of \
+In[20]:=",ExpressionUUID->"4c12d7a4-23cc-424b-9616-2d08bf0b5c73"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio nueva rutina: \"\>", "\[InvisibleSpace]", 
+   "0.000213936767578125`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio nueva rutina: ", 0.000213936767578125, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.9812271536789*^9},
+ CellLabel->
+  "During evaluation of \
+In[20]:=",ExpressionUUID->"fef1be0a-ad08-4757-a0e8-63688f845291"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownExclamation]El nuevo es \"\>", "\[InvisibleSpace]", 
+   "186", "\[InvisibleSpace]", "\<\"x m\[AAcute]s r\[AAcute]pido!\\n\"\>"}],
+  SequenceForm[
+  "\[DownExclamation]El nuevo es ", 186, "x m\[AAcute]s r\[AAcute]pido!\n"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981227153679771*^9},
+ CellLabel->
+  "During evaluation of \
+In[20]:=",ExpressionUUID->"fdf74611-da9c-45e8-9aaf-e2a78aa5d4c1"]
+}, Open  ]]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["ApplyPeriodicIsingInteraction (previously ApplyIsingChain)", "Section",
+ CellChangeTimes->{
+  3.981221106994338*^9, {3.981225702036915*^9, 
+   3.981225728175692*^9}},ExpressionUUID->"d9a1a459-7e44-4dfb-ae95-\
+b1c6aa26cbde"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{"1.", " ", "Par\[AAcute]metros", " ", "de", " ", "prueba"}], " ", 
+   "*)"}], "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"numQubits", " ", "=", " ", "14"}], ";"}], " ", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "Aumentamos", " ", "para", " ", "notar", " ", "el", " ", "impacto", " ", 
+     "de", " ", "la", " ", "vectorizaci\[OAcute]n"}], " ", "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"targetQubit", " ", "=", " ", "2"}], ";"}], " ", "\n", 
+   RowBox[{
+    RowBox[{"bVec", " ", "=", " ", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "1"}], ",", " ", "1"}], "}"}], ",", " ", "3"}], "]"}]}],
+     ";"}], "\n", "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{"Estado", " ", "aleatorio", " ", "normalizado", " ", "complejo"}],
+     " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"state", " ", "=", " ", 
+     RowBox[{"RandomChainProductState", "[", "numQubits", "]"}]}], ";"}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"JCoupling", " ", "=", " ", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", " ", 
+        RowBox[{"2", " ", "Pi"}]}], "}"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"pos1", " ", "=", " ", "2"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"pos2", " ", "=", " ", "5"}], ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Print", "[", "\"\<--- TEST ISING CHAIN ---\>\"", "]"}], ";"}], 
+   "\n", "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{" ", "A", ")"}], " ", "Paquete", " ", "Original", " ", 
+     RowBox[{"(", 
+      RowBox[{"Doble", " ", "bucle", " ", 
+       RowBox[{"For", ":", " ", 
+        RowBox[{"N", " ", "Qubits", " ", "x", " ", 
+         RowBox[{"2", "^", "N"}], " ", "Estados"}]}]}], ")"}]}], " ", "*)"}], 
+   "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tOldChain", ",", " ", "oldStateChain"}], "}"}], " ", "=", " ", 
+     "\n", "  ", 
+     RowBox[{"RepeatedTiming", "[", "\n", "   ", 
+      RowBox[{"SpinChain`ApplyIsingChain", "[", 
+       RowBox[{"state", ",", " ", "JCoupling"}], "]"}], "]"}]}], ";"}], "\n", 
+   "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{" ", "B", ")"}], " ", "Nuevo", " ", "Paquete", " ", "QMB", " ", 
+     RowBox[{"(", 
+      RowBox[{
+      "Operaci\[OAcute]n", " ", "anal\[IAcute]tica", " ", "de", " ", "bits", " ",
+        "O", 
+       RowBox[{"(", "1", ")"}], " ", "loopless"}], ")"}]}], " ", "*)"}], "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tNewChain", ",", " ", "newStateChain"}], "}"}], " ", "=", " ", 
+     "\n", "  ", 
+     RowBox[{"RepeatedTiming", "[", "\n", "   ", 
+      RowBox[{"QMB`ManyBody`ApplyPeriodicIsingInteraction", "[", 
+       RowBox[{"state", ",", " ", "JCoupling"}], "]"}], "]"}]}], ";"}], "\n", 
+   "\n", 
+   RowBox[{
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"!", " ", 
+       RowBox[{"VectorQ", "[", 
+        RowBox[{"newStateChain", ",", " ", "NumericQ"}], "]"}]}], ",", "\n", 
+      "      ", 
+      RowBox[{
+      "Print", "[", "\"\<\[WarningSign] ERROR: La funci\[OAcute]n nueva no se \
+evalu\[OAcute].\>\"", "]"}], ",", "\n", "      ", "\n", "      ", 
+      RowBox[{"(*", " ", 
+       RowBox[{"Resultados", " ", "Test", " ", "4"}], " ", "*)"}], "\n", 
+      "      ", 
+      RowBox[{
+       RowBox[{"diffChain", " ", "=", " ", 
+        RowBox[{"Norm", "[", 
+         RowBox[{"newStateChain", " ", "-", " ", "oldStateChain"}], "]"}]}], ";",
+        "\n", "      ", 
+       RowBox[{"Print", "[", 
+        RowBox[{"\"\<Diferencia (Norma): \>\"", ",", " ", "diffChain"}], 
+        "]"}], ";", "\n", "      ", 
+       RowBox[{"Print", "[", 
+        RowBox[{"\"\<\[DownQuestion]Resultados id\[EAcute]nticos?: \>\"", ",",
+          " ", 
+         RowBox[{
+          RowBox[{"Chop", "[", "diffChain", "]"}], " ", "==", " ", "0"}]}], 
+        "]"}], ";", "\n", "      ", 
+       RowBox[{"Print", "[", 
+        RowBox[{"\"\<Tiempo promedio vieja rutina: \>\"", ",", " ", 
+         "tOldChain", ",", " ", "\"\< s\>\""}], "]"}], ";", "\n", "      ", 
+       RowBox[{"Print", "[", 
+        RowBox[{"\"\<Tiempo promedio nueva rutina: \>\"", ",", " ", 
+         "tNewChain", ",", " ", "\"\< s\>\""}], "]"}], ";", "\n", "      ", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"tNewChain", " ", "<", " ", "tOldChain"}], ",", " ", "\n", 
+         "           ", 
+         RowBox[{"Print", "[", 
+          RowBox[{"\"\<\[DownExclamation]El nuevo es \>\"", ",", " ", 
+           RowBox[{"Round", "[", 
+            RowBox[{"tOldChain", "/", 
+             RowBox[{"Max", "[", 
+              RowBox[{"tNewChain", ",", " ", 
+               RowBox[{"10", "^", 
+                RowBox[{"-", "6"}]}]}], "]"}]}], "]"}], ",", 
+           " ", "\"\<x m\[AAcute]s r\[AAcute]pido!\>\""}], "]"}]}], "\n", 
+        "       ", "]"}], ";"}]}], "\n", "  ", "]"}], ";"}]}]}]], "Input",
+ CellChangeTimes->{
+  3.98122110247569*^9, {3.981227009357465*^9, 3.981227010429163*^9}, 
+   3.9812271598724546`*^9},
+ CellLabel->"In[36]:=",ExpressionUUID->"29005ae0-38f0-4fdf-b0d5-a78d1c2ea3ca"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["\<\"--- TEST ISING CHAIN ---\"\>"], "Print",
+ CellChangeTimes->{3.981221108720565*^9, 3.9812269256375504`*^9, 
+  3.9812271647549133`*^9},
+ CellLabel->
+  "During evaluation of \
+In[36]:=",ExpressionUUID->"0a8ea793-0d61-4719-a5e7-34b98438e3d1"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Diferencia (Norma): \"\>", "\[InvisibleSpace]", 
+   "6.968753099816713`*^-16"}],
+  SequenceForm["Diferencia (Norma): ", 6.968753099816713*^-16],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981221108720565*^9, 3.9812269256375504`*^9, 
+  3.981227168742278*^9},
+ CellLabel->
+  "During evaluation of \
+In[36]:=",ExpressionUUID->"67446660-ca34-401d-946b-4f1d48b4667d"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownQuestion]Resultados id\[EAcute]nticos?: \"\>", "\[InvisibleSpace]",
+    "True"}],
+  SequenceForm["\[DownQuestion]Resultados id\[EAcute]nticos?: ", True],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981221108720565*^9, 3.9812269256375504`*^9, 
+  3.9812271687442827`*^9},
+ CellLabel->
+  "During evaluation of \
+In[36]:=",ExpressionUUID->"5e83c5f3-5073-45c2-b5f0-0ecd985eaeea"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio vieja rutina: \"\>", "\[InvisibleSpace]", 
+   "0.518605`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio vieja rutina: ", 0.518605, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981221108720565*^9, 3.9812269256375504`*^9, 
+  3.9812271687451363`*^9},
+ CellLabel->
+  "During evaluation of \
+In[36]:=",ExpressionUUID->"0e9760a7-35a4-4706-b2c6-479c891e7180"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio nueva rutina: \"\>", "\[InvisibleSpace]", 
+   "0.014665484375`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio nueva rutina: ", 0.014665484375, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981221108720565*^9, 3.9812269256375504`*^9, 
+  3.9812271687460003`*^9},
+ CellLabel->
+  "During evaluation of \
+In[36]:=",ExpressionUUID->"89ee7d52-76a3-420f-b98f-d5e57c6241ba"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownExclamation]El nuevo es \"\>", "\[InvisibleSpace]", "35",
+    "\[InvisibleSpace]", "\<\"x m\[AAcute]s r\[AAcute]pido!\"\>"}],
+  SequenceForm[
+  "\[DownExclamation]El nuevo es ", 35, "x m\[AAcute]s r\[AAcute]pido!"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981221108720565*^9, 3.9812269256375504`*^9, 
+  3.9812271687468767`*^9},
+ CellLabel->
+  "During evaluation of \
+In[36]:=",ExpressionUUID->"01a268f2-7bd4-4210-b34e-0fc6d7aac229"]
+}, Open  ]]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["ApplyKickedIsingChain (previosly ApplyChain)", "Section",
+ CellChangeTimes->{{3.981221866095793*^9, 3.981221868307879*^9}, {
+  3.981225093116428*^9, 
+  3.981225105783566*^9}},ExpressionUUID->"44505d95-19d7-45c7-b627-\
+995992fc6a59"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+     "===", "===", "==="}], " ", "*)"}], "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"TEST", " ", "5"}], ":", " ", 
+      RowBox[{"APPLY", " ", "CHAIN"}]}], " ", "&"}], " ", "INVERSE", " ", 
+    "CHAIN"}], "        ", "*)"}], "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+     "===", "===", "==="}], " ", "*)"}], "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Print", "[", "\"\<--- TEST APPLY CHAIN ---\>\"", "]"}], ";"}], 
+   "\n", "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "Usamos", " ", "el", " ", "mismo", " ", "estado", " ", "aleatorio", " ", 
+     "del", " ", "test", " ", "anterior"}], " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"numQubits", " ", "=", " ", "14"}], ";"}], " ", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "Aumentamos", " ", "para", " ", "notar", " ", "el", " ", "impacto", " ", 
+     "de", " ", "la", " ", "vectorizaci\[OAcute]n"}], " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"bVec", " ", "=", " ", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "1"}], ",", " ", "1"}], "}"}], ",", " ", "3"}], "]"}]}],
+     ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"JCoupling", " ", "=", " ", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", " ", 
+        RowBox[{"2", " ", "Pi"}]}], "}"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"pos1", " ", "=", " ", "2"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"pos2", " ", "=", " ", "5"}], ";"}], "\[IndentingNewLine]", "\n", 
+   
+   RowBox[{
+    RowBox[{"state", " ", "=", " ", 
+     RowBox[{"RandomChainProductState", "[", "numQubits", "]"}]}], ";"}], 
+   "\n", "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{" ", "A", ")"}], " ", "Paquete", " ", "Original"}], " ", "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tOld", ",", " ", "oldState"}], "}"}], " ", "=", " ", 
+     RowBox[{"RepeatedTiming", "[", "\n", "    ", 
+      RowBox[{"SpinChain`ApplyChain", "[", 
+       RowBox[{"state", ",", " ", "JCoupling", ",", " ", "bVec"}], "]"}], 
+      "]"}]}], ";"}], "\n", "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{" ", "B", ")"}], " ", "Nuevo", " ", "Paquete", " ", "QMB"}], " ",
+     "*)"}], "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tNew", ",", " ", "newState"}], "}"}], " ", "=", " ", 
+     RowBox[{"RepeatedTiming", "[", "\n", "    ", 
+      RowBox[{"QMB`ManyBody`ApplyKickedIsingChain", "[", 
+       RowBox[{"state", ",", " ", "JCoupling", ",", " ", "bVec"}], "]"}], 
+      "]"}]}], ";"}], "\n", "\n", 
+   RowBox[{
+    RowBox[{"diff", " ", "=", " ", 
+     RowBox[{"Norm", "[", 
+      RowBox[{"newState", " ", "-", " ", "oldState"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Diferencia (Norma): \>\"", ",", " ", "diff"}], "]"}], ";"}],
+    "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<\[DownQuestion]Resultados id\[EAcute]nticos?: \>\"", ",", 
+      " ", 
+      RowBox[{
+       RowBox[{"Chop", "[", "diff", "]"}], " ", "==", " ", "0"}]}], "]"}], 
+    ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Tiempo promedio vieja rutina: \>\"", ",", " ", "tOld", ",", 
+      " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Tiempo promedio nueva rutina: \>\"", ",", " ", "tNew", ",", 
+      " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"tNew", " ", "<", " ", "tOld"}], ",", " ", 
+      RowBox[{"Print", "[", 
+       RowBox[{"\"\<\[DownExclamation]El nuevo es \>\"", ",", " ", 
+        RowBox[{"Round", "[", 
+         RowBox[{"tOld", "/", 
+          RowBox[{"Max", "[", 
+           RowBox[{"tNew", ",", " ", 
+            RowBox[{"10", "^", 
+             RowBox[{"-", "6"}]}]}], "]"}]}], "]"}], ",", 
+        " ", "\"\<x m\[AAcute]s r\[AAcute]pido!\\n\>\""}], "]"}], ",", " ", 
+      RowBox[{"Print", "[", "\"\<\\n\>\"", "]"}]}], "]"}], ";"}]}]}]], "Input",\
+
+ CellChangeTimes->{{3.981221871961817*^9, 3.98122190333538*^9}, {
+   3.981221964801646*^9, 3.9812220173997307`*^9}, {3.981222067995471*^9, 
+   3.981222068897605*^9}, 3.9812251145768223`*^9},
+ CellLabel->"In[47]:=",ExpressionUUID->"27ad7c8b-4680-4746-94a3-5d253d994c5f"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["\<\"--- TEST APPLY CHAIN ---\"\>"], "Print",
+ CellChangeTimes->{{3.981221885802696*^9, 3.981221907660172*^9}, {
+   3.981221980327504*^9, 3.981222000043589*^9}, 3.9812220331728907`*^9, 
+   3.981227181223743*^9},
+ CellLabel->
+  "During evaluation of \
+In[47]:=",ExpressionUUID->"b512c944-251f-4845-87f7-a5e0f1497634"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Diferencia (Norma): \"\>", "\[InvisibleSpace]", 
+   "8.123991822534103`*^-16"}],
+  SequenceForm["Diferencia (Norma): ", 8.123991822534103*^-16],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.981221885802696*^9, 3.981221907660172*^9}, {
+   3.981221980327504*^9, 3.981222000043589*^9}, 3.9812220331728907`*^9, 
+   3.981227198175539*^9},
+ CellLabel->
+  "During evaluation of \
+In[47]:=",ExpressionUUID->"38e8fe0e-b4fd-4bbc-9f03-a57bfc5712c5"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownQuestion]Resultados id\[EAcute]nticos?: \"\>", "\[InvisibleSpace]",
+    "True"}],
+  SequenceForm["\[DownQuestion]Resultados id\[EAcute]nticos?: ", True],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.981221885802696*^9, 3.981221907660172*^9}, {
+   3.981221980327504*^9, 3.981222000043589*^9}, 3.9812220331728907`*^9, 
+   3.9812271981790133`*^9},
+ CellLabel->
+  "During evaluation of \
+In[47]:=",ExpressionUUID->"cd2cbd3e-66ee-48ae-8cc7-7c3d1e597f62"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio vieja rutina: \"\>", "\[InvisibleSpace]", 
+   "7.763361`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio vieja rutina: ", 7.763361, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.981221885802696*^9, 3.981221907660172*^9}, {
+   3.981221980327504*^9, 3.981222000043589*^9}, 3.9812220331728907`*^9, 
+   3.9812271981798887`*^9},
+ CellLabel->
+  "During evaluation of \
+In[47]:=",ExpressionUUID->"e104fd16-7649-4488-915c-ba957621ce52"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio nueva rutina: \"\>", "\[InvisibleSpace]", 
+   "0.0463715`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio nueva rutina: ", 0.0463715, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.981221885802696*^9, 3.981221907660172*^9}, {
+   3.981221980327504*^9, 3.981222000043589*^9}, 3.9812220331728907`*^9, 
+   3.981227198180801*^9},
+ CellLabel->
+  "During evaluation of \
+In[47]:=",ExpressionUUID->"121aef5a-ee72-4732-9c85-b7153a0ffdd8"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownExclamation]El nuevo es \"\>", "\[InvisibleSpace]", 
+   "167", "\[InvisibleSpace]", "\<\"x m\[AAcute]s r\[AAcute]pido!\\n\"\>"}],
+  SequenceForm[
+  "\[DownExclamation]El nuevo es ", 167, "x m\[AAcute]s r\[AAcute]pido!\n"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.981221885802696*^9, 3.981221907660172*^9}, {
+   3.981221980327504*^9, 3.981222000043589*^9}, 3.9812220331728907`*^9, 
+   3.981227198181655*^9},
+ CellLabel->
+  "During evaluation of \
+In[47]:=",ExpressionUUID->"dcd1b6ec-24a6-4acf-ad3d-9458df857915"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Print", "[", "\"\<--- TEST INVERSE CHAIN ---\>\"", "]"}], ";"}], 
+  "\n", "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Usamos", " ", "el", " ", "mismo", " ", "estado", " ", "aleatorio", " ", 
+    "del", " ", "test", " ", "anterior"}], " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"numQubits", " ", "=", " ", "14"}], ";"}], " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Aumentamos", " ", "para", " ", "notar", " ", "el", " ", "impacto", " ", 
+    "de", " ", "la", " ", "vectorizaci\[OAcute]n"}], " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"bVec", " ", "=", " ", 
+   RowBox[{"RandomReal", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", " ", "1"}], "}"}], ",", " ", "3"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"JCoupling", " ", "=", " ", 
+   RowBox[{"RandomReal", "[", 
+    RowBox[{"{", 
+     RowBox[{"0", ",", " ", 
+      RowBox[{"2", " ", "Pi"}]}], "}"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"pos1", " ", "=", " ", "2"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"pos2", " ", "=", " ", "5"}], ";"}], "\n"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"tOldInv", ",", " ", "oldStateInv"}], "}"}], " ", "=", " ", 
+   RowBox[{"RepeatedTiming", "[", 
+    RowBox[{"SpinChain`ApplyInverseChain", "[", 
+     RowBox[{"state", ",", " ", "JCoupling", ",", " ", "bVec"}], "]"}], 
+    "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"tNewInv", ",", " ", "newStateInv"}], "}"}], " ", "=", " ", 
+    RowBox[{"RepeatedTiming", "[", 
+     RowBox[{"QMB`ManyBody`ApplyInverseKickedIsingChain", "[", 
+      RowBox[{"state", ",", " ", "JCoupling", ",", " ", "bVec"}], "]"}], 
+     "]"}]}], ";"}], "\n"}], "\n", 
+ RowBox[{
+  RowBox[{"diffInv", " ", "=", " ", 
+   RowBox[{"Norm", "[", 
+    RowBox[{"newStateInv", " ", "-", " ", "oldStateInv"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"\"\<Diferencia (Norma): \>\"", ",", " ", "diffInv"}], "]"}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"\"\<\[DownQuestion]Resultados id\[EAcute]nticos?: \>\"", ",", " ", 
+    RowBox[{
+     RowBox[{"Chop", "[", "diffInv", "]"}], " ", "==", " ", "0"}]}], "]"}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"\"\<Tiempo promedio vieja rutina: \>\"", ",", " ", "tOldInv", ",",
+     " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"\"\<Tiempo promedio nueva rutina: \>\"", ",", " ", "tNewInv", ",",
+     " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"If", "[", 
+   RowBox[{
+    RowBox[{"tNewInv", " ", "<", " ", "tOldInv"}], ",", " ", 
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<\[DownExclamation]El nuevo es \>\"", ",", " ", 
+      RowBox[{"Round", "[", 
+       RowBox[{"tOldInv", "/", 
+        RowBox[{"Max", "[", 
+         RowBox[{"tNewInv", ",", " ", 
+          RowBox[{"10", "^", 
+           RowBox[{"-", "6"}]}]}], "]"}]}], "]"}], ",", 
+      " ", "\"\<x m\[AAcute]s r\[AAcute]pido!\\n\>\""}], "]"}], ",", " ", 
+    RowBox[{"Print", "[", "\"\<\\n\>\"", "]"}]}], "]"}], ";"}]}], "Input",
+ CellChangeTimes->{
+  3.981221907360322*^9, {3.9812220728583317`*^9, 3.981222073978085*^9}, {
+   3.981225193903928*^9, 3.981225194984424*^9}},
+ CellLabel->"In[62]:=",ExpressionUUID->"8521d401-497e-4550-90b2-94883cb04301"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["\<\"--- TEST INVERSE CHAIN ---\"\>"], "Print",
+ CellChangeTimes->{3.9812219108383102`*^9, 3.981222079025017*^9, 
+  3.981227198298284*^9},
+ CellLabel->
+  "During evaluation of \
+In[62]:=",ExpressionUUID->"0f1a724e-9c20-4822-986d-af60d6447347"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Diferencia (Norma): \"\>", "\[InvisibleSpace]", 
+   "7.306907846880476`*^-16"}],
+  SequenceForm["Diferencia (Norma): ", 7.306907846880476*^-16],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.9812219108383102`*^9, 3.981222079025017*^9, 
+  3.9812272157686377`*^9},
+ CellLabel->
+  "During evaluation of \
+In[62]:=",ExpressionUUID->"0c1811ce-db59-4b5d-9b1a-bf2af61ab4cc"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownQuestion]Resultados id\[EAcute]nticos?: \"\>", "\[InvisibleSpace]",
+    "True"}],
+  SequenceForm["\[DownQuestion]Resultados id\[EAcute]nticos?: ", True],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.9812219108383102`*^9, 3.981222079025017*^9, 
+  3.981227215770863*^9},
+ CellLabel->
+  "During evaluation of \
+In[62]:=",ExpressionUUID->"921150a4-3ffc-4b3e-b240-0eecca1035e3"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio vieja rutina: \"\>", "\[InvisibleSpace]", 
+   "8.20593`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio vieja rutina: ", 8.20593, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.9812219108383102`*^9, 3.981222079025017*^9, 
+  3.9812272157719507`*^9},
+ CellLabel->
+  "During evaluation of \
+In[62]:=",ExpressionUUID->"9f6fbd85-c97c-49ce-8aca-93d6789f603a"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio nueva rutina: \"\>", "\[InvisibleSpace]", 
+   "0.0357658125`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio nueva rutina: ", 0.0357658125, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.9812219108383102`*^9, 3.981222079025017*^9, 
+  3.981227215772952*^9},
+ CellLabel->
+  "During evaluation of \
+In[62]:=",ExpressionUUID->"2d34e0bf-0ed2-48b7-882a-09a10f4909ac"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownExclamation]El nuevo es \"\>", "\[InvisibleSpace]", 
+   "229", "\[InvisibleSpace]", "\<\"x m\[AAcute]s r\[AAcute]pido!\\n\"\>"}],
+  SequenceForm[
+  "\[DownExclamation]El nuevo es ", 229, "x m\[AAcute]s r\[AAcute]pido!\n"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.9812219108383102`*^9, 3.981222079025017*^9, 
+  3.9812272157739687`*^9},
+ CellLabel->
+  "During evaluation of \
+In[62]:=",ExpressionUUID->"52e0bb04-a855-4e5b-9455-ce251ceb95a0"]
+}, Open  ]]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["ApplyCommonEnvironment", "Section",
+ CellChangeTimes->{
+  3.981222248897496*^9},ExpressionUUID->"43b9c1fe-26fc-4332-8c2f-\
+6c642947887a"],
+
+Cell["Esta funci\[OAcute]n tiene un bug en el paquete original", "Text",
+ CellChangeTimes->{{3.9812230249957047`*^9, 
+  3.981223042216372*^9}},ExpressionUUID->"2585d4fe-7822-4131-a1c1-\
+ab12f29e5270"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+     "===", "===", "==="}], " ", "*)"}], "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"TEST", " ", "6"}], ":", " ", 
+    RowBox[{"COMMON", " ", "ENVIRONMENT"}]}], "                 ", "*)"}], 
+  "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+     "===", "===", "==="}], " ", "*)"}], "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Print", "[", "\"\<--- TEST COMMON ENVIRONMENT ---\>\"", "]"}], 
+    ";"}], "\n", "\n", 
+   RowBox[{"(*", " ", 
+    RowBox[{"Par\[AAcute]metros", " ", "independientes"}], " ", "*)"}], "\n", 
+   
+   RowBox[{
+    RowBox[{"numQubits", " ", "=", " ", "5"}], ";"}], " ", "\n", 
+   RowBox[{
+    RowBox[{"state", " ", "=", " ", 
+     RowBox[{"RandomChainProductState", "[", "numQubits", "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"bVec", " ", "=", " ", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "1"}], ",", " ", "1"}], "}"}], ",", " ", "3"}], "]"}]}],
+     ";"}], "\n", 
+   RowBox[{
+    RowBox[{"JCoupling", " ", "=", " ", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", " ", 
+        RowBox[{"2", " ", "Pi"}]}], "}"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"JEnv", " ", "=", " ", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", " ", 
+        RowBox[{"2", " ", "Pi"}]}], "}"}], "]"}]}], ";"}]}]}]], "Input",
+ CellChangeTimes->{
+  3.98122275643929*^9, {3.981222895169053*^9, 3.9812228953096447`*^9}},
+ CellLabel->"In[20]:=",ExpressionUUID->"90518636-5001-479b-b78e-5c15ce5eb5c1"],
+
+Cell[BoxData["\<\"--- TEST COMMON ENVIRONMENT ---\"\>"], "Print",
+ CellChangeTimes->{3.9812226662690573`*^9, 3.98122275678545*^9, 
+  3.981222896024362*^9},
+ CellLabel->
+  "During evaluation of \
+In[20]:=",ExpressionUUID->"6796097c-1b1f-4c2c-b92a-46e4d6207ed2"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"\n", "\n", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{" ", "A", ")"}], " ", "Paquete", " ", "Original"}], " ", "*)"}], 
+  "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tOld", ",", " ", "oldState"}], "}"}], " ", "=", " ", 
+     RowBox[{"RepeatedTiming", "[", "\n", "    ", 
+      RowBox[{"SpinChain`ApplyCommonEnvironment", "[", 
+       RowBox[{
+       "state", ",", " ", "bVec", ",", " ", "JEnv", ",", " ", "JCoupling"}], 
+       "]"}], "]"}]}], ";"}], "\n", "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{" ", "B", ")"}], " ", "Nuevo", " ", "Paquete", " ", "QMB"}], " ",
+     "*)"}], "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tNew", ",", " ", "newState"}], "}"}], " ", "=", " ", 
+     RowBox[{"RepeatedTiming", "[", "\n", "    ", 
+      RowBox[{"QMB`ManyBody`ApplyCommonEnvironment", "[", 
+       RowBox[{
+       "state", ",", " ", "bVec", ",", " ", "JEnv", ",", " ", "JCoupling"}], 
+       "]"}], "]"}]}], ";"}], "\n", "\n", 
+   RowBox[{
+    RowBox[{"diff", " ", "=", " ", 
+     RowBox[{"Norm", "[", 
+      RowBox[{"newState", " ", "-", " ", "oldState"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Diferencia (Norma): \>\"", ",", " ", "diff"}], "]"}], ";"}],
+    "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<\[DownQuestion]Resultados id\[EAcute]nticos?: \>\"", ",", 
+      " ", 
+      RowBox[{
+       RowBox[{"Chop", "[", "diff", "]"}], " ", "==", " ", "0"}]}], "]"}], 
+    ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Tiempo promedio vieja rutina: \>\"", ",", " ", "tOld", ",", 
+      " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Tiempo promedio nueva rutina: \>\"", ",", " ", "tNew", ",", 
+      " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"tNew", " ", "<", " ", "tOld"}], ",", " ", 
+      RowBox[{"Print", "[", 
+       RowBox[{"\"\<\[DownExclamation]El nuevo es \>\"", ",", " ", 
+        RowBox[{"Round", "[", 
+         RowBox[{"tOld", "/", 
+          RowBox[{"Max", "[", 
+           RowBox[{"tNew", ",", " ", 
+            RowBox[{"10", "^", 
+             RowBox[{"-", "6"}]}]}], "]"}]}], "]"}], ",", 
+        " ", "\"\<x m\[AAcute]s r\[AAcute]pido!\\n\>\""}], "]"}], ",", " ", 
+      RowBox[{"Print", "[", "\"\<\\n\>\"", "]"}]}], "]"}], ";"}]}]}]], "Input",\
+
+ CellChangeTimes->{{3.9812222394597282`*^9, 3.981222257826474*^9}, 
+   3.981222663773191*^9},ExpressionUUID->"bc5f3976-e207-4741-b4d8-\
+65ac1d464be7"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["\<\"--- TEST COMMON ENVIRONMENT ---\"\>"], "Print",
+ CellChangeTimes->{3.981222259349259*^9},
+ CellLabel->
+  "During evaluation of \
+In[77]:=",ExpressionUUID->"82d13258-505d-4370-9977-22fe4f263d50"],
+
+Cell[BoxData["$Aborted"], "Print",
+ CellChangeTimes->{3.981222569898621*^9},
+ CellLabel->
+  "During evaluation of \
+In[77]:=",ExpressionUUID->"985c78bd-71fa-4798-9f8f-eb4c089e7b52"]
+}, Open  ]]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["ApplyIsingStar", "Section",
+ CellChangeTimes->{{3.9812222667062263`*^9, 
+  3.98122229015975*^9}},ExpressionUUID->"4f286b1c-0131-41cf-a165-\
+f8e1ef7f4d54"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+     "===", "===", "==="}], " ", "*)"}], "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"TEST", " ", "7"}], ":", " ", 
+    RowBox[{"STAR", " ", "TOPOLOGY", " ", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"ISING", " ", "&"}], " ", "KICKED"}], ")"}]}]}], "     ", 
+   "*)"}], "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+     "===", "===", "==="}], " ", "*)"}], "\n", "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{"Par\[AAcute]metros", " ", "independientes"}], " ", "*)"}], "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"numQubits", " ", "=", " ", "14"}], ";"}], " ", "\n", 
+   RowBox[{
+    RowBox[{"state", " ", "=", " ", 
+     RowBox[{"RandomChainProductState", "[", "numQubits", "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"bVec", " ", "=", " ", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "1"}], ",", " ", "1"}], "}"}], ",", " ", "3"}], "]"}]}],
+     ";"}], "\n", 
+   RowBox[{
+    RowBox[{"JEnv", " ", "=", " ", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", " ", 
+        RowBox[{"2", " ", "Pi"}]}], "}"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"JInt", " ", "=", " ", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", " ", 
+        RowBox[{"2", " ", "Pi"}]}], "}"}], "]"}]}], ";"}], "\n", "\n", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Print", "[", "\"\<--- TEST ISING STAR ---\>\"", "]"}], ";"}], 
+   "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{" ", "A", ")"}], " ", "Paquete", " ", "Original"}], " ", "*)"}], 
+   "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tOld", ",", " ", "oldState"}], "}"}], " ", "=", " ", 
+     RowBox[{"RepeatedTiming", "[", "\n", "    ", 
+      RowBox[{"SpinChain`ApplyIsingStar", "[", 
+       RowBox[{"state", ",", " ", "JEnv", ",", " ", "JInt"}], "]"}], "]"}]}], 
+    ";"}], "\n", "\"\<--- TEST ISING STAR ---\>\"", "\n", "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{" ", "B", ")"}], " ", "Nuevo", " ", "Paquete", " ", "QMB"}], " ",
+     "*)"}], "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tNew", ",", " ", "newState"}], "}"}], " ", "=", " ", 
+     RowBox[{"RepeatedTiming", "[", "\n", "    ", 
+      RowBox[{"QMB`ManyBody`ApplyIsingStar", "[", 
+       RowBox[{"state", ",", " ", "JEnv", ",", " ", "JInt"}], "]"}], "]"}]}], 
+    ";"}], "\n", "\n", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"diff", " ", "=", " ", 
+     RowBox[{"Norm", "[", 
+      RowBox[{"newState", " ", "-", " ", "oldState"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Diferencia (Norma): \>\"", ",", " ", "diff"}], "]"}], ";"}],
+    "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<\[DownQuestion]Resultados id\[EAcute]nticos?: \>\"", ",", 
+      " ", 
+      RowBox[{
+       RowBox[{"Chop", "[", "diff", "]"}], " ", "==", " ", "0"}]}], "]"}], 
+    ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Tiempo promedio vieja rutina: \>\"", ",", " ", "tOld", ",", 
+      " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Tiempo promedio nueva rutina: \>\"", ",", " ", "tNew", ",", 
+      " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"tNew", " ", "<", " ", "tOld"}], ",", " ", 
+      RowBox[{"Print", "[", 
+       RowBox[{"\"\<\[DownExclamation]El nuevo es \>\"", ",", " ", 
+        RowBox[{"Round", "[", 
+         RowBox[{"tOld", "/", 
+          RowBox[{"Max", "[", 
+           RowBox[{"tNew", ",", " ", 
+            RowBox[{"10", "^", 
+             RowBox[{"-", "6"}]}]}], "]"}]}], "]"}], ",", 
+        " ", "\"\<x m\[AAcute]s r\[AAcute]pido!\\n\>\""}], "]"}], ",", " ", 
+      RowBox[{"Print", "[", "\"\<\\n\>\"", "]"}]}], "]"}], ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.981223374125044*^9, 3.981223395470848*^9}},
+ CellLabel->"In[76]:=",ExpressionUUID->"9fd2db8a-6aae-493f-8a26-88ca4c84fc1a"],
+
+Cell[BoxData["\<\"--- TEST ISING STAR ---\"\>"], "Print",
+ CellChangeTimes->{3.981223397186056*^9, 3.9812235784944563`*^9, 
+  3.981227215864367*^9},
+ CellLabel->
+  "During evaluation of \
+In[76]:=",ExpressionUUID->"5afb3824-44b2-4807-a95d-a525af129d53"],
+
+Cell[BoxData["\<\"--- TEST ISING STAR ---\"\>"], "Output",
+ CellChangeTimes->{3.981223399266464*^9, 3.981223580587255*^9, 
+  3.9812272179673243`*^9},
+ CellLabel->"Out[83]=",ExpressionUUID->"38aa080a-ea3a-42a5-af5d-a441a9ff4776"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Diferencia (Norma): \"\>", "\[InvisibleSpace]", 
+   "2.3151177295745772`*^-15"}],
+  SequenceForm["Diferencia (Norma): ", 2.3151177295745772`*^-15],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981223397186056*^9, 3.9812235784944563`*^9, 
+  3.981227219451247*^9},
+ CellLabel->
+  "During evaluation of \
+In[76]:=",ExpressionUUID->"9ecfc71e-88e9-4911-b4a0-10a33a5833b6"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownQuestion]Resultados id\[EAcute]nticos?: \"\>", "\[InvisibleSpace]",
+    "True"}],
+  SequenceForm["\[DownQuestion]Resultados id\[EAcute]nticos?: ", True],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981223397186056*^9, 3.9812235784944563`*^9, 
+  3.981227219453575*^9},
+ CellLabel->
+  "During evaluation of \
+In[76]:=",ExpressionUUID->"8127dd97-ac95-4fa3-8fe4-3bfea9673da5"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio vieja rutina: \"\>", "\[InvisibleSpace]", 
+   "1.000669`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio vieja rutina: ", 1.000669, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981223397186056*^9, 3.9812235784944563`*^9, 
+  3.981227219455185*^9},
+ CellLabel->
+  "During evaluation of \
+In[76]:=",ExpressionUUID->"fbf9fbb6-61af-469b-884c-812fb1f76342"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio nueva rutina: \"\>", "\[InvisibleSpace]", 
+   "0.048079125`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio nueva rutina: ", 0.048079125, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981223397186056*^9, 3.9812235784944563`*^9, 
+  3.981227219456273*^9},
+ CellLabel->
+  "During evaluation of \
+In[76]:=",ExpressionUUID->"5a1c4cdc-d5c8-4160-9c03-687f7405b442"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownExclamation]El nuevo es \"\>", "\[InvisibleSpace]", "21",
+    "\[InvisibleSpace]", "\<\"x m\[AAcute]s r\[AAcute]pido!\\n\"\>"}],
+  SequenceForm[
+  "\[DownExclamation]El nuevo es ", 21, "x m\[AAcute]s r\[AAcute]pido!\n"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981223397186056*^9, 3.9812235784944563`*^9, 
+  3.981227219457286*^9},
+ CellLabel->
+  "During evaluation of \
+In[76]:=",ExpressionUUID->"c05fd41d-fe5b-49d0-b548-fa93512fd008"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Print", "[", "\"\<--- TEST CHAIN STAR ---\>\"", "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"tOldC", ",", " ", "oldStateC"}], "}"}], " ", "=", " ", 
+   RowBox[{"RepeatedTiming", "[", 
+    RowBox[{"SpinChain`ApplyChainStar", "[", 
+     RowBox[{"state", ",", " ", "JEnv", ",", " ", "JInt", ",", " ", "bVec"}], 
+     "]"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"tNewC", ",", " ", "newStateC"}], "}"}], " ", "=", " ", 
+    RowBox[{"RepeatedTiming", "[", 
+     RowBox[{"QMB`ManyBody`ApplyChainStar", "[", 
+      RowBox[{"state", ",", " ", "JEnv", ",", " ", "JInt", ",", " ", "bVec"}],
+       "]"}], "]"}]}], ";"}], "\n"}], "\n", 
+ RowBox[{
+  RowBox[{"diffC", " ", "=", " ", 
+   RowBox[{"Norm", "[", 
+    RowBox[{"newStateC", " ", "-", " ", "oldStateC"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"\"\<Diferencia (Norma): \>\"", ",", " ", "diffC"}], "]"}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"\"\<\[DownQuestion]Resultados id\[EAcute]nticos?: \>\"", ",", " ", 
+    RowBox[{
+     RowBox[{"Chop", "[", "diffC", "]"}], " ", "==", " ", "0"}]}], "]"}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"\"\<Tiempo promedio vieja rutina: \>\"", ",", " ", "tOldC", ",", 
+    " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"\"\<Tiempo promedio nueva rutina: \>\"", ",", " ", "tNewC", ",", 
+    " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"If", "[", 
+   RowBox[{
+    RowBox[{"tNewC", " ", "<", " ", "tOldC"}], ",", " ", 
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<\[DownExclamation]El nuevo es \>\"", ",", " ", 
+      RowBox[{"Round", "[", 
+       RowBox[{"tOldC", "/", 
+        RowBox[{"Max", "[", 
+         RowBox[{"tNewC", ",", " ", 
+          RowBox[{"10", "^", 
+           RowBox[{"-", "6"}]}]}], "]"}]}], "]"}], ",", 
+      " ", "\"\<x m\[AAcute]s r\[AAcute]pido!\\n\>\""}], "]"}], ",", " ", 
+    RowBox[{"Print", "[", "\"\<\\n\>\"", "]"}]}], "]"}], ";"}]}], "Input",
+ CellChangeTimes->{3.981223414129262*^9, 3.981223572510892*^9},
+ CellLabel->"In[91]:=",ExpressionUUID->"7840cb22-1003-40d0-a424-334ca28e169b"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["\<\"--- TEST CHAIN STAR ---\"\>"], "Print",
+ CellChangeTimes->{3.98122341536799*^9, 3.981223605945867*^9, 
+  3.981227219532013*^9},
+ CellLabel->
+  "During evaluation of \
+In[91]:=",ExpressionUUID->"0a8a5329-1948-4bc9-bd70-d4b6c8e908bd"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Diferencia (Norma): \"\>", "\[InvisibleSpace]", 
+   "2.372152537293914`*^-15"}],
+  SequenceForm["Diferencia (Norma): ", 2.372152537293914*^-15],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.98122341536799*^9, 3.981223605945867*^9, 
+  3.981227237042315*^9},
+ CellLabel->
+  "During evaluation of \
+In[91]:=",ExpressionUUID->"f8264c14-9b3b-42ef-b751-ce73b250dfa0"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownQuestion]Resultados id\[EAcute]nticos?: \"\>", "\[InvisibleSpace]",
+    "True"}],
+  SequenceForm["\[DownQuestion]Resultados id\[EAcute]nticos?: ", True],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.98122341536799*^9, 3.981223605945867*^9, 
+  3.981227237044696*^9},
+ CellLabel->
+  "During evaluation of \
+In[91]:=",ExpressionUUID->"1ccdc998-5750-4bde-8f36-dd27d6f0f9e0"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio vieja rutina: \"\>", "\[InvisibleSpace]", 
+   "8.175473`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio vieja rutina: ", 8.175473, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.98122341536799*^9, 3.981223605945867*^9, 
+  3.981227237045323*^9},
+ CellLabel->
+  "During evaluation of \
+In[91]:=",ExpressionUUID->"b72dca1c-dd14-4b31-8f9a-71b2651d00e9"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio nueva rutina: \"\>", "\[InvisibleSpace]", 
+   "0.07909675`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio nueva rutina: ", 0.07909675, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.98122341536799*^9, 3.981223605945867*^9, 
+  3.9812272370459213`*^9},
+ CellLabel->
+  "During evaluation of \
+In[91]:=",ExpressionUUID->"d021f8a8-9dba-45dc-a28f-6d82fecf6fde"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownExclamation]El nuevo es \"\>", "\[InvisibleSpace]", 
+   "103", "\[InvisibleSpace]", "\<\"x m\[AAcute]s r\[AAcute]pido!\\n\"\>"}],
+  SequenceForm[
+  "\[DownExclamation]El nuevo es ", 103, "x m\[AAcute]s r\[AAcute]pido!\n"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.98122341536799*^9, 3.981223605945867*^9, 
+  3.981227237046504*^9},
+ CellLabel->
+  "During evaluation of \
+In[91]:=",ExpressionUUID->"daa00b54-d09a-4ddb-aac5-27d3cea1d68a"]
+}, Open  ]]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["ApplyDephasingChain", "Section",
+ CellChangeTimes->{
+  3.981222419950736*^9},ExpressionUUID->"be36de38-c146-44ea-a953-\
+51e6f633622e"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+     "===", "===", "==="}], " ", "*)"}], "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"TEST", " ", "8"}], ":", " ", 
+    RowBox[{"DEPHASING", " ", "CHAIN"}]}], "                    ", "*)"}], 
+  "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+     "===", "===", "==="}], " ", "*)"}], "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Print", "[", "\"\<--- TEST DEPHASING CHAIN ---\>\"", "]"}], 
+    ";"}], "\n", "\n", 
+   RowBox[{"(*", " ", 
+    RowBox[{"Par\[AAcute]metros", " ", "independientes"}], " ", "*)"}], "\n", 
+   
+   RowBox[{
+    RowBox[{"numQubits", " ", "=", " ", "14"}], ";"}], " ", "\n", 
+   RowBox[{
+    RowBox[{"state", " ", "=", " ", 
+     RowBox[{"RandomChainProductState", "[", "numQubits", "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"JEnv", " ", "=", " ", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", " ", 
+        RowBox[{"2", " ", "Pi"}]}], "}"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"JInt", " ", "=", " ", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", " ", 
+        RowBox[{"2", " ", "Pi"}]}], "}"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"DeltaP", " ", "=", " ", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", " ", 
+        RowBox[{"2", " ", "Pi"}]}], "}"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"bEnv", " ", "=", " ", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "1"}], ",", " ", "1"}], "}"}], ",", " ", "3"}], "]"}]}],
+     ";"}], "\n", "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{" ", "A", ")"}], " ", "Paquete", " ", "Original"}], " ", "*)"}], 
+   "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tOld", ",", " ", "oldState"}], "}"}], " ", "=", " ", 
+     RowBox[{"RepeatedTiming", "[", "\n", "    ", 
+      RowBox[{"SpinChain`ApplyDephasingChain", "[", 
+       RowBox[{
+       "state", ",", " ", "DeltaP", ",", " ", "JEnv", ",", " ", "bEnv", ",", 
+        " ", "JInt"}], "]"}], "]"}]}], ";"}], "\n", "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{" ", "B", ")"}], " ", "Nuevo", " ", "Paquete", " ", "QMB"}], " ",
+     "*)"}], "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tNew", ",", " ", "newState"}], "}"}], " ", "=", " ", 
+     RowBox[{"RepeatedTiming", "[", "\n", "    ", 
+      RowBox[{"QMB`ManyBody`ApplyDephasingChain", "[", 
+       RowBox[{
+       "state", ",", " ", "DeltaP", ",", " ", "JEnv", ",", " ", "bEnv", ",", 
+        " ", "JInt"}], "]"}], "]"}]}], ";"}], "\n", "\n", 
+   RowBox[{
+    RowBox[{"diff", " ", "=", " ", 
+     RowBox[{"Norm", "[", 
+      RowBox[{"newState", " ", "-", " ", "oldState"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Diferencia (Norma): \>\"", ",", " ", "diff"}], "]"}], ";"}],
+    "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<\[DownQuestion]Resultados id\[EAcute]nticos?: \>\"", ",", 
+      " ", 
+      RowBox[{
+       RowBox[{"Chop", "[", "diff", "]"}], " ", "==", " ", "0"}]}], "]"}], 
+    ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Tiempo promedio vieja rutina: \>\"", ",", " ", "tOld", ",", 
+      " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Tiempo promedio nueva rutina: \>\"", ",", " ", "tNew", ",", 
+      " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"tNew", " ", "<", " ", "tOld"}], ",", " ", 
+      RowBox[{"Print", "[", 
+       RowBox[{"\"\<\[DownExclamation]El nuevo es \>\"", ",", " ", 
+        RowBox[{"Round", "[", 
+         RowBox[{"tOld", "/", 
+          RowBox[{"Max", "[", 
+           RowBox[{"tNew", ",", " ", 
+            RowBox[{"10", "^", 
+             RowBox[{"-", "6"}]}]}], "]"}]}], "]"}], ",", 
+        " ", "\"\<x m\[AAcute]s r\[AAcute]pido!\\n\>\""}], "]"}], ",", " ", 
+      RowBox[{"Print", "[", "\"\<\\n\>\"", "]"}]}], "]"}], ";"}]}]}]], "Input",\
+
+ CellChangeTimes->{3.98122241136799*^9},
+ CellLabel->
+  "In[100]:=",ExpressionUUID->"248f4100-da1b-49a3-bfd5-0bc50c77c78b"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["\<\"--- TEST DEPHASING CHAIN ---\"\>"], "Print",
+ CellChangeTimes->{3.981223645333805*^9, 3.981227237097404*^9},
+ CellLabel->
+  "During evaluation of \
+In[100]:=",ExpressionUUID->"a206e5a1-d55b-4db4-9bb3-cfc402be973d"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Diferencia (Norma): \"\>", "\[InvisibleSpace]", 
+   "8.861003262117649`*^-16"}],
+  SequenceForm["Diferencia (Norma): ", 8.861003262117649*^-16],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981223645333805*^9, 3.981227254331437*^9},
+ CellLabel->
+  "During evaluation of \
+In[100]:=",ExpressionUUID->"8e1f22d9-84a0-472c-b5da-d1a1a9e94adc"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownQuestion]Resultados id\[EAcute]nticos?: \"\>", "\[InvisibleSpace]",
+    "True"}],
+  SequenceForm["\[DownQuestion]Resultados id\[EAcute]nticos?: ", True],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981223645333805*^9, 3.981227254332429*^9},
+ CellLabel->
+  "During evaluation of \
+In[100]:=",ExpressionUUID->"01d92b5b-bd93-4aba-84e1-9ef489c5e96d"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio vieja rutina: \"\>", "\[InvisibleSpace]", 
+   "8.030699`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio vieja rutina: ", 8.030699, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981223645333805*^9, 3.981227254333041*^9},
+ CellLabel->
+  "During evaluation of \
+In[100]:=",ExpressionUUID->"89e87858-9719-439e-8a8d-07eaf86d0376"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio nueva rutina: \"\>", "\[InvisibleSpace]", 
+   "0.06808025`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio nueva rutina: ", 0.06808025, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981223645333805*^9, 3.981227254333597*^9},
+ CellLabel->
+  "During evaluation of \
+In[100]:=",ExpressionUUID->"8e9d2c60-3763-4b19-a29f-a0e58296380d"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownExclamation]El nuevo es \"\>", "\[InvisibleSpace]", 
+   "118", "\[InvisibleSpace]", "\<\"x m\[AAcute]s r\[AAcute]pido!\\n\"\>"}],
+  SequenceForm[
+  "\[DownExclamation]El nuevo es ", 118, "x m\[AAcute]s r\[AAcute]pido!\n"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981223645333805*^9, 3.981227254334165*^9},
+ CellLabel->
+  "During evaluation of \
+In[100]:=",ExpressionUUID->"800adb5f-928d-477c-8a25-43a06ddb4b3b"]
+}, Open  ]]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["ApplyInomogeneousChain", "Section",
+ CellChangeTimes->{
+  3.981222496494322*^9},ExpressionUUID->"b43e9092-888d-4c55-bdcd-\
+ff98cd7808a4"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+     "===", "===", "==="}], " ", "*)"}], "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"TEST", " ", "9"}], ":", " ", 
+      RowBox[{"INHOMOGENEOUS", " ", "CHAIN"}]}], " ", "&"}], " ", "KICKS"}], 
+   "        ", "*)"}], "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+     "===", "===", "==="}], " ", "*)"}], "\n", "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{"Par\[AAcute]metros", " ", "independientes"}], " ", "*)"}], "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"numQubits", " ", "=", " ", "14"}], ";"}], " ", "\n", 
+   RowBox[{
+    RowBox[{"state", " ", "=", " ", 
+     RowBox[{"RandomChainProductState", "[", "numQubits", "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"bVec", " ", "=", " ", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "1"}], ",", " ", "1"}], "}"}], ",", " ", "3"}], "]"}]}],
+     ";"}], "\n", 
+   RowBox[{
+    RowBox[{"JCoupling", " ", "=", " ", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", " ", 
+        RowBox[{"2", " ", "Pi"}]}], "}"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"J10", " ", "=", " ", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", " ", 
+        RowBox[{"2", " ", "Pi"}]}], "}"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"bInhom", " ", "=", " ", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "1"}], ",", " ", "1"}], "}"}], ",", " ", "3"}], "]"}]}],
+     ";"}], "\n", "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", "\"\<--- TEST INHOMOGENEOUS CHAIN ---\>\"", "]"}], 
+    ";"}], "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{" ", "A", ")"}], " ", "Paquete", " ", "Original"}], " ", "*)"}], 
+   "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tOld", ",", " ", "oldState"}], "}"}], " ", "=", " ", 
+     RowBox[{"RepeatedTiming", "[", "\n", "    ", 
+      RowBox[{"SpinChain`ApplyInomogeneousChain", "[", 
+       RowBox[{
+       "state", ",", " ", "JCoupling", ",", " ", "J10", ",", " ", "bVec"}], 
+       "]"}], "]"}]}], ";"}], "\n", "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{" ", "B", ")"}], " ", "Nuevo", " ", "Paquete", " ", "QMB", " ", 
+     RowBox[{"(", 
+      RowBox[{"Nota", ":", " ", 
+       RowBox[{"corregimos", " ", "el", " ", 
+        RowBox[{"typo", " ", "'"}], 
+        RowBox[{"Inomogeneous", "'"}]}]}], ")"}]}], " ", "*)"}], "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tNew", ",", " ", "newState"}], "}"}], " ", "=", " ", 
+     RowBox[{"RepeatedTiming", "[", "\n", "    ", 
+      RowBox[{"QMB`ManyBody`ApplyInhomogeneousChain", "[", 
+       RowBox[{
+       "state", ",", " ", "JCoupling", ",", " ", "J10", ",", " ", "bVec"}], 
+       "]"}], "]"}]}], ";"}], "\n", "\n", 
+   RowBox[{
+    RowBox[{"diff", " ", "=", " ", 
+     RowBox[{"Norm", "[", 
+      RowBox[{"newState", " ", "-", " ", "oldState"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Diferencia (Norma): \>\"", ",", " ", "diff"}], "]"}], ";"}],
+    "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<\[DownQuestion]Resultados id\[EAcute]nticos?: \>\"", ",", 
+      " ", 
+      RowBox[{
+       RowBox[{"Chop", "[", "diff", "]"}], " ", "==", " ", "0"}]}], "]"}], 
+    ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Tiempo promedio vieja rutina: \>\"", ",", " ", "tOld", ",", 
+      " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Tiempo promedio nueva rutina: \>\"", ",", " ", "tNew", ",", 
+      " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"tNew", " ", "<", " ", "tOld"}], ",", " ", 
+      RowBox[{"Print", "[", 
+       RowBox[{"\"\<\[DownExclamation]El nuevo es \>\"", ",", " ", 
+        RowBox[{"Round", "[", 
+         RowBox[{"tOld", "/", 
+          RowBox[{"Max", "[", 
+           RowBox[{"tNew", ",", " ", 
+            RowBox[{"10", "^", 
+             RowBox[{"-", "6"}]}]}], "]"}]}], "]"}], ",", 
+        " ", "\"\<x m\[AAcute]s r\[AAcute]pido!\\n\>\""}], "]"}], ",", " ", 
+      RowBox[{"Print", "[", "\"\<\\n\>\"", "]"}]}], "]"}], ";"}]}]}]], "Input",\
+
+ CellChangeTimes->{
+  3.9812224783868523`*^9, {3.981223703581111*^9, 3.981223711248167*^9}},
+ CellLabel->
+  "In[115]:=",ExpressionUUID->"a1dafa1c-f91e-4848-ae94-3cd26923f546"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["\<\"--- TEST INHOMOGENEOUS CHAIN ---\"\>"], "Print",
+ CellChangeTimes->{3.981223716052229*^9, 3.981227254390427*^9},
+ CellLabel->
+  "During evaluation of \
+In[115]:=",ExpressionUUID->"7353f36a-4359-4db5-82c9-1fea5416120c"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Diferencia (Norma): \"\>", "\[InvisibleSpace]", 
+   "7.666916151783965`*^-16"}],
+  SequenceForm["Diferencia (Norma): ", 7.666916151783965*^-16],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981223716052229*^9, 3.981227270934309*^9},
+ CellLabel->
+  "During evaluation of \
+In[115]:=",ExpressionUUID->"41f947f4-9290-4afa-b980-0c49216e21b3"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownQuestion]Resultados id\[EAcute]nticos?: \"\>", "\[InvisibleSpace]",
+    "True"}],
+  SequenceForm["\[DownQuestion]Resultados id\[EAcute]nticos?: ", True],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981223716052229*^9, 3.9812272709360123`*^9},
+ CellLabel->
+  "During evaluation of \
+In[115]:=",ExpressionUUID->"7ac7e404-27b5-44a7-967a-b5fa0ef61c29"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio vieja rutina: \"\>", "\[InvisibleSpace]", 
+   "7.685234`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio vieja rutina: ", 7.685234, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981223716052229*^9, 3.9812272709365883`*^9},
+ CellLabel->
+  "During evaluation of \
+In[115]:=",ExpressionUUID->"be39a3eb-dd1b-446f-8e48-235545dbe969"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio nueva rutina: \"\>", "\[InvisibleSpace]", 
+   "0.036471625`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio nueva rutina: ", 0.036471625, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981223716052229*^9, 3.981227270937118*^9},
+ CellLabel->
+  "During evaluation of \
+In[115]:=",ExpressionUUID->"4c869dc1-9cb8-4ba2-acc7-bc778acd44f0"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownExclamation]El nuevo es \"\>", "\[InvisibleSpace]", 
+   "211", "\[InvisibleSpace]", "\<\"x m\[AAcute]s r\[AAcute]pido!\\n\"\>"}],
+  SequenceForm[
+  "\[DownExclamation]El nuevo es ", 211, "x m\[AAcute]s r\[AAcute]pido!\n"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981223716052229*^9, 3.9812272709376593`*^9},
+ CellLabel->
+  "During evaluation of \
+In[115]:=",ExpressionUUID->"59aec626-239b-4f3e-ba9a-5d5cc8afd91c"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+  "Print", "[", "\"\<--- TEST MAGNETIC KICK INHOMOGENEOUS ---\>\"", "]"}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"tOldK", ",", " ", "oldStateK"}], "}"}], " ", "=", " ", 
+   RowBox[{"RepeatedTiming", "[", 
+    RowBox[{"SpinChain`ApplyMagnetickKickInhom", "[", 
+     RowBox[{"state", ",", " ", "bVec", ",", " ", "bInhom"}], "]"}], "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"tNewK", ",", " ", "newStateK"}], "}"}], " ", "=", " ", 
+    RowBox[{"RepeatedTiming", "[", 
+     RowBox[{"QMB`ManyBody`ApplyMagneticKickInhomogeneous", "[", 
+      RowBox[{"state", ",", " ", "bVec", ",", " ", "bInhom"}], "]"}], "]"}]}],
+    ";"}], "\n"}], "\n", 
+ RowBox[{
+  RowBox[{"diffK", " ", "=", " ", 
+   RowBox[{"Norm", "[", 
+    RowBox[{"newStateK", " ", "-", " ", "oldStateK"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"\"\<Diferencia (Norma): \>\"", ",", " ", "diffK"}], "]"}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"\"\<\[DownQuestion]Resultados id\[EAcute]nticos?: \>\"", ",", " ", 
+    RowBox[{
+     RowBox[{"Chop", "[", "diffK", "]"}], " ", "==", " ", "0"}]}], "]"}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"\"\<Tiempo promedio vieja rutina: \>\"", ",", " ", "tOldK", ",", 
+    " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"\"\<Tiempo promedio nueva rutina: \>\"", ",", " ", "tNewK", ",", 
+    " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"If", "[", 
+   RowBox[{
+    RowBox[{"tNewK", " ", "<", " ", "tOldK"}], ",", " ", 
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<\[DownExclamation]El nuevo es \>\"", ",", " ", 
+      RowBox[{"Round", "[", 
+       RowBox[{"tOldK", "/", 
+        RowBox[{"Max", "[", 
+         RowBox[{"tNewK", ",", " ", 
+          RowBox[{"10", "^", 
+           RowBox[{"-", "6"}]}]}], "]"}]}], "]"}], ",", 
+      " ", "\"\<x m\[AAcute]s r\[AAcute]pido!\\n\>\""}], "]"}], ",", " ", 
+    RowBox[{"Print", "[", "\"\<\\n\>\"", "]"}]}], "]"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.9812237903961897`*^9, 3.98122379162868*^9}},
+ CellLabel->
+  "In[130]:=",ExpressionUUID->"3b5b6017-ea29-4654-864c-2d0014e416c8"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["\<\"--- TEST MAGNETIC KICK INHOMOGENEOUS ---\"\>"], "Print",
+ CellChangeTimes->{3.9812237921630507`*^9, 3.9812272709950647`*^9},
+ CellLabel->
+  "During evaluation of \
+In[130]:=",ExpressionUUID->"1e9fb357-2537-45a4-9a08-0ee5f2d3b788"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Diferencia (Norma): \"\>", "\[InvisibleSpace]", 
+   "4.1497274121887033`*^-16"}],
+  SequenceForm["Diferencia (Norma): ", 4.1497274121887033`*^-16],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.9812237921630507`*^9, 3.9812272868522673`*^9},
+ CellLabel->
+  "During evaluation of \
+In[130]:=",ExpressionUUID->"0a18048a-f72b-42a3-9aee-2577a2765b07"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownQuestion]Resultados id\[EAcute]nticos?: \"\>", "\[InvisibleSpace]",
+    "True"}],
+  SequenceForm["\[DownQuestion]Resultados id\[EAcute]nticos?: ", True],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.9812237921630507`*^9, 3.981227286854642*^9},
+ CellLabel->
+  "During evaluation of \
+In[130]:=",ExpressionUUID->"7b6f3023-684d-4e7b-9289-ff3ea345e89c"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio vieja rutina: \"\>", "\[InvisibleSpace]", 
+   "7.200288`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio vieja rutina: ", 7.200288, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.9812237921630507`*^9, 3.981227286855404*^9},
+ CellLabel->
+  "During evaluation of \
+In[130]:=",ExpressionUUID->"2a545571-f9f5-47b3-92cd-3e30c22af320"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio nueva rutina: \"\>", "\[InvisibleSpace]", 
+   "0.02103946875`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio nueva rutina: ", 0.02103946875, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.9812237921630507`*^9, 3.9812272868560266`*^9},
+ CellLabel->
+  "During evaluation of \
+In[130]:=",ExpressionUUID->"b9144b88-8b2d-4e31-af97-af9f6a3ef722"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownExclamation]El nuevo es \"\>", "\[InvisibleSpace]", 
+   "342", "\[InvisibleSpace]", "\<\"x m\[AAcute]s r\[AAcute]pido!\\n\"\>"}],
+  SequenceForm[
+  "\[DownExclamation]El nuevo es ", 342, "x m\[AAcute]s r\[AAcute]pido!\n"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.9812237921630507`*^9, 3.981227286856645*^9},
+ CellLabel->
+  "During evaluation of \
+In[130]:=",ExpressionUUID->"b81618f7-da8b-468e-9c4f-fc80529e8432"]
+}, Open  ]]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["ApplyAllToAllIsingInteraction (previously ApplyAllToAll)", "Section",
+ CellChangeTimes->{
+  3.981222492527918*^9, {3.981225604796836*^9, 
+   3.981225625807379*^9}},ExpressionUUID->"0e1611a2-5683-40af-9ff0-\
+602946cac7e5"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+     "===", "===", "==="}], " ", "*)"}], "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"TEST", " ", "10"}], ":", " ", 
+    RowBox[{
+     RowBox[{"ISING", " ", "ALL"}], "-", "VS", "-", "ALL"}]}], 
+   "                  ", "*)"}], "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+     "===", "===", "==="}], " ", "*)"}], "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Print", "[", "\"\<--- TEST ISING ALL-VS-ALL ---\>\"", "]"}], 
+    ";"}], "\n", "\n", 
+   RowBox[{"(*", " ", 
+    RowBox[{"Par\[AAcute]metros", " ", "independientes"}], " ", "*)"}], "\n", 
+   
+   RowBox[{
+    RowBox[{"numQubits", " ", "=", " ", "14"}], ";"}], " ", "\n", 
+   RowBox[{
+    RowBox[{"state", " ", "=", " ", 
+     RowBox[{"RandomChainProductState", "[", "numQubits", "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"JCoupling", " ", "=", " ", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", " ", 
+        RowBox[{"2", " ", "Pi"}]}], "}"}], "]"}]}], ";"}], "\n", "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{" ", "A", ")"}], " ", "Paquete", " ", "Original", " ", 
+     RowBox[{"(", 
+      RowBox[{"Doble", " ", "bucle", " ", "anidado", " ", "O", 
+       RowBox[{"(", 
+        RowBox[{"N", "^", "2"}], ")"}]}], ")"}]}], " ", "*)"}], "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tOld", ",", " ", "oldState"}], "}"}], " ", "=", " ", 
+     RowBox[{"RepeatedTiming", "[", "\n", "    ", 
+      RowBox[{"SpinChain`ApplyIsingAllVsAll", "[", 
+       RowBox[{"state", ",", " ", "JCoupling"}], "]"}], "]"}]}], ";"}], "\n", 
+   "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{" ", "B", ")"}], " ", "Nuevo", " ", "Paquete", " ", "QMB", " ", 
+     RowBox[{"(", 
+      RowBox[{"F\[OAcute]rmula", " ", "anal\[IAcute]tica", " ", "O", 
+       RowBox[{"(", "1", ")"}]}], ")"}]}], " ", "*)"}], "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tNew", ",", " ", "newState"}], "}"}], " ", "=", " ", 
+     RowBox[{"RepeatedTiming", "[", "\n", "    ", 
+      RowBox[{"QMB`ManyBody`ApplyAllToAllIsingInteraction", "[", 
+       RowBox[{"state", ",", " ", "JCoupling"}], "]"}], "]"}]}], ";"}], "\n", 
+   "\n", 
+   RowBox[{
+    RowBox[{"diff", " ", "=", " ", 
+     RowBox[{"Norm", "[", 
+      RowBox[{"newState", " ", "-", " ", "oldState"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Diferencia (Norma): \>\"", ",", " ", "diff"}], "]"}], ";"}],
+    "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<\[DownQuestion]Resultados id\[EAcute]nticos?: \>\"", ",", 
+      " ", 
+      RowBox[{
+       RowBox[{"Chop", "[", "diff", "]"}], " ", "==", " ", "0"}]}], "]"}], 
+    ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Tiempo promedio vieja rutina: \>\"", ",", " ", "tOld", ",", 
+      " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Tiempo promedio nueva rutina: \>\"", ",", " ", "tNew", ",", 
+      " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"tNew", " ", "<", " ", "tOld"}], ",", " ", 
+      RowBox[{"Print", "[", 
+       RowBox[{"\"\<\[DownExclamation]El nuevo es \>\"", ",", " ", 
+        RowBox[{"Round", "[", 
+         RowBox[{"tOld", "/", 
+          RowBox[{"Max", "[", 
+           RowBox[{"tNew", ",", " ", 
+            RowBox[{"10", "^", 
+             RowBox[{"-", "6"}]}]}], "]"}]}], "]"}], ",", 
+        " ", "\"\<x m\[AAcute]s r\[AAcute]pido!\\n\>\""}], "]"}], ",", " ", 
+      RowBox[{"Print", "[", "\"\<\\n\>\"", "]"}]}], "]"}], ";"}]}]}]], "Input",\
+
+ CellChangeTimes->{
+  3.9812224875135117`*^9, {3.981223815317162*^9, 3.981223817382477*^9}},
+ CellLabel->
+  "In[139]:=",ExpressionUUID->"7db6bd39-9512-4106-9248-1b81fe74347d"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["\<\"--- TEST ISING ALL-VS-ALL ---\"\>"], "Print",
+ CellChangeTimes->{3.981223826448235*^9, 3.981227286909004*^9},
+ CellLabel->
+  "During evaluation of \
+In[139]:=",ExpressionUUID->"7a7d59a0-02cf-46cc-9213-b8d6ac379a02"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Diferencia (Norma): \"\>", "\[InvisibleSpace]", 
+   "3.304947167125273`*^-15"}],
+  SequenceForm["Diferencia (Norma): ", 3.304947167125273*^-15],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981223826448235*^9, 3.981227294990291*^9},
+ CellLabel->
+  "During evaluation of \
+In[139]:=",ExpressionUUID->"a8bb4f6e-b397-4290-a466-fbbfe8f81866"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownQuestion]Resultados id\[EAcute]nticos?: \"\>", "\[InvisibleSpace]",
+    "True"}],
+  SequenceForm["\[DownQuestion]Resultados id\[EAcute]nticos?: ", True],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981223826448235*^9, 3.981227294992811*^9},
+ CellLabel->
+  "During evaluation of \
+In[139]:=",ExpressionUUID->"b22b991c-2320-44e5-89b1-c164f763526a"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio vieja rutina: \"\>", "\[InvisibleSpace]", 
+   "3.440046`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio vieja rutina: ", 3.440046, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981223826448235*^9, 3.9812272949934597`*^9},
+ CellLabel->
+  "During evaluation of \
+In[139]:=",ExpressionUUID->"40577e57-f873-489b-9fff-c57744ecf346"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio nueva rutina: \"\>", "\[InvisibleSpace]", 
+   "0.035093375`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio nueva rutina: ", 0.035093375, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981223826448235*^9, 3.9812272949940567`*^9},
+ CellLabel->
+  "During evaluation of \
+In[139]:=",ExpressionUUID->"382e2279-92d4-4dff-a5b6-dd1296ee21e2"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownExclamation]El nuevo es \"\>", "\[InvisibleSpace]", "98",
+    "\[InvisibleSpace]", "\<\"x m\[AAcute]s r\[AAcute]pido!\\n\"\>"}],
+  SequenceForm[
+  "\[DownExclamation]El nuevo es ", 98, "x m\[AAcute]s r\[AAcute]pido!\n"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981223826448235*^9, 3.981227294994647*^9},
+ CellLabel->
+  "During evaluation of \
+In[139]:=",ExpressionUUID->"484a0183-e505-4ca4-99b7-46f15901de55"]
+}, Open  ]]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["ApplyMagnetickKickStarEnvironment", "Section",
+ CellChangeTimes->{
+  3.9812245385863132`*^9},ExpressionUUID->"de1a7e93-6782-4000-8b73-\
+e13fe1a08b37"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+     "===", "===", "==="}], " ", "*)"}], "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"TEST", " ", "11"}], ":", " ", 
+    RowBox[{"KICK", " ", "STAR", " ", "ENVIRONMENT"}]}], "             ", 
+   "*)"}], "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+     "===", "===", "==="}], " ", "*)"}], "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Print", "[", "\"\<--- TEST KICK STAR ENVIRONMENT ---\>\"", "]"}],
+     ";"}], "\n", "\n", 
+   RowBox[{"(*", " ", 
+    RowBox[{"Par\[AAcute]metros", " ", "independientes"}], " ", "*)"}], "\n", 
+   
+   RowBox[{
+    RowBox[{"numQubits", " ", "=", " ", "14"}], ";"}], " ", "\n", 
+   RowBox[{
+    RowBox[{"state", " ", "=", " ", 
+     RowBox[{"RandomChainProductState", "[", "numQubits", "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"bVec", " ", "=", " ", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "1"}], ",", " ", "1"}], "}"}], ",", " ", "3"}], "]"}]}],
+     ";"}], "\n", "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{" ", "A", ")"}], " ", "Paquete", " ", "Original"}], " ", "*)"}], 
+   "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tOld", ",", " ", "oldState"}], "}"}], " ", "=", " ", 
+     RowBox[{"RepeatedTiming", "[", "\n", "    ", 
+      RowBox[{"SpinChain`ApplyMagnetickKickStarEnvironment", "[", 
+       RowBox[{"state", ",", " ", "bVec"}], "]"}], "]"}]}], ";"}], "\n", "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{" ", "B", ")"}], " ", "Nuevo", " ", "Paquete", " ", "QMB", " ", 
+     RowBox[{"(", 
+      RowBox[{"Nota", ":", " ", 
+       RowBox[{"Corregido", " ", "a", " ", "Magnetic", " ", 
+        RowBox[{"sin", " ", "'"}], 
+        RowBox[{"k", "'"}]}]}], ")"}]}], " ", "*)"}], "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tNew", ",", " ", "newState"}], "}"}], " ", "=", " ", 
+     RowBox[{"RepeatedTiming", "[", "\n", "    ", 
+      RowBox[{"QMB`ManyBody`ApplyMagneticKickStarEnvironment", "[", 
+       RowBox[{"state", ",", " ", "bVec"}], "]"}], "]"}]}], ";"}], "\n", "\n", 
+   RowBox[{
+    RowBox[{"diff", " ", "=", " ", 
+     RowBox[{"Norm", "[", 
+      RowBox[{"newState", " ", "-", " ", "oldState"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Diferencia (Norma): \>\"", ",", " ", "diff"}], "]"}], ";"}],
+    "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<\[DownQuestion]Resultados id\[EAcute]nticos?: \>\"", ",", 
+      " ", 
+      RowBox[{
+       RowBox[{"Chop", "[", "diff", "]"}], " ", "==", " ", "0"}]}], "]"}], 
+    ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Tiempo promedio vieja rutina: \>\"", ",", " ", "tOld", ",", 
+      " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Tiempo promedio nueva rutina: \>\"", ",", " ", "tNew", ",", 
+      " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"tNew", " ", "<", " ", "tOld"}], ",", " ", 
+      RowBox[{"Print", "[", 
+       RowBox[{"\"\<\[DownExclamation]El nuevo es \>\"", ",", " ", 
+        RowBox[{"Round", "[", 
+         RowBox[{"tOld", "/", 
+          RowBox[{"Max", "[", 
+           RowBox[{"tNew", ",", " ", 
+            RowBox[{"10", "^", 
+             RowBox[{"-", "6"}]}]}], "]"}]}], "]"}], ",", 
+        " ", "\"\<x m\[AAcute]s r\[AAcute]pido!\\n\>\""}], "]"}], ",", " ", 
+      RowBox[{"Print", "[", "\"\<\\n\>\"", "]"}]}], "]"}], ";"}]}]}]], "Input",\
+
+ CellChangeTimes->{{3.9812245334964533`*^9, 3.981224543514902*^9}},
+ CellLabel->
+  "In[151]:=",ExpressionUUID->"1861aad0-434a-4f10-b235-0cd98a14a69f"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["\<\"--- TEST KICK STAR ENVIRONMENT ---\"\>"], "Print",
+ CellChangeTimes->{3.981224544512754*^9, 3.981227295049942*^9},
+ CellLabel->
+  "During evaluation of \
+In[151]:=",ExpressionUUID->"cd4cd1e1-f32f-4877-aef7-87d1d3f57f6c"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Diferencia (Norma): \"\>", "\[InvisibleSpace]", 
+   "3.880380967825983`*^-16"}],
+  SequenceForm["Diferencia (Norma): ", 3.880380967825983*^-16],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981224544512754*^9, 3.981227310214336*^9},
+ CellLabel->
+  "During evaluation of \
+In[151]:=",ExpressionUUID->"636cc71d-3762-44ab-bede-51a3bf15e35c"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownQuestion]Resultados id\[EAcute]nticos?: \"\>", "\[InvisibleSpace]",
+    "True"}],
+  SequenceForm["\[DownQuestion]Resultados id\[EAcute]nticos?: ", True],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981224544512754*^9, 3.981227310215992*^9},
+ CellLabel->
+  "During evaluation of \
+In[151]:=",ExpressionUUID->"d874677f-1ad1-49fe-bd7d-7240ed72591c"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio vieja rutina: \"\>", "\[InvisibleSpace]", 
+   "6.920193`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio vieja rutina: ", 6.920193, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981224544512754*^9, 3.98122731021664*^9},
+ CellLabel->
+  "During evaluation of \
+In[151]:=",ExpressionUUID->"401e25f3-1ab8-4c8f-a77d-458a7397b0d7"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio nueva rutina: \"\>", "\[InvisibleSpace]", 
+   "0.019747`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio nueva rutina: ", 0.019747, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981224544512754*^9, 3.981227310217248*^9},
+ CellLabel->
+  "During evaluation of \
+In[151]:=",ExpressionUUID->"3c5b1e3b-59cd-4033-bd9a-d18a572ec930"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownExclamation]El nuevo es \"\>", "\[InvisibleSpace]", 
+   "350", "\[InvisibleSpace]", "\<\"x m\[AAcute]s r\[AAcute]pido!\\n\"\>"}],
+  SequenceForm[
+  "\[DownExclamation]El nuevo es ", 350, "x m\[AAcute]s r\[AAcute]pido!\n"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981224544512754*^9, 3.9812273102178698`*^9},
+ CellLabel->
+  "During evaluation of \
+In[151]:=",ExpressionUUID->"98250f98-759b-4d87-b787-a7df58d41ad3"]
+}, Open  ]]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["ApplyIsingStarEnvironment", "Section",
+ CellChangeTimes->{
+  3.981224562221917*^9},ExpressionUUID->"425c5f4c-5e50-4c41-99b8-\
+5efabce5afc1"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+     "===", "===", "==="}], " ", "*)"}], "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"TEST", " ", "12"}], ":", " ", 
+    RowBox[{"ISING", " ", "STAR", " ", "ENVIRONMENT"}]}], "            ", 
+   "*)"}], "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+     "===", "===", "==="}], " ", "*)"}], "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{
+    "Print", "[", "\"\<--- TEST ISING STAR ENVIRONMENT ---\>\"", "]"}], ";"}],
+    "\n", "\n", 
+   RowBox[{"(*", " ", 
+    RowBox[{"Par\[AAcute]metros", " ", "independientes"}], " ", "*)"}], "\n", 
+   
+   RowBox[{
+    RowBox[{"numQubits", " ", "=", " ", "14"}], ";"}], " ", "\n", 
+   RowBox[{
+    RowBox[{"state", " ", "=", " ", 
+     RowBox[{"RandomChainProductState", "[", "numQubits", "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"JEnv", " ", "=", " ", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", " ", 
+        RowBox[{"2", " ", "Pi"}]}], "}"}], "]"}]}], ";"}], "\n", "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{" ", "A", ")"}], " ", "Paquete", " ", "Original"}], " ", "*)"}], 
+   "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tOld", ",", " ", "oldState"}], "}"}], " ", "=", " ", 
+     RowBox[{"RepeatedTiming", "[", "\n", "    ", 
+      RowBox[{"SpinChain`ApplyIsingStarEnvironment", "[", 
+       RowBox[{"state", ",", " ", "JEnv"}], "]"}], "]"}]}], ";"}], "\n", "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{" ", "B", ")"}], " ", "Nuevo", " ", "Paquete", " ", "QMB"}], " ",
+     "*)"}], "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tNew", ",", " ", "newState"}], "}"}], " ", "=", " ", 
+     RowBox[{"RepeatedTiming", "[", "\n", "    ", 
+      RowBox[{"QMB`ManyBody`ApplyIsingStarEnvironment", "[", 
+       RowBox[{"state", ",", " ", "JEnv"}], "]"}], "]"}]}], ";"}], "\n", "\n", 
+   RowBox[{
+    RowBox[{"diff", " ", "=", " ", 
+     RowBox[{"Norm", "[", 
+      RowBox[{"newState", " ", "-", " ", "oldState"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Diferencia (Norma): \>\"", ",", " ", "diff"}], "]"}], ";"}],
+    "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<\[DownQuestion]Resultados id\[EAcute]nticos?: \>\"", ",", 
+      " ", 
+      RowBox[{
+       RowBox[{"Chop", "[", "diff", "]"}], " ", "==", " ", "0"}]}], "]"}], 
+    ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Tiempo promedio vieja rutina: \>\"", ",", " ", "tOld", ",", 
+      " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Tiempo promedio nueva rutina: \>\"", ",", " ", "tNew", ",", 
+      " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"tNew", " ", "<", " ", "tOld"}], ",", " ", 
+      RowBox[{"Print", "[", 
+       RowBox[{"\"\<\[DownExclamation]El nuevo es \>\"", ",", " ", 
+        RowBox[{"Round", "[", 
+         RowBox[{"tOld", "/", 
+          RowBox[{"Max", "[", 
+           RowBox[{"tNew", ",", " ", 
+            RowBox[{"10", "^", 
+             RowBox[{"-", "6"}]}]}], "]"}]}], "]"}], ",", 
+        " ", "\"\<x m\[AAcute]s r\[AAcute]pido!\\n\>\""}], "]"}], ",", " ", 
+      RowBox[{"Print", "[", "\"\<\\n\>\"", "]"}]}], "]"}], ";"}]}]}]], "Input",\
+
+ CellChangeTimes->{{3.98122455712558*^9, 3.9812245663143272`*^9}},
+ CellLabel->
+  "In[163]:=",ExpressionUUID->"362d7326-dc34-4ba1-90eb-a58a00147696"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["\<\"--- TEST ISING STAR ENVIRONMENT ---\"\>"], "Print",
+ CellChangeTimes->{3.9812245671816874`*^9, 3.981227310265037*^9},
+ CellLabel->
+  "During evaluation of \
+In[163]:=",ExpressionUUID->"00b15c74-7b7d-473b-878b-ec8624c9b8c2"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Diferencia (Norma): \"\>", "\[InvisibleSpace]", 
+   "4.160063536660542`*^-16"}],
+  SequenceForm["Diferencia (Norma): ", 4.160063536660542*^-16],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.9812245671816874`*^9, 3.9812273144501762`*^9},
+ CellLabel->
+  "During evaluation of \
+In[163]:=",ExpressionUUID->"f58f99ec-8704-4dcb-bde9-8c47e1b5c2a3"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownQuestion]Resultados id\[EAcute]nticos?: \"\>", "\[InvisibleSpace]",
+    "True"}],
+  SequenceForm["\[DownQuestion]Resultados id\[EAcute]nticos?: ", True],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.9812245671816874`*^9, 3.98122731445177*^9},
+ CellLabel->
+  "During evaluation of \
+In[163]:=",ExpressionUUID->"d877abf5-36a0-4e93-8115-a37437d30b97"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio vieja rutina: \"\>", "\[InvisibleSpace]", 
+   "0.5456245`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio vieja rutina: ", 0.5456245, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.9812245671816874`*^9, 3.981227314452388*^9},
+ CellLabel->
+  "During evaluation of \
+In[163]:=",ExpressionUUID->"13f91d25-33a3-436f-a75e-8bf59d25e775"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio nueva rutina: \"\>", "\[InvisibleSpace]", 
+   "0.015783734375`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio nueva rutina: ", 0.015783734375, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.9812245671816874`*^9, 3.981227314452964*^9},
+ CellLabel->
+  "During evaluation of \
+In[163]:=",ExpressionUUID->"5e08acf8-84c2-4376-97e6-93997dc55ad3"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownExclamation]El nuevo es \"\>", "\[InvisibleSpace]", "35",
+    "\[InvisibleSpace]", "\<\"x m\[AAcute]s r\[AAcute]pido!\\n\"\>"}],
+  SequenceForm[
+  "\[DownExclamation]El nuevo es ", 35, "x m\[AAcute]s r\[AAcute]pido!\n"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.9812245671816874`*^9, 3.981227314453623*^9},
+ CellLabel->
+  "During evaluation of \
+In[163]:=",ExpressionUUID->"1e65f156-e709-44d7-a064-d2e60b3f70fa"]
+}, Open  ]]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+ApplyCentralIsingInteraction (previously \
+ApplyIsingStarInteractionQubitEnvironment)\
+\>", "Section",
+ CellChangeTimes->{
+  3.981224580663618*^9, {3.981225817917822*^9, 
+   3.981225834072502*^9}},ExpressionUUID->"b2d1b8ea-eedd-4aea-956b-\
+821cc4033a96"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+     "===", "===", "==="}], " ", "*)"}], "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"TEST", " ", "13"}], ":", " ", 
+    RowBox[{"ISING", " ", "STAR", " ", "INTERACTION", " ", "QUBIT"}]}], 
+   "      ", "*)"}], "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+     "===", "===", "==="}], " ", "*)"}], "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{
+    "Print", "[", "\"\<--- TEST ISING STAR INTERACTION ---\>\"", "]"}], ";"}],
+    "\n", "\n", 
+   RowBox[{"(*", " ", 
+    RowBox[{"Par\[AAcute]metros", " ", "independientes"}], " ", "*)"}], "\n", 
+   
+   RowBox[{
+    RowBox[{"numQubits", " ", "=", " ", "14"}], ";"}], " ", "\n", 
+   RowBox[{
+    RowBox[{"state", " ", "=", " ", 
+     RowBox[{"RandomChainProductState", "[", "numQubits", "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"JInt", " ", "=", " ", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", " ", 
+        RowBox[{"2", " ", "Pi"}]}], "}"}], "]"}]}], ";"}], "\n", "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{" ", "A", ")"}], " ", "Paquete", " ", "Original"}], " ", "*)"}], 
+   "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tOld", ",", " ", "oldState"}], "}"}], " ", "=", " ", 
+     RowBox[{"RepeatedTiming", "[", "\n", "    ", 
+      RowBox[{"SpinChain`ApplyIsingStarInteractionQubitEnvironment", "[", 
+       RowBox[{"state", ",", " ", "JInt"}], "]"}], "]"}]}], ";"}], "\n", "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{" ", "B", ")"}], " ", "Nuevo", " ", "Paquete", " ", "QMB"}], " ",
+     "*)"}], "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tNew", ",", " ", "newState"}], "}"}], " ", "=", " ", 
+     RowBox[{"RepeatedTiming", "[", "\n", "    ", 
+      RowBox[{"QMB`ManyBody`ApplyCentralIsingInteraction", "[", 
+       RowBox[{"state", ",", " ", "JInt"}], "]"}], "]"}]}], ";"}], "\n", "\n", 
+   RowBox[{
+    RowBox[{"diff", " ", "=", " ", 
+     RowBox[{"Norm", "[", 
+      RowBox[{"newState", " ", "-", " ", "oldState"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Diferencia (Norma): \>\"", ",", " ", "diff"}], "]"}], ";"}],
+    "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<\[DownQuestion]Resultados id\[EAcute]nticos?: \>\"", ",", 
+      " ", 
+      RowBox[{
+       RowBox[{"Chop", "[", "diff", "]"}], " ", "==", " ", "0"}]}], "]"}], 
+    ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Tiempo promedio vieja rutina: \>\"", ",", " ", "tOld", ",", 
+      " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Tiempo promedio nueva rutina: \>\"", ",", " ", "tNew", ",", 
+      " ", "\"\< s\>\""}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"tNew", " ", "<", " ", "tOld"}], ",", " ", 
+      RowBox[{"Print", "[", 
+       RowBox[{"\"\<\[DownExclamation]El nuevo es \>\"", ",", " ", 
+        RowBox[{"Round", "[", 
+         RowBox[{"tOld", "/", 
+          RowBox[{"Max", "[", 
+           RowBox[{"tNew", ",", " ", 
+            RowBox[{"10", "^", 
+             RowBox[{"-", "6"}]}]}], "]"}]}], "]"}], ",", 
+        " ", "\"\<x m\[AAcute]s r\[AAcute]pido!\\n\>\""}], "]"}], ",", " ", 
+      RowBox[{"Print", "[", "\"\<\\n\>\"", "]"}]}], "]"}], ";"}]}]}]], "Input",\
+
+ CellChangeTimes->{{3.981224572236752*^9, 3.981224576705183*^9}},
+ CellLabel->
+  "In[175]:=",ExpressionUUID->"4bb38fea-274a-461a-af9c-4075acf44481"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["\<\"--- TEST ISING STAR INTERACTION ---\"\>"], "Print",
+ CellChangeTimes->{3.981224577635631*^9, 3.981227314502688*^9},
+ CellLabel->
+  "During evaluation of \
+In[175]:=",ExpressionUUID->"05646cf8-27c2-41ec-8a80-87a811d9f646"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Diferencia (Norma): \"\>", "\[InvisibleSpace]", 
+   "7.595958515494068`*^-16"}],
+  SequenceForm["Diferencia (Norma): ", 7.595958515494068*^-16],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981224577635631*^9, 3.981227318627879*^9},
+ CellLabel->
+  "During evaluation of \
+In[175]:=",ExpressionUUID->"74e251f9-3448-4389-bace-fe1a51cb1dc2"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownQuestion]Resultados id\[EAcute]nticos?: \"\>", "\[InvisibleSpace]",
+    "True"}],
+  SequenceForm["\[DownQuestion]Resultados id\[EAcute]nticos?: ", True],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981224577635631*^9, 3.98122731863062*^9},
+ CellLabel->
+  "During evaluation of \
+In[175]:=",ExpressionUUID->"3d26a54b-9f3d-46b0-9181-4dad21a375a6"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio vieja rutina: \"\>", "\[InvisibleSpace]", 
+   "0.494681`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio vieja rutina: ", 0.494681, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981224577635631*^9, 3.98122731863205*^9},
+ CellLabel->
+  "During evaluation of \
+In[175]:=",ExpressionUUID->"ef5c9a39-f296-4448-8ac4-d32347e69d7a"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Tiempo promedio nueva rutina: \"\>", "\[InvisibleSpace]", 
+   "0.0324416875`", "\[InvisibleSpace]", "\<\" s\"\>"}],
+  SequenceForm["Tiempo promedio nueva rutina: ", 0.0324416875, " s"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981224577635631*^9, 3.981227318633287*^9},
+ CellLabel->
+  "During evaluation of \
+In[175]:=",ExpressionUUID->"2f6117d3-2608-4b91-90c9-71518ba472b5"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\[DownExclamation]El nuevo es \"\>", "\[InvisibleSpace]", "15",
+    "\[InvisibleSpace]", "\<\"x m\[AAcute]s r\[AAcute]pido!\\n\"\>"}],
+  SequenceForm[
+  "\[DownExclamation]El nuevo es ", 15, "x m\[AAcute]s r\[AAcute]pido!\n"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.981224577635631*^9, 3.981227318634508*^9},
+ CellLabel->
+  "During evaluation of \
+In[175]:=",ExpressionUUID->"b7050a61-6213-43e6-ab50-1e379a05bd25"]
+}, Open  ]]
+}, Open  ]]
+}, Closed]]
+}, Open  ]]
+},
+WindowSize->{720, 758.25},
+WindowMargins->{{Automatic, 0}, {0, Automatic}},
+InputAliases-><|"intt" -> RowBox[{"\[Integral]", 
+     RowBox[{"\[SelectionPlaceholder]", 
+       RowBox[{"\[DifferentialD]", "\[Placeholder]"}]}]}], "dintt" -> 
+  RowBox[{
+     SubsuperscriptBox[
+     "\[Integral]", "\[SelectionPlaceholder]", "\[Placeholder]"], 
+     RowBox[{"\[Placeholder]", 
+       RowBox[{"\[DifferentialD]", "\[Placeholder]"}]}]}], "rintt" -> 
+  RowBox[{
+     UnderscriptBox["\[Integral]", 
+      RowBox[{"\[SelectionPlaceholder]", "\[Element]", "\[Placeholder]"}]], 
+     "\[Placeholder]"}], "sumt" -> RowBox[{
+     UnderoverscriptBox["\[Sum]", 
+      RowBox[{"\[SelectionPlaceholder]", "=", "\[Placeholder]"}], 
+      "\[Placeholder]"], "\[Placeholder]"}], "prodt" -> RowBox[{
+     UnderoverscriptBox["\[Product]", 
+      RowBox[{"\[SelectionPlaceholder]", "=", "\[Placeholder]"}], 
+      "\[Placeholder]"], "\[Placeholder]"}], "dt" -> RowBox[{
+     SubscriptBox["\[PartialD]", "\[SelectionPlaceholder]"], 
+     "\[Placeholder]"}], "cbrt" -> 
+  RadicalBox[
+   "\[SelectionPlaceholder]", "3", SurdForm -> True, MultilineFunction -> 
+    None], "surd" -> 
+  RadicalBox[
+   "\[SelectionPlaceholder]", "\[Placeholder]", SurdForm -> True, 
+    MultilineFunction -> None], "ket" -> 
+  TemplateBox[{"\[SelectionPlaceholder]"}, "Ket"], "bra" -> 
+  TemplateBox[{"\[SelectionPlaceholder]"}, "Bra"], "braket" -> 
+  TemplateBox[{"\[SelectionPlaceholder]", "\[Placeholder]"}, "BraKet"], 
+  "delay" -> TemplateBox[{"\[SelectionPlaceholder]"}, "SystemsModelDelay"], 
+  "grad" -> RowBox[{
+     SubscriptBox["\[Del]", "\[SelectionPlaceholder]"], "\[Placeholder]"}], 
+  "del." -> RowBox[{
+     SubscriptBox["\[Del]", "\[SelectionPlaceholder]"], ".", 
+     "\[Placeholder]"}], "delx" -> RowBox[{
+     SubscriptBox["\[Del]", "\[SelectionPlaceholder]"], "\[Cross]", 
+     "\[Placeholder]"}], "del2" -> RowBox[{
+     SubsuperscriptBox["\[Del]", "\[SelectionPlaceholder]", 2], 
+     "\[Placeholder]"}], "kd" -> 
+  TemplateBox[{"\[SelectionPlaceholder]"}, "KroneckerDeltaSeq"], "algs" -> 
+  TemplateBox[{}, "Algebraics"], "bools" -> TemplateBox[{}, "Booleans"], 
+  "comps" -> TemplateBox[{}, "Complexes"], "ints" -> 
+  TemplateBox[{}, "Integers"], "pris" -> TemplateBox[{}, "Primes"], "rats" -> 
+  TemplateBox[{}, "Rationals"], "reals" -> TemplateBox[{}, "Reals"], "pints" -> 
+  TemplateBox[{}, "PositiveIntegers"], "npints" -> 
+  TemplateBox[{}, "NonPositiveIntegers"], "nnints" -> 
+  TemplateBox[{}, "NonNegativeIntegers"], "nints" -> 
+  TemplateBox[{}, "NegativeIntegers"], "prats" -> 
+  TemplateBox[{}, "PositiveRationals"], "nprats" -> 
+  TemplateBox[{}, "NonPositiveRationals"], "nnrats" -> 
+  TemplateBox[{}, "NonNegativeRationals"], "nrats" -> 
+  TemplateBox[{}, "NegativeRationals"], "preals" -> 
+  TemplateBox[{}, "PositiveReals"], "npreals" -> 
+  TemplateBox[{}, "NonPositiveReals"], "nnreals" -> 
+  TemplateBox[{}, "NonNegativeReals"], "nreals" -> 
+  TemplateBox[{}, "NegativeReals"], "dlim" -> RowBox[{
+     UnderscriptBox["\[Limit]", 
+      RowBox[{"\[SelectionPlaceholder]", 
+        UnderscriptBox["\[Rule]", 
+         TemplateBox[{}, "Integers"]], "\[Infinity]"}]], "\[Placeholder]"}], 
+  "dMlim" -> RowBox[{
+     UnderscriptBox["\[MaxLimit]", 
+      RowBox[{"\[SelectionPlaceholder]", 
+        UnderscriptBox["\[Rule]", 
+         TemplateBox[{}, "Integers"]], "\[Infinity]"}]], "\[Placeholder]"}], 
+  "dmlim" -> RowBox[{
+     UnderscriptBox["\[MinLimit]", 
+      RowBox[{"\[SelectionPlaceholder]", 
+        UnderscriptBox["\[Rule]", 
+         TemplateBox[{}, "Integers"]], "\[Infinity]"}]], "\[Placeholder]"}], 
+  "tue" -> OverscriptBox["\[UndirectedEdge]", "\[Placeholder]"], "tde" -> 
+  OverscriptBox["\[DirectedEdge]", "\[Placeholder]"], "cB" -> 
+  TemplateBox[{}, "CombinatorB"], "cC" -> TemplateBox[{}, "CombinatorC"], 
+  "cI" -> TemplateBox[{}, "CombinatorI"], "cK" -> 
+  TemplateBox[{}, "CombinatorK"], "cS" -> TemplateBox[{}, "CombinatorS"], 
+  "cW" -> TemplateBox[{}, "CombinatorW"], "cY" -> 
+  TemplateBox[{}, "CombinatorY"], "notation" -> RowBox[{"Notation", "[", 
+     RowBox[{
+       TemplateBox[{"\[SelectionPlaceholder]"}, "NotationTemplateTag"], " ", 
+       "\[DoubleLongLeftRightArrow]", " ", 
+       TemplateBox[{"\[Placeholder]"}, "NotationTemplateTag"]}], "]"}], 
+  "notation>" -> RowBox[{"Notation", "[", 
+     RowBox[{
+       TemplateBox[{"\[SelectionPlaceholder]"}, "NotationTemplateTag"], " ", 
+       "\[DoubleLongRightArrow]", " ", 
+       TemplateBox[{"\[Placeholder]"}, "NotationTemplateTag"]}], "]"}], 
+  "notation<" -> RowBox[{"Notation", "[", 
+     RowBox[{
+       TemplateBox[{"\[SelectionPlaceholder]"}, "NotationTemplateTag"], " ", 
+       "\[DoubleLongLeftArrow]", " ", 
+       TemplateBox[{"\[Placeholder]"}, "NotationTemplateTag"]}], "]"}], 
+  "symb" -> RowBox[{"Symbolize", "[", 
+     TemplateBox[{"\[SelectionPlaceholder]"}, "NotationTemplateTag"], "]"}], 
+  "infixnotation" -> RowBox[{"InfixNotation", "[", 
+     RowBox[{
+       TemplateBox[{"\[SelectionPlaceholder]"}, "NotationTemplateTag"], ",", 
+       "\[Placeholder]"}], "]"}], "addia" -> RowBox[{"AddInputAlias", "[", 
+     RowBox[{"\"\[SelectionPlaceholder]\"", "\[Rule]", 
+       TemplateBox[{"\[Placeholder]"}, "NotationTemplateTag"]}], "]"}], 
+  "pattwraper" -> 
+  TemplateBox[{"\[SelectionPlaceholder]"}, "NotationPatternTag"], 
+  "madeboxeswraper" -> 
+  TemplateBox[{"\[SelectionPlaceholder]"}, "NotationMadeBoxesTag"], "cf" -> 
+  SubscriptBox["&", "\[Placeholder]"]|>,
+FrontEndVersion->"14.3 for Linux x86 (64-bit) (July 8, 2025)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"e4ace7f4-920d-4efb-9f8b-1e9c6b34919f"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[576, 22, 256, 4, 72, "Title",ExpressionUUID->"cfcb92bb-b7fd-4267-8404-24b8155c9efa"],
+Cell[835, 28, 513, 9, 78, "Abstract",ExpressionUUID->"4512168d-be7a-4149-9503-efe0384f607d"],
+Cell[1351, 39, 243, 4, 22, "Input",ExpressionUUID->"69478c71-37c2-4de7-8f29-832b47bb2b6e"],
+Cell[1597, 45, 758, 16, 37, "Input",ExpressionUUID->"733e62f6-ef39-455a-9d96-c16e95f56ad1"],
+Cell[CellGroupData[{
+Cell[2380, 65, 162, 3, 49, "Section",ExpressionUUID->"c3178516-ced3-4bb2-b0a4-c8e9e8cbc1cb"],
+Cell[2545, 70, 1841, 40, 115, "Input",ExpressionUUID->"851410b0-ae66-412d-bd38-d1c8a2044d71"],
+Cell[4389, 112, 3677, 92, 301, "Input",ExpressionUUID->"f5e35842-1980-451e-a70b-bd4ffd43de6a"],
+Cell[CellGroupData[{
+Cell[8091, 208, 3664, 91, 403, "Input",ExpressionUUID->"541643ad-9ed7-4412-aec5-c49a740a06c8"],
+Cell[CellGroupData[{
+Cell[11780, 303, 293, 5, 18, "Print",ExpressionUUID->"cf363d85-6051-4bbd-bcb8-9da5345ddffd"],
+Cell[12076, 310, 458, 10, 18, "Print",ExpressionUUID->"60704963-86f2-47b8-acbb-5ca74c2054e0"],
+Cell[12537, 322, 473, 10, 18, "Print",ExpressionUUID->"6cce8bf2-6726-4532-8e82-6610a9de7dac"],
+Cell[13013, 334, 465, 10, 18, "Print",ExpressionUUID->"d95f6f2a-bb16-4a38-9f04-a397e3dca9b4"],
+Cell[13481, 346, 479, 10, 18, "Print",ExpressionUUID->"f0bafcbb-e8f4-43a6-8dac-dbd0c546263c"],
+Cell[13963, 358, 536, 11, 18, "Print",ExpressionUUID->"4b46e3ba-a3a9-40c0-8085-5a2bd7ef6a53"]
+}, Open  ]]
+}, Open  ]]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[14560, 376, 240, 4, 40, "Section",ExpressionUUID->"c1982358-1de9-44ca-bdd2-9eaabfdec54d"],
+Cell[CellGroupData[{
+Cell[14825, 384, 4721, 121, 545, "Input",ExpressionUUID->"7ddb229a-f8fb-4835-981b-eec4fab0d096"],
+Cell[CellGroupData[{
+Cell[19571, 509, 210, 4, 18, "Print",ExpressionUUID->"f8ed8614-6cee-40a1-b9f8-da39a660244b"],
+Cell[19784, 515, 370, 9, 18, "Print",ExpressionUUID->"704a06e4-9b4c-4166-aa57-071c4fab7254"],
+Cell[20157, 526, 385, 9, 18, "Print",ExpressionUUID->"9db8d93e-8f59-4d45-a09f-3cc766ea93c3"],
+Cell[20545, 537, 402, 9, 18, "Print",ExpressionUUID->"4c12d7a4-23cc-424b-9616-2d08bf0b5c73"],
+Cell[20950, 548, 425, 9, 18, "Print",ExpressionUUID->"fef1be0a-ad08-4757-a0e8-63688f845291"],
+Cell[21378, 559, 454, 10, 31, "Print",ExpressionUUID->"fdf74611-da9c-45e8-9aaf-e2a78aa5d4c1"]
+}, Open  ]]
+}, Open  ]]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[21893, 576, 229, 4, 40, "Section",ExpressionUUID->"d9a1a459-7e44-4dfb-ae95-b1c6aa26cbde"],
+Cell[CellGroupData[{
+Cell[22147, 584, 5153, 127, 611, "Input",ExpressionUUID->"29005ae0-38f0-4fdf-b0d5-a78d1c2ea3ca"],
+Cell[CellGroupData[{
+Cell[27325, 715, 256, 5, 18, "Print",ExpressionUUID->"0a8ea793-0d61-4719-a5e7-34b98438e3d1"],
+Cell[27584, 722, 419, 10, 18, "Print",ExpressionUUID->"67446660-ca34-401d-946b-4f1d48b4667d"],
+Cell[28006, 734, 436, 10, 18, "Print",ExpressionUUID->"5e83c5f3-5073-45c2-b5f0-0ecd985eaeea"],
+Cell[28445, 746, 454, 10, 18, "Print",ExpressionUUID->"0e9760a7-35a4-4706-b2c6-479c891e7180"],
+Cell[28902, 758, 466, 10, 18, "Print",ExpressionUUID->"89ee7d52-76a3-420f-b98f-d5e57c6241ba"],
+Cell[29371, 770, 498, 11, 18, "Print",ExpressionUUID->"01a268f2-7bd4-4210-b34e-0fc6d7aac229"]
+}, Open  ]]
+}, Open  ]]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[29930, 788, 238, 4, 40, "Section",ExpressionUUID->"44505d95-19d7-45c7-b627-995992fc6a59"],
+Cell[CellGroupData[{
+Cell[30193, 796, 4555, 119, 478, "Input",ExpressionUUID->"27ad7c8b-4680-4746-94a3-5d253d994c5f"],
+Cell[CellGroupData[{
+Cell[34773, 919, 329, 6, 18, "Print",ExpressionUUID->"b512c944-251f-4845-87f7-a5e0f1497634"],
+Cell[35105, 927, 494, 11, 18, "Print",ExpressionUUID->"38e8fe0e-b4fd-4bbc-9f03-a57bfc5712c5"],
+Cell[35602, 940, 511, 11, 18, "Print",ExpressionUUID->"cd2cbd3e-66ee-48ae-8cc7-7c3d1e597f62"],
+Cell[36116, 953, 529, 11, 18, "Print",ExpressionUUID->"e104fd16-7649-4488-915c-ba957621ce52"],
+Cell[36648, 966, 529, 11, 18, "Print",ExpressionUUID->"121aef5a-ee72-4732-9c85-b7153a0ffdd8"],
+Cell[37180, 979, 578, 12, 31, "Print",ExpressionUUID->"dcd1b6ec-24a6-4acf-ad3d-9458df857915"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[37807, 997, 3450, 91, 335, "Input",ExpressionUUID->"8521d401-497e-4550-90b2-94883cb04301"],
+Cell[CellGroupData[{
+Cell[41282, 1092, 256, 5, 18, "Print",ExpressionUUID->"0f1a724e-9c20-4822-986d-af60d6447347"],
+Cell[41541, 1099, 421, 10, 70, "Print",ExpressionUUID->"0c1811ce-db59-4b5d-9b1a-bf2af61ab4cc"],
+Cell[41965, 1111, 434, 10, 70, "Print",ExpressionUUID->"921150a4-3ffc-4b3e-b240-0eecca1035e3"],
+Cell[42402, 1123, 452, 10, 70, "Print",ExpressionUUID->"9f6fbd85-c97c-49ce-8aca-93d6789f603a"],
+Cell[42857, 1135, 460, 10, 70, "Print",ExpressionUUID->"2d34e0bf-0ed2-48b7-882a-09a10f4909ac"],
+Cell[43320, 1147, 505, 11, 70, "Print",ExpressionUUID->"52e0bb04-a855-4e5b-9455-ce251ceb95a0"]
+}, Open  ]]
+}, Open  ]]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[43886, 1165, 143, 3, 40, "Section",ExpressionUUID->"43b9c1fe-26fc-4332-8c2f-6c642947887a"],
+Cell[44032, 1170, 200, 3, 25, "Text",ExpressionUUID->"2585d4fe-7822-4131-a1c1-ab12f29e5270"],
+Cell[CellGroupData[{
+Cell[44257, 1177, 1758, 49, 182, "Input",ExpressionUUID->"90518636-5001-479b-b78e-5c15ce5eb5c1"],
+Cell[46018, 1228, 260, 5, 18, "Print",ExpressionUUID->"6796097c-1b1f-4c2c-b92a-46e4d6207ed2"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[46315, 1238, 2597, 69, 289, "Input",ExpressionUUID->"bc5f3976-e207-4741-b4d8-65ac1d464be7"],
+Cell[CellGroupData[{
+Cell[48937, 1311, 212, 4, 18, "Print",ExpressionUUID->"82d13258-505d-4370-9977-22fe4f263d50"],
+Cell[49152, 1317, 181, 4, 18, "Print",ExpressionUUID->"985c78bd-71fa-4798-9f8f-eb4c089e7b52"]
+}, Open  ]]
+}, Open  ]]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[49394, 1328, 160, 3, 40, "Section",ExpressionUUID->"4f286b1c-0131-41cf-a165-f8e1ef7f4d54"],
+Cell[CellGroupData[{
+Cell[49579, 1335, 4201, 111, 497, "Input",ExpressionUUID->"9fd2db8a-6aae-493f-8a26-88ca4c84fc1a"],
+Cell[53783, 1448, 253, 5, 18, "Print",ExpressionUUID->"5afb3824-44b2-4807-a95d-a525af129d53"],
+Cell[54039, 1455, 228, 3, 25, "Output",ExpressionUUID->"38aa080a-ea3a-42a5-af5d-a441a9ff4776"],
+Cell[CellGroupData[{
+Cell[54292, 1462, 422, 10, 18, "Print",ExpressionUUID->"9ecfc71e-88e9-4911-b4a0-10a33a5833b6"],
+Cell[54717, 1474, 434, 10, 18, "Print",ExpressionUUID->"8127dd97-ac95-4fa3-8fe4-3bfea9673da5"],
+Cell[55154, 1486, 452, 10, 18, "Print",ExpressionUUID->"fbf9fbb6-61af-469b-884c-812fb1f76342"],
+Cell[55609, 1498, 458, 10, 18, "Print",ExpressionUUID->"5a1c4cdc-d5c8-4160-9c03-687f7405b442"],
+Cell[56070, 1510, 501, 11, 31, "Print",ExpressionUUID->"c05fd41d-fe5b-49d0-b548-fa93512fd008"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[56620, 1527, 2285, 59, 207, "Input",ExpressionUUID->"7840cb22-1003-40d0-a424-334ca28e169b"],
+Cell[CellGroupData[{
+Cell[58930, 1590, 250, 5, 18, "Print",ExpressionUUID->"0a8a5329-1948-4bc9-bd70-d4b6c8e908bd"],
+Cell[59183, 1597, 416, 10, 18, "Print",ExpressionUUID->"f8264c14-9b3b-42ef-b751-ce73b250dfa0"],
+Cell[59602, 1609, 431, 10, 18, "Print",ExpressionUUID->"1ccdc998-5750-4bde-8f36-dd27d6f0f9e0"],
+Cell[60036, 1621, 449, 10, 18, "Print",ExpressionUUID->"b72dca1c-dd14-4b31-8f9a-71b2651d00e9"],
+Cell[60488, 1633, 455, 10, 18, "Print",ExpressionUUID->"d021f8a8-9dba-45dc-a28f-6d82fecf6fde"],
+Cell[60946, 1645, 500, 11, 31, "Print",ExpressionUUID->"daa00b54-d09a-4ddb-aac5-27d3cea1d68a"]
+}, Open  ]]
+}, Open  ]]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[61507, 1663, 140, 3, 40, "Section",ExpressionUUID->"be36de38-c146-44ea-a953-51e6f633622e"],
+Cell[CellGroupData[{
+Cell[61672, 1670, 4333, 119, 466, "Input",ExpressionUUID->"248f4100-da1b-49a3-bfd5-0bc50c77c78b"],
+Cell[CellGroupData[{
+Cell[66030, 1793, 232, 4, 18, "Print",ExpressionUUID->"a206e5a1-d55b-4db4-9bb3-cfc402be973d"],
+Cell[66265, 1799, 393, 9, 18, "Print",ExpressionUUID->"8e1f22d9-84a0-472c-b5da-d1a1a9e94adc"],
+Cell[66661, 1810, 408, 9, 18, "Print",ExpressionUUID->"01d92b5b-bd93-4aba-84e1-9ef489c5e96d"],
+Cell[67072, 1821, 426, 9, 18, "Print",ExpressionUUID->"89e87858-9719-439e-8a8d-07eaf86d0376"],
+Cell[67501, 1832, 430, 9, 18, "Print",ExpressionUUID->"8e9d2c60-3763-4b19-a29f-a0e58296380d"],
+Cell[67934, 1843, 477, 10, 31, "Print",ExpressionUUID->"800adb5f-928d-477c-8a25-43a06ddb4b3b"]
+}, Open  ]]
+}, Open  ]]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[68472, 1860, 143, 3, 40, "Section",ExpressionUUID->"b43e9092-888d-4c55-bdcd-ff98cd7808a4"],
+Cell[CellGroupData[{
+Cell[68640, 1867, 4632, 127, 466, "Input",ExpressionUUID->"a1dafa1c-f91e-4848-ae94-3cd26923f546"],
+Cell[CellGroupData[{
+Cell[73297, 1998, 236, 4, 18, "Print",ExpressionUUID->"7353f36a-4359-4db5-82c9-1fea5416120c"],
+Cell[73536, 2004, 393, 9, 18, "Print",ExpressionUUID->"41f947f4-9290-4afa-b980-0c49216e21b3"],
+Cell[73932, 2015, 410, 9, 18, "Print",ExpressionUUID->"7ac7e404-27b5-44a7-967a-b5fa0ef61c29"],
+Cell[74345, 2026, 428, 9, 18, "Print",ExpressionUUID->"be39a3eb-dd1b-446f-8e48-235545dbe969"],
+Cell[74776, 2037, 432, 9, 18, "Print",ExpressionUUID->"4c869dc1-9cb8-4ba2-acc7-bc778acd44f0"],
+Cell[75211, 2048, 479, 10, 31, "Print",ExpressionUUID->"59aec626-239b-4f3e-ba9a-5d5cc8afd91c"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[75739, 2064, 2262, 60, 192, "Input",ExpressionUUID->"3b5b6017-ea29-4654-864c-2d0014e416c8"],
+Cell[CellGroupData[{
+Cell[78026, 2128, 248, 4, 18, "Print",ExpressionUUID->"1e9fb357-2537-45a4-9a08-0ee5f2d3b788"],
+Cell[78277, 2134, 400, 9, 18, "Print",ExpressionUUID->"0a18048a-f72b-42a3-9aee-2577a2765b07"],
+Cell[78680, 2145, 410, 9, 18, "Print",ExpressionUUID->"7b6f3023-684d-4e7b-9289-ff3ea345e89c"],
+Cell[79093, 2156, 428, 9, 18, "Print",ExpressionUUID->"2a545571-f9f5-47b3-92cd-3e30c22af320"],
+Cell[79524, 2167, 440, 9, 18, "Print",ExpressionUUID->"b9144b88-8b2d-4e31-af97-af9f6a3ef722"],
+Cell[79967, 2178, 479, 10, 31, "Print",ExpressionUUID->"b81618f7-da8b-468e-9c4f-fc80529e8432"]
+}, Open  ]]
+}, Open  ]]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[80507, 2195, 227, 4, 40, "Section",ExpressionUUID->"0e1611a2-5683-40af-9ff0-602946cac7e5"],
+Cell[CellGroupData[{
+Cell[80759, 2203, 3961, 104, 415, "Input",ExpressionUUID->"7db6bd39-9512-4106-9248-1b81fe74347d"],
+Cell[CellGroupData[{
+Cell[84745, 2311, 233, 4, 18, "Print",ExpressionUUID->"7a7d59a0-02cf-46cc-9213-b8d6ac379a02"],
+Cell[84981, 2317, 393, 9, 18, "Print",ExpressionUUID->"a8bb4f6e-b397-4290-a466-fbbfe8f81866"],
+Cell[85377, 2328, 408, 9, 18, "Print",ExpressionUUID->"b22b991c-2320-44e5-89b1-c164f763526a"],
+Cell[85788, 2339, 428, 9, 18, "Print",ExpressionUUID->"40577e57-f873-489b-9fff-c57744ecf346"],
+Cell[86219, 2350, 434, 9, 18, "Print",ExpressionUUID->"382e2279-92d4-4dff-a5b6-dd1296ee21e2"],
+Cell[86656, 2361, 475, 10, 31, "Print",ExpressionUUID->"484a0183-e505-4ca4-99b7-46f15901de55"]
+}, Open  ]]
+}, Open  ]]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[87192, 2378, 156, 3, 40, "Section",ExpressionUUID->"de1a7e93-6782-4000-8b73-e13fe1a08b37"],
+Cell[CellGroupData[{
+Cell[87373, 2385, 3849, 101, 415, "Input",ExpressionUUID->"1861aad0-434a-4f10-b235-0cd98a14a69f"],
+Cell[CellGroupData[{
+Cell[91247, 2490, 238, 4, 18, "Print",ExpressionUUID->"cd4cd1e1-f32f-4877-aef7-87d1d3f57f6c"],
+Cell[91488, 2496, 393, 9, 18, "Print",ExpressionUUID->"636cc71d-3762-44ab-bede-51a3bf15e35c"],
+Cell[91884, 2507, 408, 9, 18, "Print",ExpressionUUID->"d874677f-1ad1-49fe-bd7d-7240ed72591c"],
+Cell[92295, 2518, 425, 9, 18, "Print",ExpressionUUID->"401e25f3-1ab8-4c8f-a77d-458a7397b0d7"],
+Cell[92723, 2529, 426, 9, 18, "Print",ExpressionUUID->"3c5b1e3b-59cd-4033-bd9a-d18a572ec930"],
+Cell[93152, 2540, 479, 10, 31, "Print",ExpressionUUID->"98250f98-759b-4d87-b787-a7df58d41ad3"]
+}, Open  ]]
+}, Open  ]]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[93692, 2557, 146, 3, 40, "Section",ExpressionUUID->"425c5f4c-5e50-4c41-99b8-5efabce5afc1"],
+Cell[CellGroupData[{
+Cell[93863, 2564, 3615, 96, 415, "Input",ExpressionUUID->"362d7326-dc34-4ba1-90eb-a58a00147696"],
+Cell[CellGroupData[{
+Cell[97503, 2664, 241, 4, 18, "Print",ExpressionUUID->"00b15c74-7b7d-473b-878b-ec8624c9b8c2"],
+Cell[97747, 2670, 397, 9, 18, "Print",ExpressionUUID->"f58f99ec-8704-4dcb-bde9-8c47e1b5c2a3"],
+Cell[98147, 2681, 409, 9, 18, "Print",ExpressionUUID->"d877abf5-36a0-4e93-8115-a37437d30b97"],
+Cell[98559, 2692, 430, 9, 18, "Print",ExpressionUUID->"13f91d25-33a3-436f-a75e-8bf59d25e775"],
+Cell[98992, 2703, 440, 9, 18, "Print",ExpressionUUID->"5e08acf8-84c2-4376-97e6-93997dc55ad3"],
+Cell[99435, 2714, 477, 10, 31, "Print",ExpressionUUID->"1e65f156-e709-44d7-a064-d2e60b3f70fa"]
+}, Open  ]]
+}, Open  ]]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[99973, 2731, 264, 7, 68, "Section",ExpressionUUID->"b2d1b8ea-eedd-4aea-956b-821cc4033a96"],
+Cell[CellGroupData[{
+Cell[100262, 2742, 3641, 96, 415, "Input",ExpressionUUID->"4bb38fea-274a-461a-af9c-4075acf44481"],
+Cell[CellGroupData[{
+Cell[103928, 2842, 239, 4, 18, "Print",ExpressionUUID->"05646cf8-27c2-41ec-8a80-87a811d9f646"],
+Cell[104170, 2848, 393, 9, 18, "Print",ExpressionUUID->"74e251f9-3448-4389-bace-fe1a51cb1dc2"],
+Cell[104566, 2859, 407, 9, 18, "Print",ExpressionUUID->"3d26a54b-9f3d-46b0-9181-4dad21a375a6"],
+Cell[104976, 2870, 425, 9, 18, "Print",ExpressionUUID->"ef5c9a39-f296-4448-8ac4-d32347e69d7a"],
+Cell[105404, 2881, 434, 9, 18, "Print",ExpressionUUID->"2f6117d3-2608-4b91-90c9-71518ba472b5"],
+Cell[105841, 2892, 475, 10, 31, "Print",ExpressionUUID->"b7050a61-6213-43e6-ab50-1e379a05bd25"]
+}, Open  ]]
+}, Open  ]]
+}, Closed]]
+}, Open  ]]
+}
+]
+*)
+
