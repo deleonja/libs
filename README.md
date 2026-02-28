@@ -21,4 +21,4 @@ Get["path/to/libs/QuantumWalks/Kernel/init.m"];
 - **Version**: 
   - QMB v0.2.0
 - **Creator**: Jose Alfredo de Leon.
-- **Acknowledgments**: Spin chain routines adapted from `SpinChain.m` by [carlospgmat03](https://github.com/carlospgmat03/libs) into QMB/ManyBody/Spinchains.wl
+- **Acknowledgments**: Spin chain routines from `SpinChain.m` by [carlospgmat03](https://github.com/carlospgmat03/libs) have been merged and optimized into `QMB/ManyBody/Spinchains.wl` of this repository.
