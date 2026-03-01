@@ -11,13 +11,8 @@ BeginPackage["QuantumWalks`"]
 <<ForScience`;
 
 
-ClearAll[
-  Shift, Coin, DTQWStep, DTQW, PositionProbabilityDistribution
-]
-
-
 (* ::Section:: *)
-(*Usage definitions*)
+(*Public definitions*)
 
 
 (* ::Subsection::Closed:: *)
@@ -80,13 +75,13 @@ CriticalAngle::usage = FormatUsage[
 
 
 (* ::Section:: *)
-(*Routine definitions*)
+(*Private definitions*)
 
 
 Begin["`DQWL`Private`"];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*DTQW*)
 
 
