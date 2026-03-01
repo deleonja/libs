@@ -90,7 +90,7 @@ Begin["`DQWL`Private`"];
 (*DTQW*)
 
 
-Shift[t_] := Module[{},
+Shift[t_] := Shift[t] = Module[{},
   (* Check if t is an integer *)
   If[! IntegerQ[t], 
    Return[Message[Shift::intarg, t]]];
