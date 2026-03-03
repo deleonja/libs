@@ -22,19 +22,19 @@ SpinParityEigenvectors::usage = FormatUsage[
 
 TranslationEigenvectorRepresentatives::usage = FormatUsage[
 "TranslationEigenvectorRepresentatives[NumSites] returns a list of \
-sublists, each containing: the decimal representation of a bit-string \
-representative eigenvector, its pseudomomentum k, and the length of \
-its translation orbit."
+	sublists, each containing: the decimal representation of a bit-string \
+	representative eigenvector, its pseudomomentum k, and the length of \
+	its translation orbit."
 ];
 
 BlockDiagonalize::usage = FormatUsage[
 "BlockDiagonalize[Matrix, Opts] returns ```Matrix``` in block-diagonal \
-form. Only option is '''Symmetry'''."
+	form. Only option is '''Symmetry'''."
 ];
 
 Symmetry::usage = FormatUsage[
 "Symmetry is an option for '''BlockDiagonalize'''. Takes the value \
-\"Translation\" (default)."
+	\"Translation\" (default)."
 ];
 , {FrontEndObject::notavail, First::normal}];
 
