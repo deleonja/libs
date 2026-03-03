@@ -10,14 +10,15 @@ Get["ForScience`"];
 (*Public definitions*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Symmetries and bases*)
 
 
 Quiet[
-SpinParityEigenvectors::usage = 
+SpinParityEigenvectors::usage = FormatUsage[
 "SpinParityEigenvectors[NumSites] gives a list of {Even, Odd} \
-eigenvectors of the parity operator.";
+	eigenvectors of the parity operator."
+];
 
 TranslationEigenvectorRepresentatives::usage = FormatUsage[
 "TranslationEigenvectorRepresentatives[NumSites] returns a list of \
@@ -106,7 +107,7 @@ GCoupling] returns the Hamiltonian matrix for two arbitrary spins."
 , {FrontEndObject::notavail, First::normal}];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Floquet (kicked) chains*)
 
 
