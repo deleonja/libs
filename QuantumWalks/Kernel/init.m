@@ -1,6 +1,6 @@
 (* ::Package:: *)
 
-(* QuantumWalks initialization file *)
+(* QuantumWalks initialization file  *)
 Module[{rootPath, PacletPath, PacletData, VersionLocal, 
     VersionRemote, GitHubUrl, CheckResult},
     
