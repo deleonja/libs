@@ -111,7 +111,7 @@ release:
 	git tag -a "$(PKG_NAME)-v$$CurrentVersion" -m "Release $(PKG_NAME)-v$$CurrentVersion"; \
 	git push origin main --tags; \
 	git checkout develop; \
-	echo "Release $(PKG_NAME)-v$$CurrentVersion successfully merged, tagged, and pushed."
+	echo "\n\nRelease $(PKG_NAME)-v$$CurrentVersion successfully merged, tagged, and pushed."
 
 
 ###############################################################################
