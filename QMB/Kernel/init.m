@@ -1,6 +1,6 @@
 (* ::Package:: *)
 
-(* QMB Initialization File *)
+(* QMB Initialization File  *)
 Module[{RootPath, PacletPath, PacletData, VersionLocal, 
     VersionRemote, GitHubUrl, CheckResult},
     
