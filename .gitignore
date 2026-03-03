@@ -1,6 +1,6 @@
+QuantumWalks/makefile
 QuantumWalks/UsageExamples/tmp/
-QMB/QMB_Source.txt
-QuantumWalks/QuantumWalks_Source.txt
+*_Source.txt
 to_add/
 docs/
 usage_examples/parity_sectors_BH_R.nb  
@@ -47,3 +47,4 @@ cpp/cmake-build-debug
 cpp/.idea
 cpp/Icon
 julia/.ipynb_checkpoints/
+QuantumWalks/UsageExamples/makefile

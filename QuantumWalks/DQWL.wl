@@ -11,27 +11,25 @@ BeginPackage["QuantumWalks`"]
 <<ForScience`;
 
 
-ClearAll[
-  Shift, Coin, DTQWStep, DTQW, PositionProbabilityDistribution
-]
-
-
 (* ::Section:: *)
-(*Usage definitions*)
+(*Public definitions*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*DTQW*)
 
 
-Shift::usage = FormatUsage["Shift[t] yields a sparse array of the Shift operator for a 1D DTQW in an infinite line at time ```t```."];
+Shift::usage = FormatUsage[
+"Shift[t] yields a sparse array of the Shift operator for a 1D DTQW in an infinite \
+	line at time ```t```."
+];
 
 Coin::usage = FormatUsage[
 "Coin[t] yields a sparse array of the Haddamard Coin operator for a 1D DTQW in an \
 	infinite line at time ```t```.
 Coin[t,coinOperator] yields a sparse array of the Coin operator ```coinOperator``` for a 1D DTQW in an \
 	infinite line at time ```t```.
-Coin[\[Alpha], dim] yields a global SU(2) coin operator (rotation \[Alpha]) for a position space \
+Coin[\[Alpha], dim] yields the coin operator of Alonso-Lobo (2025) for a position space \
 	of size ```dim``` (Idenity \[CircleTimes] C).
 Coin[matrix, dim] yields a global coin operator using ```matrix``` for a position \
 	space of size ```dim``` (Identity \[CircleTimes] ```matrix```)."
@@ -53,9 +51,14 @@ DTQW::usage = FormatUsage[
 DTQW[\[Psi]_0,t,coinOperator] yields the state at time ```t``` of a 1D DTQW in an infinite line, with \
 	coin ```coinOperator```, with initial state ```\[Psi]_0```."];
 
-PositionProbabilityDistribution::usage = FormatUsage["PositionProbabilityDistribution[\[Psi],t] yields the position probability distribution of the state ```\[Psi]``` of a 1D DTQW at time ```t```."];
+PositionProbabilityDistribution::usage = FormatUsage[
+"PositionProbabilityDistribution[\[Psi],t] yields the position probability distribution \
+	of the state ```\[Psi]``` of a 1D DTQW at time ```t```."
+];
 
-ExpValPosition::usage = FormatUsage["ExpValPosition[\[Psi],t] returns the expected value of position for the state \[Psi] of a 1D DTQW at time ```t```."];
+ExpValPosition::usage = FormatUsage["ExpValPosition[\[Psi],t] returns the expected value \
+	of position for the state \[Psi] of a 1D DTQW at time ```t```."
+];
 
 
 (* ::Subsection::Closed:: *)
@@ -80,7 +83,7 @@ CriticalAngle::usage = FormatUsage[
 
 
 (* ::Section:: *)
-(*Routine definitions*)
+(*Private definitions*)
 
 
 Begin["`DQWL`Private`"];
@@ -90,7 +93,7 @@ Begin["`DQWL`Private`"];
 (*DTQW*)
 
 
-Shift[t_] := Module[{},
+Shift[t_] := Shift[t] = Module[{},
   (* Check if t is an integer *)
   If[! IntegerQ[t], 
    Return[Message[Shift::intarg, t]]];
