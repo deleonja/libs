@@ -101,19 +101,17 @@ PKG_NAME ?= $(shell basename $(CURDIR))
 # ---------------------------------------------------------------------------
 release:
 	@if [ "$(PKG_NAME)" != "QMB" ] && [ "$(PKG_NAME)" != "QuantumWalks" ]; then \
-		echo "Error: Release can only be run from the QMB or QuantumWalks directories."; \
+		echo "\n\nError: Release can only be run from the QMB or QuantumWalks directories.\n\n"; \
 		exit 1; \
 	fi; \
 	CurrentVersion=$$(cat version.txt); \
-	echo "Starting release process for $(PKG_NAME) v$$CurrentVersion..."; \
-	git checkout main || { echo "Error: Failed to checkout main. Please commit or stash your changes."; exit 1; }; \
-	git merge develop -m "Merge develop into main for release $(PKG_NAME)-v$$CurrentVersion" || { echo "Error: Merge failed. Please resolve conflicts."; exit 1; }; \
+	echo "Starting release process for $(PKG_NAME) v$$CurrentVersion...\n\n"; \
+	git checkout main || { echo "\n\nError: Failed to checkout main. Please commit or stash your changes.\n\n"; exit 1; }; \
+	git merge develop -m "Merge develop into main for release $(PKG_NAME)-v$$CurrentVersion" || { echo "\n\nError: Merge failed. Please resolve conflicts.\n\n"; exit 1; }; \
 	git tag -a "$(PKG_NAME)-v$$CurrentVersion" -m "Release $(PKG_NAME)-v$$CurrentVersion"; \
-	echo "Pushing to remote..."; \
-	sleep 1; \
-	git push origin main --tags || { echo "Retrying push in 2s..."; sleep 2; git push origin main --tags; } || { echo "Error: Push failed after retry."; exit 1; }; \
+	git push origin main --tags; \
 	git checkout develop; \
-	echo "\n Release $(PKG_NAME)-v$$CurrentVersion successfully merged, tagged, and pushed."
+	echo "\n\nRelease $(PKG_NAME)-v$$CurrentVersion successfully merged, tagged, and pushed."
 
 
 ###############################################################################
