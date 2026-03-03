@@ -89,29 +89,29 @@ PKG_NAME ?= $(shell basename $(CURDIR))
 # ---------------------------------------------------------------------------
 # release:
 #   Automates the git release workflow:
-#   1. Checks if the current directory is QMB or QuantumWalks.
-#   2. Checks out the main branch. (Aborts if there are uncommitted changes).
-#   3. Merges the develop branch into main. (Aborts if there are merge conflicts).
-#   4. Creates an annotated git tag using the package name and version.
-#   5. Pushes the main branch and tags to the remote repository.
-#   6. Checks out the develop branch again.
-#
-#   Usage:
-#     make release
+#   1. Validates current directory (QMB or QuantumWalks).
+#   2. Merges develop into main and creates a version tag.
+#   3. Pushes changes to origin with retry logic for SSH stability.
+#   4. Merges main back into develop to keep branches synchronized.
 # ---------------------------------------------------------------------------
 release:
 	@if [ "$(PKG_NAME)" != "QMB" ] && [ "$(PKG_NAME)" != "QuantumWalks" ]; then \
-		echo "\n\nError: Release can only be run from the QMB or QuantumWalks directories.\n\n"; \
+		echo "Error: Release can only be run from the QMB or QuantumWalks directories."; \
 		exit 1; \
 	fi; \
 	CurrentVersion=$$(cat version.txt); \
-	echo "Starting release process for $(PKG_NAME) v$$CurrentVersion...\n\n"; \
-	git checkout main || { echo "\n\nError: Failed to checkout main. Please commit or stash your changes.\n\n"; exit 1; }; \
-	git merge develop -m "Merge develop into main for release $(PKG_NAME)-v$$CurrentVersion" || { echo "\n\nError: Merge failed. Please resolve conflicts.\n\n"; exit 1; }; \
+	echo "Starting release process for $(PKG_NAME) v$$CurrentVersion..."; \
+	git checkout main || { echo "Error: Failed to checkout main."; exit 1; }; \
+	git merge develop -m "Merge develop into main for release $(PKG_NAME)-v$$CurrentVersion" || { echo "Error: Merge failed."; exit 1; }; \
 	git tag -a "$(PKG_NAME)-v$$CurrentVersion" -m "Release $(PKG_NAME)-v$$CurrentVersion"; \
-	git push origin main --tags; \
+	echo "Pushing to remote..."; \
+	sleep 1; \
+	git push origin main --tags || { echo "Retrying push..."; sleep 2; git push origin main --tags; } || { echo "Error: Push failed."; exit 1; }; \
+	echo "Synchronizing develop with main..."; \
 	git checkout develop; \
-	echo "\n\nRelease $(PKG_NAME)-v$$CurrentVersion successfully merged, tagged, and pushed."
+	git merge main -m "Sync develop with main after release $(PKG_NAME)-v$$CurrentVersion"; \
+	git push origin develop; \
+	echo "Release $(PKG_NAME)-v$$CurrentVersion successfully merged, tagged, and synchronized."
 
 
 ###############################################################################
