@@ -1,6 +1,6 @@
 (* ::Package:: *)
 
-BeginPackage["QMB`"];
+BeginPackage["QMB`"]; 
 
 
 Get["ForScience`"]; (* nice formatting of usage definitions *)
