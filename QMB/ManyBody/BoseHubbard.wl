@@ -10,16 +10,16 @@ Get["ForScience`"];
 (*Public definitions*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Bose Hubbard with periodic boundary conditions *)
 
 
 Quiet[
-PeriodicBH::usage = FormatUsage["PeriodicBH[NumParticle_,NumSites_,J_,U_]\n Bose Hubbard wtih periodic boundary conditions.\n "]
+PeriodicBoseHubbard::usage = FormatUsage["PeriodicBH[NumParticle_,NumSites_,J_,U_]\n Bose Hubbard wtih periodic boundary conditions.\n "]
 ];
 
 Quiet[
-MomentumSectorPeriodicBH::usage=FormatUsage["SectorPeriodicBH[n,m,J,U,sector:All or interger].\n De usar All retorna el hamiltoniano por sectores de momento. Usar un entero i, retorna el sector de simetr\[IAcute]a i. ]"]
+MomentumSectorPeriodicBoseHubbard::usage=FormatUsage["SectorPeriodicBH[n,m,J,U,sector:All or interger].\n De usar All retorna el hamiltoniano por sectores de momento. Usar un entero i, retorna el sector de simetr\[IAcute]a i. ]"]
 ];
 
 
@@ -30,7 +30,7 @@ MomentumSectorPeriodicBH::usage=FormatUsage["SectorPeriodicBH[n,m,J,U,sector:All
 Begin["`BoseHubbard`Private`"];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Bose Hubbard with periodic boundary conditions*)
 
 
@@ -79,16 +79,15 @@ D1=GatherBy[InfoS,First];
 Table[Join[{D1[[i,1,1]]//Chop},{D1[[i,#,2]]&/@Range[D1[[i]]//Length]}],{i,Length[D1]}]];
 
 (*Main*)
-MomentumSectorPeriodicBH[n_,m_,J_,U_,sector_:All]:=Module[{S,base,DataS,vecs,U2,H},H=PeriodicBH[n,m,J,U];
+MomentumSectorPeriodicBoseHubbard[n_,m_,J_,U_,sector_:All]:=Module[{S,base,DataS,vecs,U2,H},H=PeriodicBH[n,m,J,U];
 S=ShiftOperator[n,m];
 base=IdentityMatrix[Length[S]];
 DataS=DegenerateSpectrum[S];
 vecs=Normalize/@Which[sector===All,Flatten[Last/@DataS,1],IntegerQ[sector]&&1<=sector<=Length[DataS],DataS[[sector,2]],True,(Message[SectorPeriodicBH::badsector,sector];Return[$Failed])];
 U2=UnitaryAtoB[base,vecs];
-Print["Momentum Sector: ",DataS[[sector,1]]];
 Chop[ConjugateTranspose[U2] . H . U2]];
 
-PeriodicBH[n_,m_,J2_,U_]:=Module[{D1,Fock=Basis[n,n]//Sort,IntFock,Pares,Data,J1,len,diag,H2,Kin},
+PeriodicBoseHubbard[n_,m_,J2_,U_]:=Module[{D1,Fock=Basis[n,n]//Sort,IntFock,Pares,Data,J1,len,diag,H2,Kin},
 len=Fock//Length;
 IntFock=AssociationThread[Fock,Range[Fock//Length]];
 Pares=Table[{Mod[i+1,Fock[[1]]//Length,1],Mod[i,Fock[[1]]//Length,1]},{i,1,Fock[[1]]//Length}];
