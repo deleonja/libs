@@ -11,7 +11,7 @@ Module[{rootPath, PacletPath, PacletData, VersionLocal,
 
     (* 1. Handling ForScience paclet installation *)
     If[Length[PacletFind["ForScience"]] == 0, 
-        PacletInstall[FileNameJoin[{rootPath, 
+        PacletInstall[FileNameJoin[{rootPath, "Kernel", 
             "ForScience-0.88.45.paclet"}]]
     ];
 
