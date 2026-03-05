@@ -100,3 +100,5 @@ Kin=-J2(J1+ConjugateTranspose[J1]);
 Kin+H2];
 
 
+End[];
+EndPackage[];
