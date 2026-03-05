@@ -88,7 +88,7 @@ D1=GatherBy[InfoS,First];
 Table[Join[{D1[[i,1,1]]//Chop},{D1[[i,#,2]]&/@Range[D1[[i]]//Length]}],{i,Length[D1]}]];
 
 (*Main*)
-MomentumSectorPeriodicBoseHubbard[n_,m_,J_,U_,sector_:All]:=Module[{S,base,DataS,vecs,U2,H},H=PeriodicBH[n,m,J,U];
+MomentumSectorPeriodicBoseHubbard[n_,m_,J_,U_,sector_:All]:=Module[{S,base,DataS,vecs,U2,H},H=PeriodicBoseHubbard[n,m,J,U];
 S=ShiftOperator[n,m];
 base=IdentityMatrix[Length[S]];
 DataS=DegenerateSpectrum[S];
