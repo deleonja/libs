@@ -10,7 +10,7 @@ Get["ForScience`"];
 (*Public definitions*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Bose Hubbard with periodic boundary conditions *)
 
 
@@ -30,8 +30,8 @@ MomentumSectorPeriodicBH::usage=FormatUsage["SectorPeriodicBH[n,m,J,U,sector:All
 Begin["`BoseHubbard`Private`"];
 
 
-(* ::Subsection:: *)
-(*Bose Hubbard with periodic boundary conditions *)
+(* ::Subsection::Closed:: *)
+(*Bose Hubbard with periodic boundary conditions*)
 
 
 (*Secondary*)
@@ -101,4 +101,6 @@ Kin+H2];
 
 
 End[];
+
+
 EndPackage[];
