@@ -8,6 +8,9 @@ PACKAGES := $(patsubst %/,%,$(wildcard */))
 # File extensions to collect (Mathematica script and package files)
 EXTENSIONS = -name "*.m" -o -name "*.wl"
 
+# Current git branch
+BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+
 .PHONY: all export-all $(PACKAGES)
 
 # Default target: export sources for all detected packages
@@ -42,9 +45,11 @@ $(PACKAGES):
 
 # ---------------------------------------------------------------------------
 # bump:
-#   Increments the semantic version (Major.Minor.Patch) in version.txt
-#   and updates the Version field in PacletInfo.wl.
-#   Automatically stages and commits these changes to the current branch.
+#   1. Validates that the current branch is 'develop'.
+#   2. Increments the semantic version (Major.Minor.Patch) in version.txt.
+#   3. Updates the Version field in PacletInfo.wl.
+#   4. Stages and commits these changes.
+#   5. Automatically triggers 'make release'.
 #
 #   Usage:
 #     make bump type=major
@@ -55,6 +60,10 @@ bump:
 ifndef type
 	$(error You must specify a type. Example: make bump type=patch)
 endif
+	@if [ "$(BRANCH)" != "develop" ]; then \
+		echo "Error: Version bumping must be performed on the 'develop' branch."; \
+		exit 1; \
+	fi
 	@CurrentVersion=$$(cat version.txt); \
 	Major=$$(echo $$CurrentVersion | cut -d. -f1); \
 	Minor=$$(echo $$CurrentVersion | cut -d. -f2); \
@@ -74,7 +83,8 @@ endif
 	sed -i "s/^\([ \t]*\)Version -> \"[^\"]*\"/\1Version -> \"$$NewVersion\"/" PacletInfo.wl; \
 	git add version.txt PacletInfo.wl; \
 	git commit -m "Bump version to $$NewVersion"; \
-	echo "Successfully bumped $(type) version and committed. New version: $$NewVersion"
+	echo "Successfully bumped $(type) version. New version: $$NewVersion"; \
+	$(MAKE) release
 
 
 ###############################################################################
@@ -89,7 +99,7 @@ PKG_NAME ?= $(shell basename $(CURDIR))
 # ---------------------------------------------------------------------------
 # release:
 #   Automates the git release workflow:
-#   1. Validates current directory (QMB or QuantumWalks).
+#   1. Validates current directory (QMB or QuantumWalks) and branch (develop).
 #   2. Merges develop into main and creates a version tag.
 #   3. Pushes changes to origin with retry logic for SSH stability.
 #   4. Merges main back into develop to keep branches synchronized.
@@ -97,6 +107,10 @@ PKG_NAME ?= $(shell basename $(CURDIR))
 release:
 	@if [ "$(PKG_NAME)" != "QMB" ] && [ "$(PKG_NAME)" != "QuantumWalks" ]; then \
 		echo "Error: Release can only be run from the QMB or QuantumWalks directories."; \
+		exit 1; \
+	fi; \
+	if [ "$(BRANCH)" != "develop" ]; then \
+		echo "Error: The release process must start from the 'develop' branch."; \
 		exit 1; \
 	fi; \
 	CurrentVersion=$$(cat version.txt); \
