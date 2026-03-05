@@ -15,11 +15,11 @@ Get["ForScience`"];
 
 
 Quiet[
-PeriodicBoseHubbard::usage = FormatUsage["PeriodicBH[NumParticle_,NumSites_,J_,U_]\n Bose Hubbard wtih periodic boundary conditions.\n "]
+PeriodicBoseHubbard::usage = FormatUsage["PeriodicBoseHubbard[N,L,J,U] returns the Hamiltonian of a 1D Bose Hubbard chain with N sites and L bosons wtih periodic boundary conditions. J and U are the hopping and interactions parameters, respectively. "]
 ];
 
 Quiet[
-MomentumSectorPeriodicBoseHubbard::usage=FormatUsage["SectorPeriodicBH[n,m,J,U,sector:All or interger].\n De usar All retorna el hamiltoniano por sectores de momento. Usar un entero i, retorna el sector de simetr\[IAcute]a i. ]"]
+MomentumSectorPeriodicBoseHubbard::usage=FormatUsage["SectorPeriodicBoseHubbard[n,m,J,U,sector:All or interger] returns the Hamiltonian of a 1D Bose Hubbard chain with N sites and L bosons wtih periodic boundary conditions in block diagonal form due to Momentum symmetry. Using the sector=All returns the full sectorized hamiltonian whereas sector= i (i <= N) returns the i-th momentum sector."]
 ];
 
 
