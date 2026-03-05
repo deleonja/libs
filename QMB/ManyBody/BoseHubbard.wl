@@ -18,7 +18,8 @@ Quiet[
 PeriodicBoseHubbard::usage = FormatUsage[
 "PeriodicBoseHubbard[N,L,J,U] returns the Hamiltonian of a 1D Bose Hubbard chain with \
 	N sites and L bosons wtih periodic boundary conditions. J and U are the hopping \
-	and interactions parameters, respectively. "]
+	and interactions parameters, respectively."
+	]
 ];
 
 Quiet[
