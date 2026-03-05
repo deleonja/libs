@@ -10,7 +10,7 @@ Get["ForScience`"];
 (*Public definitions*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Bose Hubbard with periodic boundary conditions *)
 
 
@@ -24,7 +24,7 @@ PeriodicBoseHubbard::usage = FormatUsage[
 
 Quiet[
 MomentumSectorPeriodicBoseHubbard::usage = FormatUsage[
-"SectorPeriodicBoseHubbard[N,L,J,U,sector:All or interger] returns the Hamiltonian of \
+"MomentumSectorPeriodicBoseHubbard[N,L,J,U,sector:All or interger] returns the Hamiltonian of \
 	a 1D Bose Hubbard chain with N sites and L bosons wtih periodic boundary conditions \
 	in block diagonal form due to Momentum symmetry. Using the sector=All returns the \
 	full sectorized hamiltonian whereas sector= i (i <= N) returns the i-th momentum sector."
@@ -39,7 +39,7 @@ MomentumSectorPeriodicBoseHubbard::usage = FormatUsage[
 Begin["`BoseHubbard`Private`"];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Bose Hubbard with periodic boundary conditions*)
 
 
@@ -96,7 +96,7 @@ vecs=Normalize/@Which[sector===All,Flatten[Last/@DataS,1],IntegerQ[sector]&&1<=s
 U2=UnitaryAtoB[base,vecs];
 Chop[ConjugateTranspose[U2] . H . U2]];
 
-PeriodicBoseHubbard[n_,m_,J2_,U_]:=Module[{D1,Fock=Basis[n,n]//Sort,IntFock,Pares,Data,J1,len,diag,H2,Kin},
+PeriodicBoseHubbard[n_,m_,J2_,U_]:=Module[{D1,Fock=Basis[n,m]//Sort,IntFock,Pares,Data,J1,len,diag,H2,Kin},
 len=Fock//Length;
 IntFock=AssociationThread[Fock,Range[Fock//Length]];
 Pares=Table[{Mod[i+1,Fock[[1]]//Length,1],Mod[i,Fock[[1]]//Length,1]},{i,1,Fock[[1]]//Length}];

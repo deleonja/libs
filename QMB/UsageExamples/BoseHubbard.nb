@@ -10,29 +10,65 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       154,          7]
-NotebookDataLength[    156902,       3246]
-NotebookOptionsPosition[    148514,       3082]
-NotebookOutlinePosition[    154444,       3204]
-CellTagsIndexPosition[    154401,       3201]
+NotebookDataLength[    138255,       2837]
+NotebookOptionsPosition[    129864,       2672]
+NotebookOutlinePosition[    135799,       2794]
+CellTagsIndexPosition[    135756,       2791]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
 Notebook[{
 Cell[BoxData[
  RowBox[{
-  RowBox[{
-  "Get", "[", "\"\</Users/saul/Desktop/JA_libs/QMB/Kernel/init.m\>\"", "]"}], 
-  ";"}]], "Input",
- CellChangeTimes->{{3.981732712490197*^9, 3.9817327332537117`*^9}},
- CellLabel->"In[20]:=",ExpressionUUID->"c703093f-a3ba-44e9-83e1-a35a011d6c2e"],
+  RowBox[{"(*", " ", 
+   RowBox[{"Load", " ", "QMB"}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"Get", "[", 
+   RowBox[{"StringJoin", "[", 
+    RowBox[{
+     RowBox[{"DirectoryName", "[", 
+      RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+     ",", "\"\<Kernel/init.m\>\""}], "]"}], "]"}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.981732712490197*^9, 3.9817327332537117`*^9}, {
+  3.981736951269207*^9, 3.9817369653192577`*^9}, {3.981737003389662*^9, 
+  3.981737018123959*^9}, {3.9817374004920883`*^9, 
+  3.981737407123094*^9}},ExpressionUUID->"c703093f-a3ba-44e9-83e1-\
+a35a011d6c2e"],
 
 Cell[CellGroupData[{
 
-Cell["Periodic Bose-Hubbard", "Section",
+Cell["PeriodicBoseHubbard", "Section",
  CellChangeTimes->{{3.981734670729692*^9, 3.981734685469285*^9}, {
-  3.981735432188205*^9, 
-  3.981735435748988*^9}},ExpressionUUID->"f7bc98c3-e17d-4b19-a5d2-\
+  3.981735432188205*^9, 3.981735435748988*^9}, {3.981737041302413*^9, 
+  3.9817370678121653`*^9}},ExpressionUUID->"f7bc98c3-e17d-4b19-a5d2-\
 c4b810441b76"],
+
+Cell[TextData[{
+ "Generate the Hamiltonian for ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"n", "=", "3"}], TraditionalForm]],
+  FormatType->TraditionalForm,ExpressionUUID->
+  "b266f5e0-0e7f-4dcb-8297-bc1002fbc0bf"],
+ " sites, ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"m", "=", "3"}], TraditionalForm]],
+  FormatType->TraditionalForm,ExpressionUUID->
+  "4ceb9798-a827-4451-beb2-58abcf8a2b18"],
+ " bosons and ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"J", "=", 
+    RowBox[{"U", "=", "1"}]}], TraditionalForm]],
+  FormatType->TraditionalForm,ExpressionUUID->
+  "f38d2bbd-b250-4011-bdf9-19c2038da8a9"],
+ ":"
+}], "Text",
+ CellChangeTimes->{{3.981737086187113*^9, 3.98173711338004*^9}, {
+  3.981737152882983*^9, 3.9817371617201*^9}, {3.981737295692411*^9, 
+  3.981737308532282*^9}},ExpressionUUID->"fde1d8c3-4bc6-448a-989a-\
+ad70b3f508d6"],
 
 Cell[CellGroupData[{
 
@@ -53,8 +89,9 @@ Cell[BoxData[
     RowBox[{"BH", "//", "MatrixForm"}]}]}], "]"}]], "Input",
  CellChangeTimes->{{3.981734688576812*^9, 3.981734738224493*^9}, {
   3.9817358608870907`*^9, 3.9817358654783783`*^9}, {3.981736129355566*^9, 
-  3.981736155129983*^9}},
- CellLabel->"In[11]:=",ExpressionUUID->"d94fdeab-5aee-48da-9d06-0060db065e9b"],
+  3.981736155129983*^9}, {3.981737149020398*^9, 3.9817371664515963`*^9}, {
+  3.981737274552656*^9, 3.981737362795547*^9}},
+ CellLabel->"In[27]:=",ExpressionUUID->"d94fdeab-5aee-48da-9d06-0060db065e9b"],
 
 Cell[BoxData[
  TagBox[
@@ -133,19 +170,278 @@ Cell[BoxData[
        1, -2., -1., -1.4142135623730951`, -1.7320508075688772`, 
        1, -1.4142135623730951`, -1.7320508075688772`, -2., -1., 
        3, -1.7320508075688772`, -1.7320508075688772`}}]]]]], "Output",
- CellChangeTimes->{3.981735866227044*^9, 3.981735914079875*^9, 
-  3.981735958413001*^9, 3.9817361571741743`*^9},
+ CellChangeTimes->{
+  3.981735866227044*^9, 3.981735914079875*^9, 3.981735958413001*^9, 
+   3.9817361571741743`*^9, {3.981737155641823*^9, 3.981737166851882*^9}, {
+   3.981737310632696*^9, 3.981737373308062*^9}},
  CellLabel->
-  "Out[11]//MatrixForm=",ExpressionUUID->"db409e87-ff6b-4c7f-9b22-\
-d64642194ee9"]
+  "Out[27]//MatrixForm=",ExpressionUUID->"5bc58605-61aa-4643-acfb-\
+05fa1ff2867e"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["MomentumSectorPeriodicBoseHubbard", "Section",
+ CellChangeTimes->{{3.981736010569127*^9, 3.981736024691456*^9}, 
+   3.98173719738013*^9},ExpressionUUID->"44f81772-c283-4d5b-a5c3-\
+65797f87ea00"],
+
+Cell["You can use the full sectorized hamiltonian ", "Text",
+ CellChangeTimes->{{3.98173617220671*^9, 3.981736194766796*^9}, {
+  3.981736229443645*^9, 3.9817362812835503`*^9}, {3.981737567433721*^9, 
+  3.981737568517708*^9}},ExpressionUUID->"4442d96a-ad56-4be6-ae3d-\
+820e5d609cef"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Module", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"n", "=", "3"}], ",", 
+     RowBox[{"m", "=", "3"}], ",", 
+     RowBox[{"J", "=", "1"}], ",", 
+     RowBox[{"U", "=", "1"}], ",", "BH"}], "}"}], ",", "\[IndentingNewLine]", 
+   
+   RowBox[{
+    RowBox[{"BH", "=", 
+     RowBox[{"MomentumSectorPeriodicBoseHubbard", "[", 
+      RowBox[{"n", ",", "m", ",", "J", ",", "U", ",", "All"}], "]"}]}], ";", 
+    "\n", 
+    RowBox[{"BH", "//", "MatrixForm"}]}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.981736259963567*^9, 3.981736314029726*^9}, {
+  3.9817363635961103`*^9, 3.9817363673370323`*^9}, {3.981736412214238*^9, 
+  3.981736413402726*^9}},
+ CellLabel->"In[22]:=",ExpressionUUID->"b9d8dd08-19c7-4254-87d1-410553ff3277"],
+
+Cell[BoxData[
+ TagBox[
+  RowBox[{"(", "\[NoBreak]", GridBox[{
+     {"3.000000000000001`", 
+      RowBox[{"-", "1.7320508075688776`"}], 
+      RowBox[{"-", "1.7320508075688776`"}], "0", "0", "0", "0", "0", "0", "0"},
+     {
+      RowBox[{"-", "1.7320508075688776`"}], "1.0000000000000002`", 
+      RowBox[{"-", "3.000000000000001`"}], 
+      RowBox[{"-", "2.4494897427831783`"}], "0", "0", "0", "0", "0", "0"},
+     {
+      RowBox[{"-", "1.7320508075688776`"}], 
+      RowBox[{"-", "3.000000000000001`"}], "1.0000000000000002`", 
+      RowBox[{"-", "2.4494897427831783`"}], "0", "0", "0", "0", "0", "0"},
+     {"0", 
+      RowBox[{"-", "2.4494897427831783`"}], 
+      RowBox[{"-", "2.4494897427831783`"}], "0", "0", "0", "0", "0", "0", "0"},
+     {"0", "0", "0", "0", "3.`", 
+      RowBox[{"-", "1.7320508075688772`"}], 
+      RowBox[{"-", "1.7320508075688772`"}], "0", "0", "0"},
+     {"0", "0", "0", "0", 
+      RowBox[{"-", "1.7320508075688772`"}], "1.0000000000000002`", 
+      RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+       RowBox[{"1.7320508075688776`", " ", "\[ImaginaryI]"}]}], "0", "0", "0"},
+     {"0", "0", "0", "0", 
+      RowBox[{"-", "1.7320508075688772`"}], 
+      RowBox[{"0.`", "\[VeryThinSpace]", "-", 
+       RowBox[{"1.7320508075688776`", " ", "\[ImaginaryI]"}]}], 
+      "1.0000000000000002`", "0", "0", "0"},
+     {"0", "0", "0", "0", "0", "0", "0", "3.`", 
+      RowBox[{"-", "1.7320508075688772`"}], 
+      RowBox[{"-", "1.7320508075688772`"}]},
+     {"0", "0", "0", "0", "0", "0", "0", 
+      RowBox[{"-", "1.7320508075688772`"}], "1.0000000000000002`", 
+      RowBox[{"0.`", "\[VeryThinSpace]", "-", 
+       RowBox[{"1.7320508075688776`", " ", "\[ImaginaryI]"}]}]},
+     {"0", "0", "0", "0", "0", "0", "0", 
+      RowBox[{"-", "1.7320508075688772`"}], 
+      RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+       RowBox[{"1.7320508075688776`", " ", "\[ImaginaryI]"}]}], 
+      "1.0000000000000002`"}
+    },
+    GridBoxAlignment->{"Columns" -> {{Center}}, "Rows" -> {{Baseline}}},
+    GridBoxSpacings->{"Columns" -> {
+        Offset[0.27999999999999997`], {
+         Offset[0.7]}, 
+        Offset[0.27999999999999997`]}, "Rows" -> {
+        Offset[0.2], {
+         Offset[0.4]}, 
+        Offset[0.2]}}], "\[NoBreak]", ")"}],
+  Function[BoxForm`e$, 
+   MatrixForm[
+   SparseArray[
+    Automatic, {10, 10}, 0, {
+     1, {{0, 3, 7, 11, 13, 16, 19, 22, 25, 28, 31}, {{1}, {3}, {2}, {2}, {
+       1}, {4}, {3}, {3}, {2}, {1}, {4}, {3}, {2}, {5}, {7}, {6}, {6}, {5}, {
+       7}, {7}, {6}, {5}, {8}, {10}, {9}, {9}, {8}, {10}, {10}, {9}, {8}}}, {
+      3.000000000000001, -1.7320508075688776`, -1.7320508075688776`, 
+       1.0000000000000002`, -1.7320508075688776`, -2.4494897427831783`, \
+-3.000000000000001, 
+       1.0000000000000002`, -3.000000000000001, -1.7320508075688776`, \
+-2.4494897427831783`, -2.4494897427831783`, -2.4494897427831783`, 
+       3., -1.7320508075688772`, -1.7320508075688772`, 
+       1.0000000000000002`, -1.7320508075688772`, Complex[
+       0., 1.7320508075688776`], 1.0000000000000002`, Complex[
+       0., -1.7320508075688776`], -1.7320508075688772`, 
+       3., -1.7320508075688772`, -1.7320508075688772`, 
+       1.0000000000000002`, -1.7320508075688772`, Complex[
+       0., -1.7320508075688776`], 1.0000000000000002`, Complex[
+       0., 1.7320508075688776`], -1.7320508075688772`}}]]]]], "Output",
+ CellChangeTimes->{{3.981736297363599*^9, 3.9817363145026903`*^9}, {
+  3.9817363645187073`*^9, 3.981736367887024*^9}, {3.981736406758196*^9, 
+  3.9817364137794037`*^9}},
+ CellLabel->
+  "Out[22]//MatrixForm=",ExpressionUUID->"153b3c4b-9a92-45a6-b8b5-\
+373229b0970f"]
+}, Open  ]],
+
+Cell["\<\
+Or you can use a single momentum symmetry sector by changing the last option \
+to a integer smaller or equal to max(N,L)\
+\>", "Text",
+ CellChangeTimes->{{3.981736609578001*^9, 
+  3.981736685816084*^9}},ExpressionUUID->"7c2e78b0-1713-4853-af5d-\
+f653e3f14668"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Module", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"n", "=", "3"}], ",", 
+     RowBox[{"m", "=", "3"}], ",", 
+     RowBox[{"J", "=", "1"}], ",", 
+     RowBox[{"U", "=", "1"}], ",", "BH"}], "}"}], ",", "\[IndentingNewLine]", 
+   
+   RowBox[{
+    RowBox[{"BH", "=", 
+     RowBox[{"MomentumSectorPeriodicBoseHubbard", "[", 
+      RowBox[{"n", ",", "m", ",", "J", ",", "U", ",", "1"}], "]"}]}], ";", 
+    "\n", 
+    RowBox[{"BH", "//", "MatrixForm"}]}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.981736705015134*^9, 3.9817367059664097`*^9}},
+ CellLabel->"In[23]:=",ExpressionUUID->"e80a7715-0c8b-4bed-85ca-2af632d01c1f"],
+
+Cell[BoxData[
+ TagBox[
+  RowBox[{"(", "\[NoBreak]", GridBox[{
+     {"3.000000000000001`", 
+      RowBox[{"-", "1.7320508075688776`"}], 
+      RowBox[{"-", "1.7320508075688776`"}], "0"},
+     {
+      RowBox[{"-", "1.7320508075688776`"}], "1.0000000000000002`", 
+      RowBox[{"-", "3.000000000000001`"}], 
+      RowBox[{"-", "2.4494897427831783`"}]},
+     {
+      RowBox[{"-", "1.7320508075688776`"}], 
+      RowBox[{"-", "3.000000000000001`"}], "1.0000000000000002`", 
+      RowBox[{"-", "2.4494897427831783`"}]},
+     {"0", 
+      RowBox[{"-", "2.4494897427831783`"}], 
+      RowBox[{"-", "2.4494897427831783`"}], "0"}
+    },
+    GridBoxAlignment->{"Columns" -> {{Center}}, "Rows" -> {{Baseline}}},
+    GridBoxSpacings->{"Columns" -> {
+        Offset[0.27999999999999997`], {
+         Offset[0.7]}, 
+        Offset[0.27999999999999997`]}, "Rows" -> {
+        Offset[0.2], {
+         Offset[0.4]}, 
+        Offset[0.2]}}], "\[NoBreak]", ")"}],
+  Function[BoxForm`e$, 
+   MatrixForm[
+   SparseArray[
+    Automatic, {4, 4}, 0, {
+     1, {{0, 3, 7, 11, 13}, {{1}, {3}, {2}, {2}, {1}, {4}, {3}, {3}, {2}, {
+       1}, {4}, {3}, {2}}}, {
+      3.000000000000001, -1.7320508075688776`, -1.7320508075688776`, 
+      1.0000000000000002`, -1.7320508075688776`, -2.4494897427831783`, \
+-3.000000000000001, 
+      1.0000000000000002`, -3.000000000000001, -1.7320508075688776`, \
+-2.4494897427831783`, -2.4494897427831783`, -2.4494897427831783`}}]]]]], \
+"Output",
+ CellChangeTimes->{3.981736706553897*^9},
+ CellLabel->
+  "Out[23]//MatrixForm=",ExpressionUUID->"574f4f93-2d2a-4a25-9540-\
+5be6d9ee2fe0"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
-Cell["NN spacing statistic.", "Subsection",
+Cell[BoxData[
+ RowBox[{"Module", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"n", "=", "3"}], ",", 
+     RowBox[{"m", "=", "3"}], ",", 
+     RowBox[{"J", "=", "1"}], ",", 
+     RowBox[{"U", "=", "1"}], ",", "BH"}], "}"}], ",", "\[IndentingNewLine]", 
+   
+   RowBox[{
+    RowBox[{"BH", "=", 
+     RowBox[{"MomentumSectorPeriodicBoseHubbard", "[", 
+      RowBox[{"n", ",", "m", ",", "J", ",", "U", ",", "2"}], "]"}]}], ";", 
+    "\n", 
+    RowBox[{"BH", "//", "MatrixForm"}]}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.9817367114276333`*^9, 3.9817367161506166`*^9}},
+ CellLabel->"In[24]:=",ExpressionUUID->"8abce74f-966f-4971-8885-6813c0412973"],
+
+Cell[BoxData[
+ TagBox[
+  RowBox[{"(", "\[NoBreak]", GridBox[{
+     {"3.`", 
+      RowBox[{"-", "1.7320508075688772`"}], 
+      RowBox[{"-", "1.7320508075688772`"}]},
+     {
+      RowBox[{"-", "1.7320508075688772`"}], "1.0000000000000002`", 
+      RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+       RowBox[{"1.7320508075688776`", " ", "\[ImaginaryI]"}]}]},
+     {
+      RowBox[{"-", "1.7320508075688772`"}], 
+      RowBox[{"0.`", "\[VeryThinSpace]", "-", 
+       RowBox[{"1.7320508075688776`", " ", "\[ImaginaryI]"}]}], 
+      "1.0000000000000002`"}
+    },
+    GridBoxAlignment->{"Columns" -> {{Center}}, "Rows" -> {{Baseline}}},
+    GridBoxSpacings->{"Columns" -> {
+        Offset[0.27999999999999997`], {
+         Offset[0.7]}, 
+        Offset[0.27999999999999997`]}, "Rows" -> {
+        Offset[0.2], {
+         Offset[0.4]}, 
+        Offset[0.2]}}], "\[NoBreak]", ")"}],
+  Function[BoxForm`e$, 
+   MatrixForm[
+   SparseArray[
+    Automatic, {3, 3}, 0, {
+     1, {{0, 3, 6, 9}, {{1}, {3}, {2}, {2}, {1}, {3}, {3}, {2}, {1}}}, {
+      3., -1.7320508075688772`, -1.7320508075688772`, 
+       1.0000000000000002`, -1.7320508075688772`, Complex[
+       0., 1.7320508075688776`], 1.0000000000000002`, Complex[
+       0., -1.7320508075688776`], -1.7320508075688772`}}]]]]], "Output",
+ CellChangeTimes->{3.9817367168550873`*^9},
+ CellLabel->
+  "Out[24]//MatrixForm=",ExpressionUUID->"87ab7988-921e-4b7c-837b-\
+f477d2d4d0b2"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Neat examples", "Title",
+ CellChangeTimes->{{3.981737181051242*^9, 
+  3.9817371825146923`*^9}},ExpressionUUID->"8fcf6e76-724c-4c5e-a77f-\
+cae09d77888a"],
+
+Cell[CellGroupData[{
+
+Cell["NN spacing statistics", "Subsection",
  CellChangeTimes->{{3.981735269768186*^9, 3.9817352915622168`*^9}, {
   3.9817354514337893`*^9, 3.981735452680483*^9}, {3.981736197166944*^9, 
-  3.9817362216346684`*^9}},ExpressionUUID->"438cace7-5f90-4adf-bb76-\
+  3.9817362216346684`*^9}, {3.981737603505765*^9, 
+  3.9817376035858717`*^9}},ExpressionUUID->"438cace7-5f90-4adf-bb76-\
 ecc7d5d25fc0"],
 
 Cell[CellGroupData[{
@@ -193,8 +489,8 @@ Cell[BoxData[
               Opacity[0.66]}], {}, {}], 
            RectangleBox[{0., 0}, {0.5, 954.}, "RoundingRadius" -> 0]},
           
-          ImageSizeCache->{{31.399691628302644`, 
-           48.751264992256964`}, {-99.136401138103, 93.06184153597525}}],
+          ImageSizeCache->{{25.892526521216972`, 
+           38.77253052441954}, {-73.84244018680951, 68.78558511074831}}],
          "DelayedMouseEffectStyle"],
         StatusArea[#, 954]& ,
         TagBoxNote->"954"],
@@ -214,8 +510,8 @@ Cell[BoxData[
               Opacity[0.66]}], {}, {}], 
            RectangleBox[{0.5, 0}, {1., 169.}, "RoundingRadius" -> 0]},
           
-          ImageSizeCache->{{48.251264992256964`, 65.6028383562113}, {
-           58.60271888197187, 93.06184153597525}}],
+          ImageSizeCache->{{38.39753052441954, 51.277534527622095`}, {
+           43.21062570269038, 68.78558511074831}}],
          "DelayedMouseEffectStyle"],
         StatusArea[#, 169]& ,
         TagBoxNote->"169"],
@@ -235,8 +531,8 @@ Cell[BoxData[
               Opacity[0.66]}], {}, {}], 
            RectangleBox[{1., 0}, {1.5, 145.}, "RoundingRadius" -> 0]},
           
-          ImageSizeCache->{{65.1028383562113, 82.45441172016561}, {
-           63.42531618194867, 93.06184153597525}}],
+          ImageSizeCache->{{50.902534527622095`, 63.78253853082466}, {
+           46.7893181630063, 68.78558511074831}}],
          "DelayedMouseEffectStyle"],
         StatusArea[#, 145]& ,
         TagBoxNote->"145"],
@@ -256,8 +552,8 @@ Cell[BoxData[
               Opacity[0.66]}], {}, {}], 
            RectangleBox[{1.5, 0}, {2., 106.}, "RoundingRadius" -> 0]},
           
-          ImageSizeCache->{{81.95441172016561, 99.30598508411994}, {
-           71.262036794411, 93.06184153597525}}],
+          ImageSizeCache->{{63.40753853082466, 76.28754253402721}, {
+           52.60469341101967, 68.78558511074831}}],
          "DelayedMouseEffectStyle"],
         StatusArea[#, 106]& ,
         TagBoxNote->"106"],
@@ -277,8 +573,8 @@ Cell[BoxData[
               Opacity[0.66]}], {}, {}], 
            RectangleBox[{2., 0}, {2.5, 92.}, "RoundingRadius" -> 0]},
           
-          ImageSizeCache->{{98.80598508411994, 116.15755844807425`}, {
-           74.0752185527308, 93.06184153597525}}],
+          ImageSizeCache->{{75.91254253402721, 88.79254653722978}, {
+           54.69226401287062, 68.78558511074831}}],
          "DelayedMouseEffectStyle"],
         StatusArea[#, 92]& ,
         TagBoxNote->"92"],
@@ -298,8 +594,8 @@ Cell[BoxData[
               Opacity[0.66]}], {}, {}], 
            RectangleBox[{2.5, 0}, {3., 75.}, "RoundingRadius" -> 0]},
           
-          ImageSizeCache->{{115.65755844807425`, 133.00913181202858`}, {
-           77.49122497354772, 93.06184153597525}}],
+          ImageSizeCache->{{88.41754653722978, 101.29755054043235`}, {
+           57.227171172261066`, 68.78558511074831}}],
          "DelayedMouseEffectStyle"],
         StatusArea[#, 75]& ,
         TagBoxNote->"75"],
@@ -319,8 +615,8 @@ Cell[BoxData[
               Opacity[0.66]}], {}, {}], 
            RectangleBox[{3., 0}, {3.5, 48.}, "RoundingRadius" -> 0]},
           
-          ImageSizeCache->{{132.50913181202858`, 149.8607051759829}, {
-           82.91664693602162, 93.06184153597525}}],
+          ImageSizeCache->{{100.92255054043235`, 113.8025545436349}, {
+           61.25320019011647, 68.78558511074831}}],
          "DelayedMouseEffectStyle"],
         StatusArea[#, 48]& ,
         TagBoxNote->"48"],
@@ -340,8 +636,8 @@ Cell[BoxData[
               Opacity[0.66]}], {}, {}], 
            RectangleBox[{3.5, 0}, {4., 39.}, "RoundingRadius" -> 0]},
           
-          ImageSizeCache->{{149.3607051759829, 166.71227853993722`}, {
-           84.72512092351293, 93.06184153597525}}],
+          ImageSizeCache->{{113.4275545436349, 126.30755854683747`}, {
+           62.59520986273495, 68.78558511074831}}],
          "DelayedMouseEffectStyle"],
         StatusArea[#, 39]& ,
         TagBoxNote->"39"],
@@ -361,8 +657,8 @@ Cell[BoxData[
               Opacity[0.66]}], {}, {}], 
            RectangleBox[{4., 0}, {4.5, 35.}, "RoundingRadius" -> 0]},
           
-          ImageSizeCache->{{166.21227853993722`, 183.56385190389153`}, {
-           85.52888714017573, 93.06184153597525}}],
+          ImageSizeCache->{{125.93255854683747`, 138.81256255004}, {
+           63.19165860612093, 68.78558511074831}}],
          "DelayedMouseEffectStyle"],
         StatusArea[#, 35]& ,
         TagBoxNote->"35"],
@@ -382,8 +678,8 @@ Cell[BoxData[
               Opacity[0.66]}], {}, {}], 
            RectangleBox[{4.5, 0}, {5., 21.}, "RoundingRadius" -> 0]},
           
-          ImageSizeCache->{{183.06385190389153`, 200.41542526784585`}, {
-           88.34206889849554, 93.06184153597525}}],
+          ImageSizeCache->{{138.43756255004, 151.31756655324259`}, {
+           65.27922920797188, 68.78558511074831}}],
          "DelayedMouseEffectStyle"],
         StatusArea[#, 21]& ,
         TagBoxNote->"21"],
@@ -403,8 +699,8 @@ Cell[BoxData[
               Opacity[0.66]}], {}, {}], 
            RectangleBox[{5., 0}, {5.5, 9.}, "RoundingRadius" -> 0]},
           
-          ImageSizeCache->{{199.91542526784585`, 217.2669986318002}, {
-           90.75336754848394, 93.06184153597525}}],
+          ImageSizeCache->{{150.94256655324259`, 163.82257055644516`}, {
+           67.06857543812984, 68.78558511074831}}],
          "DelayedMouseEffectStyle"],
         StatusArea[#, 9]& ,
         TagBoxNote->"9"],
@@ -424,8 +720,8 @@ Cell[BoxData[
               Opacity[0.66]}], {}, {}], 
            RectangleBox[{5.5, 0}, {6., 5.}, "RoundingRadius" -> 0]},
           
-          ImageSizeCache->{{216.7669986318002, 234.1185719957545}, {
-           91.55713376514674, 93.06184153597525}}],
+          ImageSizeCache->{{163.44757055644516`, 176.32757455964773`}, {
+           67.66502418151583, 68.78558511074831}}],
          "DelayedMouseEffectStyle"],
         StatusArea[#, 5]& ,
         TagBoxNote->"5"],
@@ -445,8 +741,8 @@ Cell[BoxData[
               Opacity[0.66]}], {}, {}], 
            RectangleBox[{6., 0}, {6.5, 6.}, "RoundingRadius" -> 0]},
           
-          ImageSizeCache->{{233.6185719957545, 250.97014535970882`}, {
-           91.35619221098105, 93.06184153597525}}],
+          ImageSizeCache->{{175.95257455964773`, 188.83257856285027`}, {
+           67.51591199566934, 68.78558511074831}}],
          "DelayedMouseEffectStyle"],
         StatusArea[#, 6]& ,
         TagBoxNote->"6"],
@@ -466,8 +762,8 @@ Cell[BoxData[
               Opacity[0.66]}], {}, {}], 
            RectangleBox[{6.5, 0}, {7., 1.}, "RoundingRadius" -> 0]},
           
-          ImageSizeCache->{{250.47014535970882`, 267.8217187236632}, {
-           92.36089998180955, 93.06184153597525}}],
+          ImageSizeCache->{{188.45757856285027`, 201.33758256605284`}, {
+           68.26147292490182, 68.78558511074831}}],
          "DelayedMouseEffectStyle"],
         StatusArea[#, 1]& ,
         TagBoxNote->"1"],
@@ -487,8 +783,8 @@ Cell[BoxData[
               Opacity[0.66]}], {}, {}], 
            RectangleBox[{7., 0}, {7.5, 3.}, "RoundingRadius" -> 0]},
           
-          ImageSizeCache->{{267.3217187236632, 284.6732920876175}, {
-           91.95901687347815, 93.06184153597525}}],
+          ImageSizeCache->{{200.96258256605284`, 213.8425865692554}, {
+           67.96324855320883, 68.78558511074831}}],
          "DelayedMouseEffectStyle"],
         StatusArea[#, 3]& ,
         TagBoxNote->"3"],
@@ -508,8 +804,8 @@ Cell[BoxData[
               Opacity[0.66]}], {}, {}], 
            RectangleBox[{7.5, 0}, {8., 3.}, "RoundingRadius" -> 0]},
           
-          ImageSizeCache->{{284.1732920876175, 301.5248654515718}, {
-           91.95901687347815, 93.06184153597525}}],
+          ImageSizeCache->{{213.4675865692554, 226.34759057245796`}, {
+           67.96324855320883, 68.78558511074831}}],
          "DelayedMouseEffectStyle"],
         StatusArea[#, 3]& ,
         TagBoxNote->"3"],
@@ -529,8 +825,8 @@ Cell[BoxData[
               Opacity[0.66]}], {}, {}], 
            RectangleBox[{8., 0}, {8.5, 2.}, "RoundingRadius" -> 0]},
           
-          ImageSizeCache->{{301.0248654515718, 318.37643881552617`}, {
-           92.15995842764384, 93.06184153597525}}],
+          ImageSizeCache->{{225.97259057245796`, 238.85259457566053`}, {
+           68.11236073905532, 68.78558511074831}}],
          "DelayedMouseEffectStyle"],
         StatusArea[#, 2]& ,
         TagBoxNote->"2"],
@@ -550,8 +846,8 @@ Cell[BoxData[
               Opacity[0.66]}], {}, {}], 
            RectangleBox[{8.5, 0}, {9., 1.}, "RoundingRadius" -> 0]},
           
-          ImageSizeCache->{{317.87643881552617`, 335.22801217948046`}, {
-           92.36089998180955, 93.06184153597525}}],
+          ImageSizeCache->{{238.47759457566053`, 251.35759857886308`}, {
+           68.26147292490182, 68.78558511074831}}],
          "DelayedMouseEffectStyle"],
         StatusArea[#, 1]& ,
         TagBoxNote->"1"],
@@ -571,8 +867,8 @@ Cell[BoxData[
               Opacity[0.66]}], {}, {}], 
            RectangleBox[{9., 0}, {9.5, 1.}, "RoundingRadius" -> 0]},
           
-          ImageSizeCache->{{334.72801217948046`, 352.0795855434348}, {
-           92.36089998180955, 93.06184153597525}}],
+          ImageSizeCache->{{250.98259857886308`, 263.8626025820656}, {
+           68.26147292490182, 68.78558511074831}}],
          "DelayedMouseEffectStyle"],
         StatusArea[#, 1]& ,
         TagBoxNote->"1"],
@@ -2174,6 +2470,7 @@ e3+zCfM57ifD3nUrmMh8jud1775h9j7M5xKy1YMDhpgwn+N6dvFMv3SO8+cS
 HmyT90Ewn+P6K2zI8/9//lzC3CX+o1q9mM/xvJTtvTrzZyX4LyQ705s=
       "]]},
     Annotation[#, "Charting`Private`Tag#1"]& ], {{}, {}}},
+  PlotInteractivity :> True,
   AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
   Axes->{True, True},
   AxesLabel->{
@@ -2274,7 +2571,6 @@ FormBox[RowBox[{StyleBox[\\\"S\\\", \\\"TI\\\"], StyleBox[\\\"F\\\", \\\"TI\\\
          Part[#, 1]], 
         (Identity[#]& )[
          Part[#, 2]]}& )}},
-  PlotInteractivity:>True,
   PlotRange->{{0, 2.9815}, {0, 2.62656807906195}},
   PlotRangeClipping->True,
   PlotRangePadding->{{
@@ -2372,716 +2668,10 @@ Cell[BoxData[
            RowBox[{"2", "t"}], "-", "1"}], ")"}]}], "]"}]}]}]}], "]"}]}], 
   ";"}]], "Input",ExpressionUUID->"3135452e-19e2-4124-a7d7-d217dbd8326b"]
 }, Closed]]
-}, Closed]],
-
-Cell[CellGroupData[{
-
-Cell["Momentum sectors Bose-Hubbard", "Section",
- CellChangeTimes->{{3.981736010569127*^9, 
-  3.981736024691456*^9}},ExpressionUUID->"44f81772-c283-4d5b-a5c3-\
-65797f87ea00"],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"?", "MomentumSectorPeriodicBoseHubbard"}]], "Input",
- CellChangeTimes->{{3.981736286949442*^9, 3.9817362918727503`*^9}},
- CellLabel->"In[12]:=",ExpressionUUID->"e3e7acde-8d10-4d79-95cc-96ce034e5c85"],
-
-Cell[BoxData[
- InterpretationBox[
-  StyleBox[
-   FrameBox[
-    DynamicModuleBox[{System`InformationDump`open$$ = False, 
-     System`InformationDump`mouseOver$$ = False}, 
-     PaneSelectorBox[{True->
-      TagBox[GridBox[{
-         {
-          ItemBox[
-           PaneBox[
-            StyleBox[
-             TagBox[
-              TooltipBox[
-               StyleBox["\<\" Symbol\"\>", "InformationRowLabel",
-                StripOnInput->False],
-               "\"Symbol\"",
-               TooltipStyle->"TextStyling"],
-              Annotation[#, "Symbol", "Tooltip"]& ], "InformationTitleText",
-             StripOnInput->False,
-             BaseStyle -> None],
-            FrameMargins->{{4, 0}, {-1, 1}}],
-           BaseStyle->"InformationTitleBackground",
-           StripOnInput->False], 
-          ItemBox["\<\"\"\>",
-           BaseStyle->"InformationTitleBackground",
-           StripOnInput->False]},
-         {
-          ItemBox[
-           PaneBox[
-            
-            StyleBox["\<\"\\!\\(\\*StyleBox[RowBox[{\\\"\
-SectorPeriodicBoseHubbard\\\", \\\"[\\\", StyleBox[\\\"N\\\", \\\"TI\\\"], \\\
-\",\\\", StyleBox[\\\"L\\\", \\\"TI\\\"], \\\",\\\", StyleBox[\\\"J\\\", \
-\\\"TI\\\"], \\\",\\\", StyleBox[\\\"U\\\", \\\"TI\\\"], \\\",\\\", StyleBox[\
-\\\"sector\\\", \\\"TI\\\"], \\\":\\\", StyleBox[\\\"All\\\", \\\"TI\\\"], \\\
-\" \\\", StyleBox[\\\"or\\\", \\\"TI\\\"], \\\" \\\", StyleBox[\\\"interger\\\
-\", \\\"TI\\\"], \\\"]\\\"}], \\\"MR\\\"]\\) returns the Hamiltonian of a 1D \
-Bose Hubbard chain with N sites and L bosons wtih periodic boundary \
-conditions in block diagonal form due to Momentum symmetry. Using the \
-sector=All returns the full sectorized hamiltonian whereas sector= i (i <= N) \
-returns the i-th momentum sector.\"\>", "InformationUsageText",
-             StripOnInput->False,
-             LineSpacing->{1.5, 1.5, 3.}],
-            FrameMargins->{{10, 10}, {8, 10}}],
-           BaseStyle->"InformationUsageSubtitleBackground",
-           StripOnInput->False], 
-          ItemBox["\<\"\"\>",
-           BaseStyle->"InformationUsageSubtitleBackground",
-           StripOnInput->False]},
-         {
-          PaneBox[
-           TagBox[GridBox[{
-              {
-               StyleBox[
-                TagBox[
-                 TooltipBox[
-                  StyleBox["\<\" Definitions\"\>", "InformationRowLabel",
-                   StripOnInput->False],
-                  "\"Definitions\"",
-                  TooltipStyle->"TextStyling"],
-                 Annotation[#, "Definitions", "Tooltip"]& ], "DialogStyle",
-                StripOnInput->False]},
-              {
-               TemplateBox[{"\"\[ThinSpace]\"", 
-                 GridBox[{{
-                    RowBox[{
-                    RowBox[{"MomentumSectorPeriodicBoseHubbard", "[", 
-                    
-                    RowBox[{
-                    "QMB`ManyBody`BoseHubbard`Private`n_", ",", 
-                    "QMB`ManyBody`BoseHubbard`Private`m_", ",", 
-                    "QMB`ManyBody`BoseHubbard`Private`J_", ",", 
-                    "QMB`ManyBody`BoseHubbard`Private`U_", ",", 
-                    
-                    RowBox[{
-                    "QMB`ManyBody`BoseHubbard`Private`sector_", ":", 
-                    "All"}]}], "]"}], ":=", 
-                    RowBox[{"Module", "[", 
-                    RowBox[{
-                    RowBox[{"{", 
-                    
-                    RowBox[{"QMB`ManyBody`BoseHubbard`Private`S", ",", 
-                    "QMB`ManyBody`BoseHubbard`Private`base", ",", 
-                    "QMB`ManyBody`BoseHubbard`Private`DataS", ",", 
-                    "QMB`ManyBody`BoseHubbard`Private`vecs", ",", 
-                    "QMB`ManyBody`BoseHubbard`Private`U2", ",", 
-                    "QMB`ManyBody`BoseHubbard`Private`H"}], "}"}], ",", 
-                    RowBox[{
-                    RowBox[{"QMB`ManyBody`BoseHubbard`Private`H", "=", 
-                    
-                    RowBox[{"QMB`ManyBody`BoseHubbard`Private`PeriodicBH", 
-                    "[", 
-                    
-                    RowBox[{"QMB`ManyBody`BoseHubbard`Private`n", ",", 
-                    "QMB`ManyBody`BoseHubbard`Private`m", ",", 
-                    "QMB`ManyBody`BoseHubbard`Private`J", ",", 
-                    "QMB`ManyBody`BoseHubbard`Private`U"}], "]"}]}], ";", 
-                    RowBox[{"QMB`ManyBody`BoseHubbard`Private`S", "=", 
-                    
-                    RowBox[{"QMB`ManyBody`BoseHubbard`Private`ShiftOperator", 
-                    "[", 
-                    
-                    RowBox[{"QMB`ManyBody`BoseHubbard`Private`n", ",", 
-                    "QMB`ManyBody`BoseHubbard`Private`m"}], "]"}]}], ";", 
-                    RowBox[{"QMB`ManyBody`BoseHubbard`Private`base", "=", 
-                    RowBox[{"IdentityMatrix", "[", 
-                    
-                    RowBox[{"Length", "[", 
-                    "QMB`ManyBody`BoseHubbard`Private`S", "]"}], "]"}]}], ";", 
-                    RowBox[{"QMB`ManyBody`BoseHubbard`Private`DataS", "=", 
-                    
-                    RowBox[{
-                    "QMB`ManyBody`BoseHubbard`Private`DegenerateSpectrum", 
-                    "[", "QMB`ManyBody`BoseHubbard`Private`S", "]"}]}], ";", 
-                    RowBox[{"QMB`ManyBody`BoseHubbard`Private`vecs", "=", 
-                    RowBox[{"Normalize", "/@", 
-                    RowBox[{"Which", "[", 
-                    RowBox[{
-                    
-                    RowBox[{"QMB`ManyBody`BoseHubbard`Private`sector", "===", 
-                    "All"}], ",", 
-                    RowBox[{"Flatten", "[", 
-                    RowBox[{
-                    
-                    RowBox[{"Last", "/@", 
-                    "QMB`ManyBody`BoseHubbard`Private`DataS"}], ",", "1"}], 
-                    "]"}], ",", 
-                    RowBox[{
-                    
-                    RowBox[{"IntegerQ", "[", 
-                    "QMB`ManyBody`BoseHubbard`Private`sector", "]"}], "&&", 
-                    
-                    RowBox[{"1", "\[LessEqual]", 
-                    "QMB`ManyBody`BoseHubbard`Private`sector", "\[LessEqual]", 
-                    
-                    RowBox[{"Length", "[", 
-                    "QMB`ManyBody`BoseHubbard`Private`DataS", "]"}]}]}], ",", 
-                    
-                    
-                    RowBox[{"QMB`ManyBody`BoseHubbard`Private`DataS", 
-                    "\[LeftDoubleBracket]", 
-                    
-                    RowBox[{"QMB`ManyBody`BoseHubbard`Private`sector", ",", 
-                    "2"}], "\[RightDoubleBracket]"}], ",", "True", ",", 
-                    RowBox[{
-                    RowBox[{"Message", "[", 
-                    RowBox[{
-                    StyleBox[
-                    
-                    RowBox[{
-                    "QMB`ManyBody`BoseHubbard`Private`SectorPeriodicBH", "::",
-                     "badsector"}], "MessageName"], ",", 
-                    "QMB`ManyBody`BoseHubbard`Private`sector"}], "]"}], ";", 
-                    RowBox[{"Return", "[", "$Failed", "]"}]}]}], "]"}]}]}], 
-                    ";", 
-                    RowBox[{"QMB`ManyBody`BoseHubbard`Private`U2", "=", 
-                    
-                    RowBox[{"QMB`ManyBody`BoseHubbard`Private`UnitaryAtoB", 
-                    "[", 
-                    
-                    RowBox[{"QMB`ManyBody`BoseHubbard`Private`base", ",", 
-                    "QMB`ManyBody`BoseHubbard`Private`vecs"}], "]"}]}], ";", 
-                    RowBox[{"Chop", "[", 
-                    RowBox[{
-                    
-                    RowBox[{"ConjugateTranspose", "[", 
-                    "QMB`ManyBody`BoseHubbard`Private`U2", "]"}], ".", 
-                    "QMB`ManyBody`BoseHubbard`Private`H", ".", 
-                    "QMB`ManyBody`BoseHubbard`Private`U2"}], "]"}]}]}], 
-                    "]"}]}]}, {" "}}, 
-                  GridBoxAlignment -> {"Columns" -> {{Left}}}, 
-                  DefaultBaseStyle -> "Column", 
-                  GridBoxItemSize -> {
-                   "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}]},
-                "RowDefault"]}
-             },
-             DefaultBaseStyle->"Column",
-             GridBoxAlignment->{"Columns" -> {{Left}}},
-             
-             GridBoxItemSize->{
-              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
-            "Column"],
-           FrameMargins->{{6, 0}, {3, 6}}], "\<\"\"\>"},
-         {
-          PaneBox[GridBox[{
-             {
-              
-              DynamicModuleBox[{System`InformationDump`open$$ = {
-               False, False, False, False, False, False}}, 
-               StyleBox[GridBox[{
-                  {
-                   TagBox[
-                    TooltipBox[
-                    StyleBox["\<\" Full Name\"\>", "InformationRowLabel",
-                    StripOnInput->False],
-                    "\"FullName\"",
-                    TooltipStyle->"TextStyling"],
-                    
-                    Annotation[#, "FullName", 
-                    "Tooltip"]& ], \
-"\<\"QMB`ManyBody`MomentumSectorPeriodicBoseHubbard\"\>"}
-                 },
-                 AutoDelete->False,
-                 GridBoxAlignment->{"Columns" -> {Right, Left}},
-                 GridBoxDividers->None,
-                 GridBoxItemSize->{"Columns" -> {Automatic, Automatic}},
-                 GridBoxSpacings->{"Columns" -> {
-                    Offset[0.27999999999999997`], {
-                    Offset[0.5599999999999999]}, 
-                    Offset[0.27999999999999997`]}, "Rows" -> {
-                    Offset[0.2], {
-                    Offset[0.8]}, 
-                    Offset[0.2]}}], "DialogStyle",
-                StripOnInput->False],
-               DynamicModuleValues:>{}]}
-            },
-            DefaultBaseStyle->"Column",
-            GridBoxAlignment->{"Columns" -> {{Left}}},
-            GridBoxDividers->{"Columns" -> {{False}}, "Rows" -> {{False}}},
-            
-            GridBoxItemSize->{
-             "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}},
-            GridBoxSpacings->{"Columns" -> {
-                Offset[0.27999999999999997`], {
-                 Offset[0.5599999999999999]}, 
-                Offset[0.27999999999999997`]}, "Rows" -> {
-                Offset[0.2], {
-                 Offset[3.6]}, 
-                Offset[0.2]}}],
-           FrameMargins->{{6, 6}, {6, 3}}], ""},
-         {
-          ItemBox[
-           TagBox[
-            ButtonBox[
-             PaneSelectorBox[{False->
-              
-              DynamicBox[FEPrivate`FrontEndResource[
-               "FEBitmaps", "UpPointerOpener"]], True->
-              
-              DynamicBox[FEPrivate`FrontEndResource[
-               "FEBitmaps", "UpPointerOpenerHot"]]}, Dynamic[
-              System`InformationDump`mouseOver$$]],
-             Alignment->Left,
-             Appearance->{"Default" -> None},
-             
-             ButtonFunction:>FEPrivate`Set[
-              System`InformationDump`open$$, False],
-             Evaluator->Automatic,
-             FrameMargins->{{9, 0}, {0, 0}},
-             ImageMargins->0,
-             ImageSize->Full,
-             Method->"Preemptive"],
-            
-            EventHandlerTag[{
-             "MouseEntered" :> 
-              FEPrivate`Set[System`InformationDump`mouseOver$$, True], 
-              "MouseExited" :> 
-              FEPrivate`Set[System`InformationDump`mouseOver$$, False], 
-              Method -> "Preemptive", PassEventsDown -> Automatic, 
-              PassEventsUp -> True}]],
-           BaseStyle->"InformationTitleBackground",
-           StripOnInput->False], "\[SpanFromLeft]"}
-        },
-        AutoDelete->False,
-        FrameStyle->Directive[
-          LightDarkSwitched[
-           GrayLevel[0.8]], 
-          Thickness[Tiny]],
-        GridBoxAlignment->{"Columns" -> {Left, Right}, "Rows" -> {{Center}}},
-        GridBoxDividers->{
-         "Columns" -> {{None}}, "Rows" -> {False, {True}, False}},
-        GridBoxItemSize->{
-         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
-       "Grid"], False->
-      TagBox[GridBox[{
-         {
-          ItemBox[
-           PaneBox[
-            StyleBox[
-             TagBox[
-              TooltipBox[
-               StyleBox["\<\" Symbol\"\>", "InformationRowLabel",
-                StripOnInput->False],
-               "\"Symbol\"",
-               TooltipStyle->"TextStyling"],
-              Annotation[#, "Symbol", "Tooltip"]& ], "InformationTitleText",
-             StripOnInput->False],
-            FrameMargins->{{4, 0}, {-1, 1}}],
-           BaseStyle->"InformationTitleBackground",
-           StripOnInput->False], 
-          ItemBox["\<\"\"\>",
-           BaseStyle->"InformationTitleBackground",
-           StripOnInput->False]},
-         {
-          ItemBox[
-           PaneBox[
-            
-            StyleBox["\<\"\\!\\(\\*StyleBox[RowBox[{\\\"\
-SectorPeriodicBoseHubbard\\\", \\\"[\\\", StyleBox[\\\"N\\\", \\\"TI\\\"], \\\
-\",\\\", StyleBox[\\\"L\\\", \\\"TI\\\"], \\\",\\\", StyleBox[\\\"J\\\", \
-\\\"TI\\\"], \\\",\\\", StyleBox[\\\"U\\\", \\\"TI\\\"], \\\",\\\", StyleBox[\
-\\\"sector\\\", \\\"TI\\\"], \\\":\\\", StyleBox[\\\"All\\\", \\\"TI\\\"], \\\
-\" \\\", StyleBox[\\\"or\\\", \\\"TI\\\"], \\\" \\\", StyleBox[\\\"interger\\\
-\", \\\"TI\\\"], \\\"]\\\"}], \\\"MR\\\"]\\) returns the Hamiltonian of a 1D \
-Bose Hubbard chain with N sites and L bosons wtih periodic boundary \
-conditions in block diagonal form due to Momentum symmetry. Using the \
-sector=All returns the full sectorized hamiltonian whereas sector= i (i <= N) \
-returns the i-th momentum sector.\"\>", "InformationUsageText",
-             StripOnInput->False,
-             LineSpacing->{1.5, 1.5, 3.}],
-            FrameMargins->{{10, 10}, {8, 10}},
-            ScrollPosition->{0., 0.}],
-           BaseStyle->"InformationUsageSubtitleBackground",
-           StripOnInput->False], 
-          ItemBox["\<\"\"\>",
-           BaseStyle->"InformationUsageSubtitleBackground",
-           StripOnInput->False]},
-         {
-          ItemBox[
-           TagBox[
-            ButtonBox[
-             PaneSelectorBox[{False->
-              
-              DynamicBox[FEPrivate`FrontEndResource[
-               "FEBitmaps", "DownPointerOpener"],
-               ImageSizeCache->{10., {1.143798828125, 8.856201171875}}], True->
-              
-              
-              DynamicBox[FEPrivate`FrontEndResource[
-               "FEBitmaps", "DownPointerOpenerHot"],
-               ImageSizeCache->{10., {1.143798828125, 8.856201171875}}]}, 
-              Dynamic[System`InformationDump`mouseOver$$]],
-             Alignment->Left,
-             Appearance->{"Default" -> None},
-             
-             ButtonFunction:>FEPrivate`Set[
-              System`InformationDump`open$$, True],
-             Evaluator->Automatic,
-             FrameMargins->{{9, 0}, {0, 0}},
-             ImageMargins->0,
-             ImageSize->Full,
-             Method->"Preemptive"],
-            
-            EventHandlerTag[{
-             "MouseEntered" :> 
-              FEPrivate`Set[System`InformationDump`mouseOver$$, True], 
-              "MouseExited" :> 
-              FEPrivate`Set[System`InformationDump`mouseOver$$, False], 
-              Method -> "Preemptive", PassEventsDown -> Automatic, 
-              PassEventsUp -> True}]],
-           BaseStyle->"InformationTitleBackground",
-           StripOnInput->False], "\[SpanFromLeft]"}
-        },
-        AutoDelete->False,
-        FrameStyle->Directive[
-          LightDarkSwitched[
-           GrayLevel[0.8]], 
-          Thickness[Tiny]],
-        GridBoxAlignment->{"Columns" -> {Left, Right}, "Rows" -> {{Center}}},
-        GridBoxDividers->{
-         "Columns" -> {{None}}, "Rows" -> {False, {True}, False}},
-        GridBoxItemSize->{
-         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
-       "Grid"]}, Dynamic[System`InformationDump`open$$],
-      BaselinePosition->Baseline,
-      FrameMargins->0,
-      ImageSize->Automatic],
-     DynamicModuleValues:>{}],
-    BaseStyle->"InformationGridFrame",
-    StripOnInput->False], "InformationGridPlain",
-   StripOnInput->False],
-  InformationData[<|
-   "ObjectType" -> "Symbol", "Usage" -> 
-    "\!\(\*StyleBox[RowBox[{\"SectorPeriodicBoseHubbard\", \"[\", \
-StyleBox[\"N\", \"TI\"], \",\", StyleBox[\"L\", \"TI\"], \",\", \
-StyleBox[\"J\", \"TI\"], \",\", StyleBox[\"U\", \"TI\"], \",\", \
-StyleBox[\"sector\", \"TI\"], \":\", StyleBox[\"All\", \"TI\"], \" \", \
-StyleBox[\"or\", \"TI\"], \" \", StyleBox[\"interger\", \"TI\"], \"]\"}], \
-\"MR\"]\) returns the Hamiltonian of a 1D Bose Hubbard chain with N sites and \
-L bosons wtih periodic boundary conditions in block diagonal form due to \
-Momentum symmetry. Using the sector=All returns the full sectorized \
-hamiltonian whereas sector= i (i <= N) returns the i-th momentum sector.", 
-    "Documentation" -> None, "OwnValues" -> None, "UpValues" -> None, 
-    "DownValues" -> 
-    Information`InformationValueForm[
-     DownValues, QMB`ManyBody`MomentumSectorPeriodicBoseHubbard, {
-      QMB`ManyBody`MomentumSectorPeriodicBoseHubbard[
-         Pattern[QMB`ManyBody`BoseHubbard`Private`n, 
-          Blank[]], 
-         Pattern[QMB`ManyBody`BoseHubbard`Private`m, 
-          Blank[]], 
-         Pattern[QMB`ManyBody`BoseHubbard`Private`J, 
-          Blank[]], 
-         Pattern[QMB`ManyBody`BoseHubbard`Private`U, 
-          Blank[]], 
-         Optional[
-          Pattern[QMB`ManyBody`BoseHubbard`Private`sector, 
-           Blank[]], All]] :> 
-       Module[{
-         QMB`ManyBody`BoseHubbard`Private`S, 
-          QMB`ManyBody`BoseHubbard`Private`base, 
-          QMB`ManyBody`BoseHubbard`Private`DataS, 
-          QMB`ManyBody`BoseHubbard`Private`vecs, 
-          QMB`ManyBody`BoseHubbard`Private`U2, 
-          QMB`ManyBody`BoseHubbard`Private`H}, 
-         QMB`ManyBody`BoseHubbard`Private`H = 
-          QMB`ManyBody`BoseHubbard`Private`PeriodicBH[
-           QMB`ManyBody`BoseHubbard`Private`n, 
-            QMB`ManyBody`BoseHubbard`Private`m, 
-            QMB`ManyBody`BoseHubbard`Private`J, 
-            QMB`ManyBody`BoseHubbard`Private`U]; 
-         QMB`ManyBody`BoseHubbard`Private`S = 
-          QMB`ManyBody`BoseHubbard`Private`ShiftOperator[
-           QMB`ManyBody`BoseHubbard`Private`n, 
-            QMB`ManyBody`BoseHubbard`Private`m]; 
-         QMB`ManyBody`BoseHubbard`Private`base = IdentityMatrix[
-            Length[QMB`ManyBody`BoseHubbard`Private`S]]; 
-         QMB`ManyBody`BoseHubbard`Private`DataS = 
-          QMB`ManyBody`BoseHubbard`Private`DegenerateSpectrum[
-           QMB`ManyBody`BoseHubbard`Private`S]; 
-         QMB`ManyBody`BoseHubbard`Private`vecs = Map[Normalize, 
-            Which[QMB`ManyBody`BoseHubbard`Private`sector === All, 
-             Flatten[
-              Map[Last, QMB`ManyBody`BoseHubbard`Private`DataS], 1], 
-             And[
-              IntegerQ[QMB`ManyBody`BoseHubbard`Private`sector], 1 <= 
-              QMB`ManyBody`BoseHubbard`Private`sector <= 
-              Length[QMB`ManyBody`BoseHubbard`Private`DataS]], 
-             Part[
-             QMB`ManyBody`BoseHubbard`Private`DataS, 
-              QMB`ManyBody`BoseHubbard`Private`sector, 2], True, Message[
-               MessageName[
-               QMB`ManyBody`BoseHubbard`Private`SectorPeriodicBH, 
-                "badsector"], QMB`ManyBody`BoseHubbard`Private`sector]; 
-             Return[$Failed]]]; 
-         QMB`ManyBody`BoseHubbard`Private`U2 = 
-          QMB`ManyBody`BoseHubbard`Private`UnitaryAtoB[
-           QMB`ManyBody`BoseHubbard`Private`base, 
-            QMB`ManyBody`BoseHubbard`Private`vecs]; Chop[
-           Dot[
-            ConjugateTranspose[QMB`ManyBody`BoseHubbard`Private`U2], 
-            QMB`ManyBody`BoseHubbard`Private`H, 
-            QMB`ManyBody`BoseHubbard`Private`U2]]]}], "SubValues" -> None, 
-    "DefaultValues" -> None, "NValues" -> None, "FormatValues" -> None, 
-    "Options" -> None, "Attributes" -> {}, "FullName" -> 
-    "QMB`ManyBody`MomentumSectorPeriodicBoseHubbard"|>, False]]], "Output",
- CellChangeTimes->{3.981736292565577*^9},
- CellLabel->"Out[12]=",ExpressionUUID->"6b5d1698-e53c-4a33-8043-98e32f9c1b35"]
-}, Open  ]],
-
-Cell["You can use the full sectorized hamiltonian ", "Text",
- CellChangeTimes->{{3.98173617220671*^9, 3.981736194766796*^9}, {
-  3.981736229443645*^9, 
-  3.9817362812835503`*^9}},ExpressionUUID->"4442d96a-ad56-4be6-ae3d-\
-820e5d609cef"],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"Module", "[", 
-  RowBox[{
-   RowBox[{"{", 
-    RowBox[{
-     RowBox[{"n", "=", "3"}], ",", 
-     RowBox[{"m", "=", "3"}], ",", 
-     RowBox[{"J", "=", "1"}], ",", 
-     RowBox[{"U", "=", "1"}], ",", "BH"}], "}"}], ",", "\[IndentingNewLine]", 
-   
-   RowBox[{
-    RowBox[{"BH", "=", 
-     RowBox[{"MomentumSectorPeriodicBoseHubbard", "[", 
-      RowBox[{"n", ",", "m", ",", "J", ",", "U", ",", "All"}], "]"}]}], ";", 
-    "\n", 
-    RowBox[{"BH", "//", "MatrixForm"}]}]}], "]"}]], "Input",
- CellChangeTimes->{{3.981736259963567*^9, 3.981736314029726*^9}, {
-  3.9817363635961103`*^9, 3.9817363673370323`*^9}, {3.981736412214238*^9, 
-  3.981736413402726*^9}},
- CellLabel->"In[22]:=",ExpressionUUID->"b9d8dd08-19c7-4254-87d1-410553ff3277"],
-
-Cell[BoxData[
- TagBox[
-  RowBox[{"(", "\[NoBreak]", GridBox[{
-     {"3.000000000000001`", 
-      RowBox[{"-", "1.7320508075688776`"}], 
-      RowBox[{"-", "1.7320508075688776`"}], "0", "0", "0", "0", "0", "0", "0"},
-     {
-      RowBox[{"-", "1.7320508075688776`"}], "1.0000000000000002`", 
-      RowBox[{"-", "3.000000000000001`"}], 
-      RowBox[{"-", "2.4494897427831783`"}], "0", "0", "0", "0", "0", "0"},
-     {
-      RowBox[{"-", "1.7320508075688776`"}], 
-      RowBox[{"-", "3.000000000000001`"}], "1.0000000000000002`", 
-      RowBox[{"-", "2.4494897427831783`"}], "0", "0", "0", "0", "0", "0"},
-     {"0", 
-      RowBox[{"-", "2.4494897427831783`"}], 
-      RowBox[{"-", "2.4494897427831783`"}], "0", "0", "0", "0", "0", "0", "0"},
-     {"0", "0", "0", "0", "3.`", 
-      RowBox[{"-", "1.7320508075688772`"}], 
-      RowBox[{"-", "1.7320508075688772`"}], "0", "0", "0"},
-     {"0", "0", "0", "0", 
-      RowBox[{"-", "1.7320508075688772`"}], "1.0000000000000002`", 
-      RowBox[{"0.`", "\[VeryThinSpace]", "+", 
-       RowBox[{"1.7320508075688776`", " ", "\[ImaginaryI]"}]}], "0", "0", "0"},
-     {"0", "0", "0", "0", 
-      RowBox[{"-", "1.7320508075688772`"}], 
-      RowBox[{"0.`", "\[VeryThinSpace]", "-", 
-       RowBox[{"1.7320508075688776`", " ", "\[ImaginaryI]"}]}], 
-      "1.0000000000000002`", "0", "0", "0"},
-     {"0", "0", "0", "0", "0", "0", "0", "3.`", 
-      RowBox[{"-", "1.7320508075688772`"}], 
-      RowBox[{"-", "1.7320508075688772`"}]},
-     {"0", "0", "0", "0", "0", "0", "0", 
-      RowBox[{"-", "1.7320508075688772`"}], "1.0000000000000002`", 
-      RowBox[{"0.`", "\[VeryThinSpace]", "-", 
-       RowBox[{"1.7320508075688776`", " ", "\[ImaginaryI]"}]}]},
-     {"0", "0", "0", "0", "0", "0", "0", 
-      RowBox[{"-", "1.7320508075688772`"}], 
-      RowBox[{"0.`", "\[VeryThinSpace]", "+", 
-       RowBox[{"1.7320508075688776`", " ", "\[ImaginaryI]"}]}], 
-      "1.0000000000000002`"}
-    },
-    GridBoxAlignment->{"Columns" -> {{Center}}, "Rows" -> {{Baseline}}},
-    GridBoxSpacings->{"Columns" -> {
-        Offset[0.27999999999999997`], {
-         Offset[0.7]}, 
-        Offset[0.27999999999999997`]}, "Rows" -> {
-        Offset[0.2], {
-         Offset[0.4]}, 
-        Offset[0.2]}}], "\[NoBreak]", ")"}],
-  Function[BoxForm`e$, 
-   MatrixForm[
-   SparseArray[
-    Automatic, {10, 10}, 0, {
-     1, {{0, 3, 7, 11, 13, 16, 19, 22, 25, 28, 31}, {{1}, {3}, {2}, {2}, {
-       1}, {4}, {3}, {3}, {2}, {1}, {4}, {3}, {2}, {5}, {7}, {6}, {6}, {5}, {
-       7}, {7}, {6}, {5}, {8}, {10}, {9}, {9}, {8}, {10}, {10}, {9}, {8}}}, {
-      3.000000000000001, -1.7320508075688776`, -1.7320508075688776`, 
-       1.0000000000000002`, -1.7320508075688776`, -2.4494897427831783`, \
--3.000000000000001, 
-       1.0000000000000002`, -3.000000000000001, -1.7320508075688776`, \
--2.4494897427831783`, -2.4494897427831783`, -2.4494897427831783`, 
-       3., -1.7320508075688772`, -1.7320508075688772`, 
-       1.0000000000000002`, -1.7320508075688772`, Complex[
-       0., 1.7320508075688776`], 1.0000000000000002`, Complex[
-       0., -1.7320508075688776`], -1.7320508075688772`, 
-       3., -1.7320508075688772`, -1.7320508075688772`, 
-       1.0000000000000002`, -1.7320508075688772`, Complex[
-       0., -1.7320508075688776`], 1.0000000000000002`, Complex[
-       0., 1.7320508075688776`], -1.7320508075688772`}}]]]]], "Output",
- CellChangeTimes->{{3.981736297363599*^9, 3.9817363145026903`*^9}, {
-  3.9817363645187073`*^9, 3.981736367887024*^9}, {3.981736406758196*^9, 
-  3.9817364137794037`*^9}},
- CellLabel->
-  "Out[22]//MatrixForm=",ExpressionUUID->"153b3c4b-9a92-45a6-b8b5-\
-373229b0970f"]
-}, Open  ]],
-
-Cell["\<\
-Or you can use a single momentum symmetry sector by changing the last option \
-to a integer smaller or equal to max(N,L)\
-\>", "Text",
- CellChangeTimes->{{3.981736609578001*^9, 
-  3.981736685816084*^9}},ExpressionUUID->"7c2e78b0-1713-4853-af5d-\
-f653e3f14668"],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"Module", "[", 
-  RowBox[{
-   RowBox[{"{", 
-    RowBox[{
-     RowBox[{"n", "=", "3"}], ",", 
-     RowBox[{"m", "=", "3"}], ",", 
-     RowBox[{"J", "=", "1"}], ",", 
-     RowBox[{"U", "=", "1"}], ",", "BH"}], "}"}], ",", "\[IndentingNewLine]", 
-   
-   RowBox[{
-    RowBox[{"BH", "=", 
-     RowBox[{"MomentumSectorPeriodicBoseHubbard", "[", 
-      RowBox[{"n", ",", "m", ",", "J", ",", "U", ",", "1"}], "]"}]}], ";", 
-    "\n", 
-    RowBox[{"BH", "//", "MatrixForm"}]}]}], "]"}]], "Input",
- CellChangeTimes->{{3.981736705015134*^9, 3.9817367059664097`*^9}},
- CellLabel->"In[23]:=",ExpressionUUID->"e80a7715-0c8b-4bed-85ca-2af632d01c1f"],
-
-Cell[BoxData[
- TagBox[
-  RowBox[{"(", "\[NoBreak]", GridBox[{
-     {"3.000000000000001`", 
-      RowBox[{"-", "1.7320508075688776`"}], 
-      RowBox[{"-", "1.7320508075688776`"}], "0"},
-     {
-      RowBox[{"-", "1.7320508075688776`"}], "1.0000000000000002`", 
-      RowBox[{"-", "3.000000000000001`"}], 
-      RowBox[{"-", "2.4494897427831783`"}]},
-     {
-      RowBox[{"-", "1.7320508075688776`"}], 
-      RowBox[{"-", "3.000000000000001`"}], "1.0000000000000002`", 
-      RowBox[{"-", "2.4494897427831783`"}]},
-     {"0", 
-      RowBox[{"-", "2.4494897427831783`"}], 
-      RowBox[{"-", "2.4494897427831783`"}], "0"}
-    },
-    GridBoxAlignment->{"Columns" -> {{Center}}, "Rows" -> {{Baseline}}},
-    GridBoxSpacings->{"Columns" -> {
-        Offset[0.27999999999999997`], {
-         Offset[0.7]}, 
-        Offset[0.27999999999999997`]}, "Rows" -> {
-        Offset[0.2], {
-         Offset[0.4]}, 
-        Offset[0.2]}}], "\[NoBreak]", ")"}],
-  Function[BoxForm`e$, 
-   MatrixForm[
-   SparseArray[
-    Automatic, {4, 4}, 0, {
-     1, {{0, 3, 7, 11, 13}, {{1}, {3}, {2}, {2}, {1}, {4}, {3}, {3}, {2}, {
-       1}, {4}, {3}, {2}}}, {
-      3.000000000000001, -1.7320508075688776`, -1.7320508075688776`, 
-      1.0000000000000002`, -1.7320508075688776`, -2.4494897427831783`, \
--3.000000000000001, 
-      1.0000000000000002`, -3.000000000000001, -1.7320508075688776`, \
--2.4494897427831783`, -2.4494897427831783`, -2.4494897427831783`}}]]]]], \
-"Output",
- CellChangeTimes->{3.981736706553897*^9},
- CellLabel->
-  "Out[23]//MatrixForm=",ExpressionUUID->"574f4f93-2d2a-4a25-9540-\
-5be6d9ee2fe0"]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"Module", "[", 
-  RowBox[{
-   RowBox[{"{", 
-    RowBox[{
-     RowBox[{"n", "=", "3"}], ",", 
-     RowBox[{"m", "=", "3"}], ",", 
-     RowBox[{"J", "=", "1"}], ",", 
-     RowBox[{"U", "=", "1"}], ",", "BH"}], "}"}], ",", "\[IndentingNewLine]", 
-   
-   RowBox[{
-    RowBox[{"BH", "=", 
-     RowBox[{"MomentumSectorPeriodicBoseHubbard", "[", 
-      RowBox[{"n", ",", "m", ",", "J", ",", "U", ",", "2"}], "]"}]}], ";", 
-    "\n", 
-    RowBox[{"BH", "//", "MatrixForm"}]}]}], "]"}]], "Input",
- CellChangeTimes->{{3.9817367114276333`*^9, 3.9817367161506166`*^9}},
- CellLabel->"In[24]:=",ExpressionUUID->"8abce74f-966f-4971-8885-6813c0412973"],
-
-Cell[BoxData[
- TagBox[
-  RowBox[{"(", "\[NoBreak]", GridBox[{
-     {"3.`", 
-      RowBox[{"-", "1.7320508075688772`"}], 
-      RowBox[{"-", "1.7320508075688772`"}]},
-     {
-      RowBox[{"-", "1.7320508075688772`"}], "1.0000000000000002`", 
-      RowBox[{"0.`", "\[VeryThinSpace]", "+", 
-       RowBox[{"1.7320508075688776`", " ", "\[ImaginaryI]"}]}]},
-     {
-      RowBox[{"-", "1.7320508075688772`"}], 
-      RowBox[{"0.`", "\[VeryThinSpace]", "-", 
-       RowBox[{"1.7320508075688776`", " ", "\[ImaginaryI]"}]}], 
-      "1.0000000000000002`"}
-    },
-    GridBoxAlignment->{"Columns" -> {{Center}}, "Rows" -> {{Baseline}}},
-    GridBoxSpacings->{"Columns" -> {
-        Offset[0.27999999999999997`], {
-         Offset[0.7]}, 
-        Offset[0.27999999999999997`]}, "Rows" -> {
-        Offset[0.2], {
-         Offset[0.4]}, 
-        Offset[0.2]}}], "\[NoBreak]", ")"}],
-  Function[BoxForm`e$, 
-   MatrixForm[
-   SparseArray[
-    Automatic, {3, 3}, 0, {
-     1, {{0, 3, 6, 9}, {{1}, {3}, {2}, {2}, {1}, {3}, {3}, {2}, {1}}}, {
-      3., -1.7320508075688772`, -1.7320508075688772`, 
-       1.0000000000000002`, -1.7320508075688772`, Complex[
-       0., 1.7320508075688776`], 1.0000000000000002`, Complex[
-       0., -1.7320508075688776`], -1.7320508075688772`}}]]]]], "Output",
- CellChangeTimes->{3.9817367168550873`*^9},
- CellLabel->
-  "Out[24]//MatrixForm=",ExpressionUUID->"87ab7988-921e-4b7c-837b-\
-f477d2d4d0b2"]
 }, Open  ]]
-}, Closed]]
 },
-WindowSize->{1193, 715},
-WindowMargins->{{4, Automatic}, {Automatic, 4}},
+WindowSize->{1440, 758.25},
+WindowMargins->{{0, Automatic}, {0, Automatic}},
 InputAliases-><|"intt" -> RowBox[{"\[Integral]", 
      RowBox[{"\[SelectionPlaceholder]", 
        RowBox[{"\[DifferentialD]", "\[Placeholder]"}]}]}], "dintt" -> 
@@ -3188,7 +2778,7 @@ InputAliases-><|"intt" -> RowBox[{"\[Integral]",
   "madeboxeswraper" -> 
   TemplateBox[{"\[SelectionPlaceholder]"}, "NotationMadeBoxesTag"], "cf" -> 
   SubscriptBox["&", "\[Placeholder]"]|>,
-FrontEndVersion->"14.3 for Mac OS X ARM (64-bit) (July 8, 2025)",
+FrontEndVersion->"14.2 for Linux x86 (64-bit) (December 26, 2024)",
 StyleDefinitions->"Default.nb",
 ExpressionUUID->"811c502a-d95d-4a56-9d60-6d0233d518ee"
 ]
@@ -3203,51 +2793,52 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[554, 20, 279, 6, 29, "Input",ExpressionUUID->"c703093f-a3ba-44e9-83e1-a35a011d6c2e"],
+Cell[554, 20, 639, 15, 49, "Input",ExpressionUUID->"c703093f-a3ba-44e9-83e1-a35a011d6c2e",
+ InitializationCell->True],
 Cell[CellGroupData[{
-Cell[858, 30, 215, 4, 66, "Section",ExpressionUUID->"f7bc98c3-e17d-4b19-a5d2-c4b810441b76"],
+Cell[1218, 39, 261, 4, 49, "Section",ExpressionUUID->"f7bc98c3-e17d-4b19-a5d2-c4b810441b76"],
+Cell[1482, 45, 828, 25, 25, "Text",ExpressionUUID->"fde1d8c3-4bc6-448a-989a-ad70b3f508d6"],
 Cell[CellGroupData[{
-Cell[1098, 38, 728, 18, 70, "Input",ExpressionUUID->"d94fdeab-5aee-48da-9d06-0060db065e9b"],
-Cell[1829, 58, 3511, 81, 197, "Output",ExpressionUUID->"db409e87-ff6b-4c7f-9b22-d64642194ee9"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[5377, 144, 270, 4, 53, "Subsection",ExpressionUUID->"438cace7-5f90-4adf-bb76-ecc7d5d25fc0"],
-Cell[CellGroupData[{
-Cell[5672, 152, 843, 22, 70, "Input",ExpressionUUID->"29d7ae72-c37b-4765-a074-d1929c10da1c"],
-Cell[6518, 176, 16390, 493, 257, "Output",ExpressionUUID->"ef3c2437-3a1b-4ebf-a5a7-c0e363c2ad5d"]
+Cell[2335, 74, 825, 19, 52, "Input",ExpressionUUID->"d94fdeab-5aee-48da-9d06-0060db065e9b"],
+Cell[3163, 95, 3611, 83, 149, "Output",ExpressionUUID->"5bc58605-61aa-4643-acfb-05fa1ff2867e"]
 }, Open  ]]
 }, Closed]],
 Cell[CellGroupData[{
-Cell[22957, 675, 218, 4, 37, "Subsection",ExpressionUUID->"dc170b2e-8c76-48e4-8f41-204118e4c820"],
+Cell[6823, 184, 200, 3, 40, "Section",ExpressionUUID->"44f81772-c283-4d5b-a5c3-65797f87ea00"],
+Cell[7026, 189, 282, 4, 25, "Text",ExpressionUUID->"4442d96a-ad56-4be6-ae3d-820e5d609cef"],
 Cell[CellGroupData[{
-Cell[23200, 683, 3817, 98, 197, "Input",ExpressionUUID->"ebc5028b-dd28-4abc-bedd-4fec8b079d56"],
-Cell[27020, 783, 88933, 1505, 379, "Output",ExpressionUUID->"7f7d7950-0c74-494a-8c0e-f9162f653399"]
+Cell[7333, 197, 759, 19, 52, "Input",ExpressionUUID->"b9d8dd08-19c7-4254-87d1-410553ff3277"],
+Cell[8095, 218, 3615, 75, 162, "Output",ExpressionUUID->"153b3c4b-9a92-45a6-b8b5-373229b0970f"]
 }, Open  ]],
-Cell[115968, 2291, 1847, 56, 131, "Input",ExpressionUUID->"967a67ec-277b-4bb9-80ed-e47f7f995cc4"],
-Cell[117818, 2349, 714, 23, 29, "Input",ExpressionUUID->"3135452e-19e2-4124-a7d7-d217dbd8326b"]
-}, Closed]]
+Cell[11725, 296, 270, 6, 25, "Text",ExpressionUUID->"7c2e78b0-1713-4853-af5d-f653e3f14668"],
+Cell[CellGroupData[{
+Cell[12020, 306, 657, 17, 52, "Input",ExpressionUUID->"e80a7715-0c8b-4bed-85ca-2af632d01c1f"],
+Cell[12680, 325, 1590, 41, 71, "Output",ExpressionUUID->"574f4f93-2d2a-4a25-9540-5be6d9ee2fe0"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[14307, 371, 659, 17, 52, "Input",ExpressionUUID->"8abce74f-966f-4971-8885-6813c0412973"],
+Cell[14969, 390, 1415, 36, 65, "Output",ExpressionUUID->"87ab7988-921e-4b7c-837b-f477d2d4d0b2"]
+}, Open  ]]
 }, Closed]],
 Cell[CellGroupData[{
-Cell[118581, 2378, 174, 3, 52, "Section",ExpressionUUID->"44f81772-c283-4d5b-a5c3-65797f87ea00"],
+Cell[16433, 432, 158, 3, 53, "Title",ExpressionUUID->"8fcf6e76-724c-4c5e-a77f-cae09d77888a"],
 Cell[CellGroupData[{
-Cell[118780, 2385, 223, 3, 29, "Input",ExpressionUUID->"e3e7acde-8d10-4d79-95cc-96ce034e5c85"],
-Cell[119006, 2390, 20153, 448, 111, "Output",ExpressionUUID->"6b5d1698-e53c-4a33-8043-98e32f9c1b35"]
-}, Open  ]],
-Cell[139174, 2841, 236, 4, 33, "Text",ExpressionUUID->"4442d96a-ad56-4be6-ae3d-820e5d609cef"],
+Cell[16616, 439, 321, 5, 39, "Subsection",ExpressionUUID->"438cace7-5f90-4adf-bb76-ecc7d5d25fc0"],
 Cell[CellGroupData[{
-Cell[139435, 2849, 759, 19, 70, "Input",ExpressionUUID->"b9d8dd08-19c7-4254-87d1-410553ff3277"],
-Cell[140197, 2870, 3615, 75, 197, "Output",ExpressionUUID->"153b3c4b-9a92-45a6-b8b5-373229b0970f"]
-}, Open  ]],
-Cell[143827, 2948, 270, 6, 33, "Text",ExpressionUUID->"7c2e78b0-1713-4853-af5d-f653e3f14668"],
-Cell[CellGroupData[{
-Cell[144122, 2958, 657, 17, 70, "Input",ExpressionUUID->"e80a7715-0c8b-4bed-85ca-2af632d01c1f"],
-Cell[144782, 2977, 1590, 41, 94, "Output",ExpressionUUID->"574f4f93-2d2a-4a25-9540-5be6d9ee2fe0"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[146409, 3023, 659, 17, 70, "Input",ExpressionUUID->"8abce74f-966f-4971-8885-6813c0412973"],
-Cell[147071, 3042, 1415, 36, 96, "Output",ExpressionUUID->"87ab7988-921e-4b7c-837b-f477d2d4d0b2"]
+Cell[16962, 448, 843, 22, 52, "Input",ExpressionUUID->"29d7ae72-c37b-4765-a074-d1929c10da1c"],
+Cell[17808, 472, 16402, 493, 178, "Output",ExpressionUUID->"ef3c2437-3a1b-4ebf-a5a7-c0e363c2ad5d"]
 }, Open  ]]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[34259, 971, 218, 4, 28, "Subsection",ExpressionUUID->"dc170b2e-8c76-48e4-8f41-204118e4c820"],
+Cell[CellGroupData[{
+Cell[34502, 979, 3817, 98, 103, "Input",ExpressionUUID->"ebc5028b-dd28-4abc-bedd-4fec8b079d56"],
+Cell[38322, 1079, 88935, 1505, 270, "Output",ExpressionUUID->"7f7d7950-0c74-494a-8c0e-f9162f653399"]
+}, Open  ]],
+Cell[127272, 2587, 1847, 56, 85, "Input",ExpressionUUID->"967a67ec-277b-4bb9-80ed-e47f7f995cc4"],
+Cell[129122, 2645, 714, 23, 16, "Input",ExpressionUUID->"3135452e-19e2-4124-a7d7-d217dbd8326b"]
 }, Closed]]
+}, Open  ]]
 }
 ]
 *)
