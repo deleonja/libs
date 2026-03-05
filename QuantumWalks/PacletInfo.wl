@@ -2,7 +2,7 @@
 
 Paclet[
   Name -> "QuantumWalks",
-  Version -> "0.1.9",
+  Version -> "0.1.10",
   WolframVersion -> "13.0+",
   Description -> "Quantum walks (discrete- and continous- time) package",
   Creator -> "Jose Alfredo de Leon",
