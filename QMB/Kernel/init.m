@@ -39,4 +39,5 @@ Module[{RootPath, PacletPath, PacletData, VersionLocal,
     (* 5. Load submodules *)
     Get[FileNameJoin[{RootPath, "OldQMB.wl"}]]; 
     Get[FileNameJoin[{RootPath, "ManyBody", "SpinChains.wl"}]];
+    Get[FileNameJoin[{RootPath, "ManyBody", "BoseHubbard.wl"}]];
 ];
