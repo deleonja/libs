@@ -1,9 +1,5 @@
 (* ::Package:: *)
 
-(* If ForScience paclet not installed, install it. See https://github.com/MMA-ForScience/ForScience *)
-If[Length[PacletFind["ForScience"]]==0, PacletInstall[FileNameJoin[{DirectoryName[$InputFileName], "ForScience-0.88.45.paclet"}]]];
-
-
 BeginPackage["QuantumWalks`"]
 
 
@@ -15,7 +11,7 @@ BeginPackage["QuantumWalks`"]
 (*Public definitions*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*DTQW*)
 
 
@@ -89,7 +85,7 @@ CriticalAngle::usage = FormatUsage[
 Begin["`DQWL`Private`"];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*DTQW*)
 
 
