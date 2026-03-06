@@ -159,6 +159,9 @@ SU2Rotation::usage = FormatUsage[
 , {FrontEndObject::notavail, First::normal}];
 
 
+RenyiEntropy::usage = "RenyiEntropy[\[Alpha], \[Rho]] computes the \[Alpha]-th order Renyi entropy of density matrix \[Rho].";
+
+
 (* ::Subsection::Closed:: *)
 (*Quantum chaos*)
 
@@ -368,12 +371,6 @@ sites."
 
 
 
-BosonEscapeKrausOperators::usage = "BosonEscapeKrausOperators[N, L]: bosons escape to nearest neighbouring sites. N: bosons, L: site.";
-
-
-BosonEscapeKrausOperators2::usage = "sdfa";
-
-
 HilbertSpaceDim::replaced = "Function `1` has been replaced by `2`.";
 
 
@@ -396,17 +393,17 @@ FockBasisStateAsColumnVector::usage = "FockBasisStateAsColumnVector[FockState, N
 FockBasisIndex::usage = "FockBasisIndex[fockState, sortedTagsFockBasis] returns the position of fockState in the tag-sorted Fock basis with tags sortedTagsFockBasis.";
 
 
-RenyiEntropy::usage = "RenyiEntropy[\[Alpha], \[Rho]] computes the \[Alpha]-th order Renyi entropy of density matrix \[Rho].";
-
-
 BosonicPartialTrace::usage = "BosonicPartialTrace[\[Rho]] calculates the partial trace of \[Rho]. Requires initialization.";
 
 
 InitializationBosonicPartialTrace::usage = "InitializationBosonicPartialTrace[{\!\(\*SubscriptBox[\(i\), \(1\)]\),\[Ellipsis],\!\(\*SubscriptBox[\(i\), \(k\)]\)}, N, L] initializes variables for BosonicPartialTrace[] to calculate the reduced density matrix of sites {\!\(\*SubscriptBox[\(i\), \(1\)]\),\[Ellipsis],\!\(\*SubscriptBox[\(i\), \(k\)]\)}.";
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsection::Closed:: *)
 (*Fuzzy measurements in bosonic systems*)
+
+
+BosonEscapeKrausOperators::usage = "BosonEscapeKrausOperators[N, L]: bosons escape to nearest neighbouring sites. N: bosons, L: site.";
 
 
 InitializeVariables::usage = "InitializeVariables[n, L, boundaries, FMmodel] sets up the necessary variables for correct running of FuzzyMeasurement[\[Psi], \!\(\*SubscriptBox[\(p\), \(fuzzy\)]\)]; boundaries: 'open' or 'closed'; FMmodel: '#NN'.";
@@ -593,6 +590,9 @@ SU2Rotation[n_List, \[Theta]R_] /; Length[n] == 3 :=
         {{c - I * s * nz, -I * s * (nx - I * ny)}, 
          {-I * s * (nx + I * ny), c + I * s * nz}}
     ]
+
+
+RenyiEntropy[\[Alpha]_,\[Rho]_]:=1/(1-\[Alpha]) Log[Tr[MatrixPower[\[Rho],\[Alpha]]]]
 
 
 (* ::Subsection::Closed:: *)
@@ -932,39 +932,6 @@ Reshuffle[A_,m_,n_] := ArrayFlatten[ArrayReshape[A, {m, n, m, n}]]
 
 
 (* ::Subsection::Closed:: *)
-(*Bosons*)
-
-
-FockBasisStateAsColumnVector[FockBasisState_,N_,L_]:=Normal[SparseArray[Position[SortFockBasis[Normal[FockBasis[N,L]]][[2]],FockBasisState]->1,Binomial[N+L-1,L]]]
-
-
-(* ------------------------------------------------------
-FockBasis[N,M] returns the lexicographical-sorted Fock basis for N bosons in M sites.
-New implementation as of 15/Jun/2025 uses more efficient algorithm based on IntegerPartitions.
------------------------------------------------------- *)
-FockBasis[N_, M_] := ReverseSort[Catenate[Permutations[PadRight[#, M]] & /@ IntegerPartitions[N, M]]]
-
-(* Old implementation preserved for reference *)
-(*
-FockBasis[N_, M_] := Module[{k, fockState},
-    k = 1;
-    Normal[Join[
-        {fockState = SparseArray[{1 -> N}, {M}]},
-        Table[
-            fockState = SparseArray[Join[Table[i -> fockState[[i]], {i, k - 1}], {k -> fockState[[k]] - 1}], {M}];
-            fockState[[k + 1]] = N - Total[fockState[[1 ;; k]]];
-            k = Assignationk[M, N, fockState];
-            fockState,
-        HilbertSpaceDim[N, M] - 1]
-    ]]
-]
-*)
-
-
-SortFockBasis[fockBasis_]:=Transpose[Sort[{Tag[#],#}&/@fockBasis]]
-
-
-(* ::Subsection::Closed:: *)
 (*Bose-Hubbard*)
 
 
@@ -998,7 +965,7 @@ Module[
         U/2*PotentialTermBoseHubbardHamiltonian[basis];
     
     (* Para subespacios de simetria, obtenerlos a partir de H *)
-    Switch[OptionValue[SymmetricSubspace],
+    Switch[OptionValue[SymmetricSubspace],BosonEscapeKrausOperators
         "All",
             Nothing,
             
@@ -1239,6 +1206,35 @@ Module[{len = Length[First[basis]]},
 ]
 
 
+FockBasisStateAsColumnVector[FockBasisState_,N_,L_]:=Normal[SparseArray[Position[SortFockBasis[Normal[FockBasis[N,L]]][[2]],FockBasisState]->1,Binomial[N+L-1,L]]]
+
+
+(* ------------------------------------------------------
+FockBasis[N,M] returns the lexicographical-sorted Fock basis for N bosons in M sites.
+New implementation as of 15/Jun/2025 uses more efficient algorithm based on IntegerPartitions.
+------------------------------------------------------ *)
+FockBasis[N_, M_] := ReverseSort[Catenate[Permutations[PadRight[#, M]] & /@ IntegerPartitions[N, M]]]
+
+(* Old implementation preserved for reference *)
+(*
+FockBasis[N_, M_] := Module[{k, fockState},
+    k = 1;
+    Normal[Join[
+        {fockState = SparseArray[{1 -> N}, {M}]},
+        Table[
+            fockState = SparseArray[Join[Table[i -> fockState[[i]], {i, k - 1}], {k -> fockState[[k]] - 1}], {M}];
+            fockState[[k + 1]] = N - Total[fockState[[1 ;; k]]];
+            k = Assignationk[M, N, fockState];
+            fockState,
+        HilbertSpaceDim[N, M] - 1]
+    ]]
+]
+*)
+
+
+SortFockBasis[fockBasis_]:=Transpose[Sort[{Tag[#],#}&/@fockBasis]]
+
+
 ValueAfterADaggerA[basis_] := 
 MapApply[
     Sqrt[(#1 + 1.) * #2] &,
@@ -1282,7 +1278,7 @@ BosonicPartialTrace[Rho_] :=
 	]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsection::Closed:: *)
 (*Fuzzy measurements in bosonic systems*)
 
 
@@ -1312,7 +1308,7 @@ FuzzyMeasurement[\[Psi]_,pFuzzy_] :=
 (1 - pFuzzy) Dyad[\[Psi]] + (pFuzzy/numberOfPermutations) * Total[ Table[ Dyad[\[Psi][[i]]], {i,permutedBasisIndices}]]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsubsection::Closed:: *)
 (*BosonEscapeKrausOperators[n, L]*)
 
 
@@ -1365,9 +1361,6 @@ FromDigits[Flatten[Position[sortedTagsFockBasis,Tag[fockState]],1]]
 
 
 Assignationk[M_,N_,n_]:=If[n[[1;;M-1]]==ConstantArray[0,M-1],M-1,FromDigits[Last[Position[Normal[n[[1;;M-1]]],x_ /;x!=0]]]]
-
-
-RenyiEntropy[\[Alpha]_,\[Rho]_]:=1/(1-\[Alpha]) Log[Tr[MatrixPower[\[Rho],\[Alpha]]]]
 
 
 (* ::Subsection::Closed:: *)
