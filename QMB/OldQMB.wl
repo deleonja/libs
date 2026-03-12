@@ -141,14 +141,6 @@ SU2Rotation::usage = FormatUsage[
 ];
 , {FrontEndObject::notavail, First::normal}];
 
-
-(* ::Text:: *)
-(*Agregadas por Miguel*)
-
-
-coherentstate::usage = "coherentstate[state,L] Generates a spin coherent state of L spins given a general single qubit state";
-
-
 Quiet[
 SU2Rotation::usage = FormatUsage[
 	"SU2Rotation[{\[Theta]_a,\[Phi]_a},\[Theta]_R] devuelve la matriz de rotaci\[OAcute]n SU(2) \
@@ -159,7 +151,30 @@ SU2Rotation::usage = FormatUsage[
 , {FrontEndObject::notavail, First::normal}];
 
 
+(*Agregada por Miguel*)
+coherentstate::usage = "coherentstate[state,L] Generates a spin coherent state of L spins given a general single qubit state";
+
+
 RenyiEntropy::usage = "RenyiEntropy[\[Alpha], \[Rho]] computes the \[Alpha]-th order Renyi entropy of density matrix \[Rho].";
+
+
+EigenvectorQ::usage = FormatUsage[
+"EigenvectorQ[M,v] returns True if vector ```v``` is an eigenvector \
+	of the matrix ```M```."
+];
+
+
+WeylMatrix::usage = FormatUsage[
+"WeylMatrix[m,n,d] returns the Weyl matrix \
+	U(```m```,```n```) of dimension ```d```.
+WeylMatrix[mList,nList,dList] returns the multiparticle Weyl matrix \
+	U(```mList```,```nList```) of dimensions ```dList```."
+];
+
+
+ComplexToPolar::usage = FormatUsage[
+"ComplexToPolar[z] returns the polar form of ```z```."
+];
 
 
 (* ::Subsection::Closed:: *)
@@ -553,9 +568,6 @@ Module[{\[Rho]tilde, R, \[Lambda]},
 Qubit[\[Theta]_,\[Phi]_] := {Cos[\[Theta]/2],Exp[I \[Phi]]Sin[\[Theta]/2]}
 
 
-coherentstate[state_,L_]:=Flatten[KroneckerProduct@@Table[state,L]]
-
-
 SU2Rotation[sphCoord_List?VectorQ,\[Theta]_]/; Length[sphCoord]==2 :=
 	Module[{n={Sin[#1]Cos[#2], Sin[#1]Sin[#2], Cos[#1]} & @@ sphCoord},
 		MatrixExp[-I * \[Theta]/2 * n . (Pauli /@ Range[3])]
@@ -563,8 +575,7 @@ SU2Rotation[sphCoord_List?VectorQ,\[Theta]_]/; Length[sphCoord]==2 :=
 
 SU2Rotation[n_List?VectorQ,\[Theta]_]/; Length[n]==3 && Chop[Norm[n]-1]==0 :=
 	MatrixExp[-I * \[Theta]/2 * n . (Pauli /@ Range[3])]
-
-
+	
 SU2Rotation[sphCoord_List, \[Theta]R_] /; Length[sphCoord] == 2 := 
     Module[{nx, ny, nz, c, s, phase},
         (* Conversi\[OAcute]n Esf\[EAcute]ricas -> Cartesianas (Radio = 1) *)
@@ -592,7 +603,23 @@ SU2Rotation[n_List, \[Theta]R_] /; Length[n] == 3 :=
     ]
 
 
+coherentstate[state_,L_]:=Flatten[KroneckerProduct@@Table[state,L]]
+
+
 RenyiEntropy[\[Alpha]_,\[Rho]_]:=1/(1-\[Alpha]) Log[Tr[MatrixPower[\[Rho],\[Alpha]]]]
+
+
+EigenvectorQ[M_?MatrixQ, v_?VectorQ] := MatrixRank[{FullSimplify /@ M . v, v}] == 1
+
+
+WeylMatrix[m_Integer,n_Integer,d_Integer] := 
+	Sum[SparseArray[Mod[{k,k+n},d]+1->\[Omega][d,k*m],{d,d}],{k,0,d-1}]
+	
+WeylMatrix[m_List,n_List,d_List] := 
+	KroneckerProduct@@(WeylMatrix[#1,#2,#3]&@@@Transpose[Join[{m,n},{d}]])
+
+
+ComplexToPolar[z_]/; z\[Element]Complexes := Abs[z] Exp[I Arg[z]]
 
 
 (* ::Subsection::Closed:: *)
