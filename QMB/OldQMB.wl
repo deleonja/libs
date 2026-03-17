@@ -629,7 +629,7 @@ ComplexToPolar[z_]/; z\[Element]Complexes := Abs[z] Exp[I Arg[z]]
 MeanLevelSpacingRatio[eigenvalues_]:=Mean[Min/@Transpose[{#,1/#}]&[Ratios[Differences[Sort[eigenvalues]]]]]
 
 
-IPR[\[Psi]_] := Total[\[Psi]^4]
+IPR[\[Psi]_] := Total[Abs[\[Psi]]^4]
 
 
 kthOrderSpacings[spectrum_, k_] := RotateLeft[#, k] - # &[Sort[spectrum]][[;; -(k+1)]]
