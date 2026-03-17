@@ -10,7 +10,11 @@ y la asociaci\[OAcute]n de mapeo para el billar de estadio completo (Full Stadiu
 L: Semilongitud de la parte recta. \
 R: Radio de los semic\[IAcute]rculos.";
 
+
+
 Begin["`Bunimovich`Private`"];
+
+
 
 (* --- 1. Geometr\[IAcute]a del Estadio de Bunimovich desimetrizado (1/4) --- *)
 
@@ -36,10 +40,10 @@ GenerateBunimovichBasis[xc_Integer, nu_Integer] := Module[
     stateToIndex = AssociationThread[coords -> Range[Length[coords]]];
 
     <|
-        "Coords" -> coords,
+        "Coordinates" -> coords,
         "Mapping" -> stateToIndex,
         "Dimension" -> Length[coords],
-        "Params" -> {xc, nu},
+        "Parameters" -> {xc, nu},
         "Type" -> "Bunimovich"
     |>
 ]
@@ -84,13 +88,15 @@ GenerateFullStadiumBasis[L_Integer, R_Integer] := Module[
     stateToIndex = AssociationThread[coords -> Range[Length[coords]]];
 
     <|
-        "Coords" -> coords,
+        "Coordinates" -> coords,
         "Mapping" -> stateToIndex,
         "Dimension" -> Length[coords],
-        "Params" -> <|"L" -> L, "R" -> R, "Symmetry" -> "None"|>,
+        "Parameters" -> <|"L" -> L, "R" -> R, "Symmetry" -> "None"|>,
         "Type" -> "BunimovichFull"
     |>
 ]
+
+
 
 End[];
 EndPackage[];
