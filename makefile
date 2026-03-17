@@ -29,12 +29,13 @@ export-all: $(PACKAGES)
 # ---------------------------------------------------------------------------
 $(PACKAGES):
 	@echo "Exporting source for package: $@"
-	@find $@ -type f \( $(EXTENSIONS) \) | sort | while read -r file; do \
+	@VER=$$(cat $@/version.txt); \
+	find $@ -type f \( $(EXTENSIONS) \) | sort | while read -r file; do \
 		echo "=== FILENAME: $${file} ==="; \
 		cat "$$file"; \
 		printf "\n\n"; \
-	done > $@_Source.txt
-	@echo "$@_Source.txt generated successfully."
+	done > "$@_v$${VER}_Source.txt"; \
+	echo "$@_v$${VER}_Source.txt generado con éxito."
 
 
 ###############################################################################
@@ -140,5 +141,5 @@ release:
 # ---------------------------------------------------------------------------
 clean:
 	@echo "Cleaning up exported source files..."
-	@rm -f *_Source.txt
+	@rm -f *_v*_Source.txt
 	@echo "Cleanup complete."
