@@ -22,7 +22,7 @@ Get["ForScience`"]; (* nice formatting of usage definitions *)
 (*Public definitions*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*General quantum mechanics*)
 
 
@@ -109,13 +109,6 @@ BlochVector::usage = FormatUsage["BlochVector[\[Rho]] returns the Bloch vector o
 
 
 KroneckerVectorProduct::usage = "KroneckerVectorProduct[a,b] calculates \!\(\*TemplateBox[{\"a\"},\n\"Ket\"]\)\[CircleTimes]\!\(\*TemplateBox[{\"b\"},\n\"Ket\"]\).";
-
-
-Quiet[
-Purity::usage = FormatUsage[
-"Purity[\[Rho]] calculates the purity of ```\[Rho]```."
-];
-, {FrontEndObject::notavail, First::normal}];
 
 
 Quiet[
@@ -470,7 +463,7 @@ FuzzyMeasurementChannel[\[Rho], {\!\(\*SubscriptBox[\(p\), \(totalError\)]\), \!
 Begin["`Private`"]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*General quantum mechanics*)
 
 
@@ -551,9 +544,6 @@ BlochVector[\[Rho]_]:=Chop[Tr[Pauli[#] . \[Rho]]&/@Range[3]]
 
 
 KroneckerVectorProduct[a_,b_]:=Flatten[KroneckerProduct[a,b]]
-
-
-Purity[\[Rho]_]:=Tr[\[Rho] . \[Rho]] 
 
 
 Concurrence[\[Rho]_] :=

@@ -6,6 +6,10 @@ BeginPackage["QMB`"];
 Get["ForScience`"];
 
 
+(* ::Section:: *)
+(*Public definitions*)
+
+
 MatrixPartialTraceFromPureState::usage = FormatUsage[
 "MatrixPartialTraceFromPureState[stateVector,dimA,dimB,sysToTrace] \
 	computes the partial trace over ```sysToTrace``` of the density \
@@ -13,8 +17,9 @@ MatrixPartialTraceFromPureState::usage = FormatUsage[
 ];
 
 
-(* ::Section:: *)
-(*Public definitions*)
+Purity::usage = FormatUsage[
+"Purity[\[Rho]] calculates the purity of ```\[Rho]```."
+];
 
 
 (* ::Section:: *)
@@ -92,6 +97,9 @@ MatrixPartialTraceFromPureState[state_, dimA_Integer, dimB_Integer, sysToTrace_]
         Message[MatrixPartialTraceFromPureState::invalidSys,sysToTrace];
         $Failed
     );
+
+
+Purity[\[Rho]_] := Chop[Tr[\[Rho] . \[Rho]]]
 
 
 End[];
