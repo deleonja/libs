@@ -1,0 +1,385 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     15228,        377]
+NotebookOptionsPosition[      7766,        230]
+NotebookOutlinePosition[     13554,        350]
+CellTagsIndexPosition[     13511,        347]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{"Load", " ", "QMB"}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"Get", "[", 
+   RowBox[{"StringJoin", "[", 
+    RowBox[{
+     RowBox[{"DirectoryName", "[", 
+      RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+     ",", "\"\<Kernel/init.m\>\""}], "]"}], "]"}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.982865779622978*^9, 3.982865798465619*^9}},
+ CellLabel->"In[86]:=",ExpressionUUID->"61a8bba0-6dfe-442f-9176-445150b95dcd"],
+
+Cell[CellGroupData[{
+
+Cell["MatrixPartialTraceFromPureState", "Section",
+ CellChangeTimes->{
+  3.982865815361579*^9},ExpressionUUID->"bb65ae30-b4a2-4fcd-9f00-\
+6fa9cbaf8190"],
+
+Cell[TextData[{
+ "Consider a pure random state of dimension ",
+ Cell[BoxData[
+  FormBox["1000", TraditionalForm]],
+  FormatType->TraditionalForm,ExpressionUUID->
+  "bfa52a95-1a5e-4615-a65b-580871d38c17"],
+ ":"
+}], "Text",
+ CellChangeTimes->{{3.98286592860581*^9, 
+  3.98286595147593*^9}},ExpressionUUID->"5efe71ec-0b0d-43b2-a0b1-\
+3a2ed4565a40"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"psi", "=", 
+   RowBox[{"RandomHaarState", "[", "1000", "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.98286609222865*^9, 3.9828661269870033`*^9}},
+ CellLabel->"In[87]:=",ExpressionUUID->"d2becf57-4483-48e6-92a4-549d121dfb88"],
+
+Cell[TextData[{
+ "Compute the reduced density matrix of subsystem B which is of dimension 2 \
+(assuming ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SubscriptBox["H", "A"], "\[CircleTimes]", 
+    SubscriptBox["H", "B"]}], TraditionalForm]],
+  FormatType->TraditionalForm,ExpressionUUID->
+  "c3ac273b-4e2f-4dfe-92a6-478ade5108ed"],
+ "):"
+}], "Text",
+ CellChangeTimes->{{3.982866130527639*^9, 
+  3.982866192018491*^9}},ExpressionUUID->"12bffa13-19d3-44ba-8ed1-\
+1f69779b1bec"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"MatrixPartialTraceFromPureState", "[", 
+   RowBox[{"psi", ",", "500", ",", "2", ",", "1"}], "]"}], "//", 
+  "MatrixForm"}]], "Input",
+ CellChangeTimes->{{3.982866193844214*^9, 3.982866236652828*^9}},
+ CellLabel->"In[92]:=",ExpressionUUID->"1f867dfa-e1a9-4376-856e-045da5c79c38"],
+
+Cell[BoxData[
+ TagBox[
+  RowBox[{"(", "\[NoBreak]", GridBox[{
+     {
+      RowBox[{"0.4914886083653718`", "\[VeryThinSpace]", "+", 
+       RowBox[{"0.`", " ", "\[ImaginaryI]"}]}], 
+      RowBox[{
+       RowBox[{"-", "0.01570537894791435`"}], "-", 
+       RowBox[{"0.01898854427306586`", " ", "\[ImaginaryI]"}]}]},
+     {
+      RowBox[{
+       RowBox[{"-", "0.01570537894791435`"}], "+", 
+       RowBox[{"0.01898854427306586`", " ", "\[ImaginaryI]"}]}], 
+      RowBox[{"0.5085113916346288`", "\[VeryThinSpace]", "+", 
+       RowBox[{"0.`", " ", "\[ImaginaryI]"}]}]}
+    },
+    GridBoxAlignment->{"Columns" -> {{Center}}, "Rows" -> {{Baseline}}},
+    GridBoxSpacings->{"Columns" -> {
+        Offset[0.27999999999999997`], {
+         Offset[0.7]}, 
+        Offset[0.27999999999999997`]}, "Rows" -> {
+        Offset[0.2], {
+         Offset[0.4]}, 
+        Offset[0.2]}}], "\[NoBreak]", ")"}],
+  Function[BoxForm`e$, 
+   MatrixForm[BoxForm`e$]]]], "Output",
+ CellChangeTimes->{{3.9828662167713137`*^9, 3.982866236906451*^9}},
+ CellLabel->
+  "Out[92]//MatrixForm=",ExpressionUUID->"a50f31c9-842b-4dec-85ef-\
+7656597eed22"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Purity", "Section",
+ CellChangeTimes->{{3.982866238938223*^9, 
+  3.982866242386669*^9}},ExpressionUUID->"6ad802a7-12da-499d-897a-\
+b7f2cb4fc6bd"],
+
+Cell[TextData[{
+ "Consider a pure random state of dimension ",
+ Cell[BoxData[
+  FormBox["1000", TraditionalForm]],
+  FormatType->TraditionalForm,ExpressionUUID->
+  "f3ede99c-d18c-43fc-966d-28e92e4a70e4"],
+ ":"
+}], "Text",
+ CellChangeTimes->{{3.98286592860581*^9, 
+  3.98286595147593*^9}},ExpressionUUID->"c51a7bd2-7f60-4422-8398-\
+14c6d309ba9d"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"psi", "=", 
+   RowBox[{"RandomHaarState", "[", "1000", "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.98286609222865*^9, 3.9828661269870033`*^9}},
+ CellLabel->"In[99]:=",ExpressionUUID->"48bd6f63-31c6-420e-8098-9f3c63be1920"],
+
+Cell[TextData[{
+ "Compute the purity of the reduced density matrix of subsystem B which is of \
+dimension 2 (assuming ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SubscriptBox["H", "A"], "\[CircleTimes]", 
+    SubscriptBox["H", "B"]}], TraditionalForm]],
+  FormatType->TraditionalForm,ExpressionUUID->
+  "6d46a3b4-4ea2-4894-adfc-56af47cc45dd"],
+ "):"
+}], "Text",
+ CellChangeTimes->{{3.982866130527639*^9, 3.982866192018491*^9}, {
+  3.982866268682761*^9, 
+  3.982866270170274*^9}},ExpressionUUID->"c2e4c637-8048-4c46-89aa-\
+e6c7300f2950"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"reducedRho", "=", 
+   RowBox[{"MatrixPartialTraceFromPureState", "[", 
+    RowBox[{"psi", ",", "500", ",", "2", ",", "1"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Purity", "[", "reducedRho", "]"}]}], "Input",
+ CellChangeTimes->{{3.982866193844214*^9, 3.982866236652828*^9}, {
+  3.982866273171221*^9, 3.982866285240363*^9}},
+ CellLabel->
+  "In[100]:=",ExpressionUUID->"b807970c-6910-47d9-9aac-ef2fb7ca95d2"],
+
+Cell[BoxData["0.501103229200343`"], "Output",
+ CellChangeTimes->{{3.9828662167713137`*^9, 3.982866236906451*^9}, {
+  3.982866281722331*^9, 3.982866290355995*^9}},
+ CellLabel->
+  "Out[101]=",ExpressionUUID->"c9c39cf7-f403-4c86-b4c7-2e93f8f679b4"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["HaarRandomState", "Section",
+ CellChangeTimes->{{3.982866296617983*^9, 
+  3.982866298514127*^9}},ExpressionUUID->"2581064b-32a5-42a7-8e45-\
+7a12bff4b774"],
+
+Cell["Sample a Haar-random state of dimension 8:", "Text",
+ CellChangeTimes->{{3.9828663053192167`*^9, 
+  3.98286632003209*^9}},ExpressionUUID->"08d45327-570a-4780-90f6-\
+d67b8c829044"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"HaarRandomState", "[", "8", "]"}]], "Input",
+ CellChangeTimes->{{3.982866313413741*^9, 3.982866323114689*^9}},
+ CellLabel->
+  "In[103]:=",ExpressionUUID->"e5f4d0b0-5d5c-4706-b5b3-9b0cfc8c310e"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"0.3618371310552788`", "\[VeryThinSpace]", "+", 
+    RowBox[{"0.42481749360129334`", " ", "\[ImaginaryI]"}]}], ",", 
+   RowBox[{"0.02400120830384234`", "\[VeryThinSpace]", "-", 
+    RowBox[{"0.07716565412908222`", " ", "\[ImaginaryI]"}]}], ",", 
+   RowBox[{"0.16299023910190027`", "\[VeryThinSpace]", "+", 
+    RowBox[{"0.09907192289867386`", " ", "\[ImaginaryI]"}]}], ",", 
+   RowBox[{"0.2639234977909583`", "\[VeryThinSpace]", "-", 
+    RowBox[{"0.10456819733218511`", " ", "\[ImaginaryI]"}]}], ",", 
+   RowBox[{
+    RowBox[{"-", "0.30858763651106186`"}], "+", 
+    RowBox[{"0.1919550415101277`", " ", "\[ImaginaryI]"}]}], ",", 
+   RowBox[{"0.5197853021252562`", "\[VeryThinSpace]", "+", 
+    RowBox[{"0.024121680180844103`", " ", "\[ImaginaryI]"}]}], ",", 
+   RowBox[{"0.10080198243029519`", "\[VeryThinSpace]", "-", 
+    RowBox[{"0.18683290372092953`", " ", "\[ImaginaryI]"}]}], ",", 
+   RowBox[{"0.32795827124270044`", "\[VeryThinSpace]", "+", 
+    RowBox[{"0.0982156944379733`", " ", "\[ImaginaryI]"}]}]}], 
+  "}"}]], "Output",
+ CellChangeTimes->{{3.982866316411419*^9, 3.982866323658489*^9}},
+ CellLabel->
+  "Out[103]=",ExpressionUUID->"d3bc666a-4527-428c-a001-51f8be30f1f7"]
+}, Closed]]
+}, Closed]]
+},
+WindowSize->{720, 758.25},
+WindowMargins->{{Automatic, 0}, {0, Automatic}},
+InputAliases-><|"intt" -> RowBox[{"\[Integral]", 
+     RowBox[{"\[SelectionPlaceholder]", 
+       RowBox[{"\[DifferentialD]", "\[Placeholder]"}]}]}], "dintt" -> 
+  RowBox[{
+     SubsuperscriptBox[
+     "\[Integral]", "\[SelectionPlaceholder]", "\[Placeholder]"], 
+     RowBox[{"\[Placeholder]", 
+       RowBox[{"\[DifferentialD]", "\[Placeholder]"}]}]}], "rintt" -> 
+  RowBox[{
+     UnderscriptBox["\[Integral]", 
+      RowBox[{"\[SelectionPlaceholder]", "\[Element]", "\[Placeholder]"}]], 
+     "\[Placeholder]"}], "sumt" -> RowBox[{
+     UnderoverscriptBox["\[Sum]", 
+      RowBox[{"\[SelectionPlaceholder]", "=", "\[Placeholder]"}], 
+      "\[Placeholder]"], "\[Placeholder]"}], "prodt" -> RowBox[{
+     UnderoverscriptBox["\[Product]", 
+      RowBox[{"\[SelectionPlaceholder]", "=", "\[Placeholder]"}], 
+      "\[Placeholder]"], "\[Placeholder]"}], "dt" -> RowBox[{
+     SubscriptBox["\[PartialD]", "\[SelectionPlaceholder]"], 
+     "\[Placeholder]"}], "cbrt" -> 
+  RadicalBox[
+   "\[SelectionPlaceholder]", "3", SurdForm -> True, MultilineFunction -> 
+    None], "surd" -> 
+  RadicalBox[
+   "\[SelectionPlaceholder]", "\[Placeholder]", SurdForm -> True, 
+    MultilineFunction -> None], "ket" -> 
+  TemplateBox[{"\[SelectionPlaceholder]"}, "Ket"], "bra" -> 
+  TemplateBox[{"\[SelectionPlaceholder]"}, "Bra"], "braket" -> 
+  TemplateBox[{"\[SelectionPlaceholder]", "\[Placeholder]"}, "BraKet"], 
+  "delay" -> TemplateBox[{"\[SelectionPlaceholder]"}, "SystemsModelDelay"], 
+  "grad" -> RowBox[{
+     SubscriptBox["\[Del]", "\[SelectionPlaceholder]"], "\[Placeholder]"}], 
+  "del." -> RowBox[{
+     SubscriptBox["\[Del]", "\[SelectionPlaceholder]"], ".", 
+     "\[Placeholder]"}], "delx" -> RowBox[{
+     SubscriptBox["\[Del]", "\[SelectionPlaceholder]"], "\[Cross]", 
+     "\[Placeholder]"}], "del2" -> RowBox[{
+     SubsuperscriptBox["\[Del]", "\[SelectionPlaceholder]", 2], 
+     "\[Placeholder]"}], "kd" -> 
+  TemplateBox[{"\[SelectionPlaceholder]"}, "KroneckerDeltaSeq"], "algs" -> 
+  TemplateBox[{}, "Algebraics"], "bools" -> TemplateBox[{}, "Booleans"], 
+  "comps" -> TemplateBox[{}, "Complexes"], "ints" -> 
+  TemplateBox[{}, "Integers"], "pris" -> TemplateBox[{}, "Primes"], "rats" -> 
+  TemplateBox[{}, "Rationals"], "reals" -> TemplateBox[{}, "Reals"], "pints" -> 
+  TemplateBox[{}, "PositiveIntegers"], "npints" -> 
+  TemplateBox[{}, "NonPositiveIntegers"], "nnints" -> 
+  TemplateBox[{}, "NonNegativeIntegers"], "nints" -> 
+  TemplateBox[{}, "NegativeIntegers"], "prats" -> 
+  TemplateBox[{}, "PositiveRationals"], "nprats" -> 
+  TemplateBox[{}, "NonPositiveRationals"], "nnrats" -> 
+  TemplateBox[{}, "NonNegativeRationals"], "nrats" -> 
+  TemplateBox[{}, "NegativeRationals"], "preals" -> 
+  TemplateBox[{}, "PositiveReals"], "npreals" -> 
+  TemplateBox[{}, "NonPositiveReals"], "nnreals" -> 
+  TemplateBox[{}, "NonNegativeReals"], "nreals" -> 
+  TemplateBox[{}, "NegativeReals"], "dlim" -> RowBox[{
+     UnderscriptBox["\[Limit]", 
+      RowBox[{"\[SelectionPlaceholder]", 
+        UnderscriptBox["\[Rule]", 
+         TemplateBox[{}, "Integers"]], "\[Infinity]"}]], "\[Placeholder]"}], 
+  "dMlim" -> RowBox[{
+     UnderscriptBox["\[MaxLimit]", 
+      RowBox[{"\[SelectionPlaceholder]", 
+        UnderscriptBox["\[Rule]", 
+         TemplateBox[{}, "Integers"]], "\[Infinity]"}]], "\[Placeholder]"}], 
+  "dmlim" -> RowBox[{
+     UnderscriptBox["\[MinLimit]", 
+      RowBox[{"\[SelectionPlaceholder]", 
+        UnderscriptBox["\[Rule]", 
+         TemplateBox[{}, "Integers"]], "\[Infinity]"}]], "\[Placeholder]"}], 
+  "tue" -> OverscriptBox["\[UndirectedEdge]", "\[Placeholder]"], "tde" -> 
+  OverscriptBox["\[DirectedEdge]", "\[Placeholder]"], "cB" -> 
+  TemplateBox[{}, "CombinatorB"], "cC" -> TemplateBox[{}, "CombinatorC"], 
+  "cI" -> TemplateBox[{}, "CombinatorI"], "cK" -> 
+  TemplateBox[{}, "CombinatorK"], "cS" -> TemplateBox[{}, "CombinatorS"], 
+  "cW" -> TemplateBox[{}, "CombinatorW"], "cY" -> 
+  TemplateBox[{}, "CombinatorY"], "notation" -> RowBox[{"Notation", "[", 
+     RowBox[{
+       TemplateBox[{"\[SelectionPlaceholder]"}, "NotationTemplateTag"], " ", 
+       "\[DoubleLongLeftRightArrow]", " ", 
+       TemplateBox[{"\[Placeholder]"}, "NotationTemplateTag"]}], "]"}], 
+  "notation>" -> RowBox[{"Notation", "[", 
+     RowBox[{
+       TemplateBox[{"\[SelectionPlaceholder]"}, "NotationTemplateTag"], " ", 
+       "\[DoubleLongRightArrow]", " ", 
+       TemplateBox[{"\[Placeholder]"}, "NotationTemplateTag"]}], "]"}], 
+  "notation<" -> RowBox[{"Notation", "[", 
+     RowBox[{
+       TemplateBox[{"\[SelectionPlaceholder]"}, "NotationTemplateTag"], " ", 
+       "\[DoubleLongLeftArrow]", " ", 
+       TemplateBox[{"\[Placeholder]"}, "NotationTemplateTag"]}], "]"}], 
+  "symb" -> RowBox[{"Symbolize", "[", 
+     TemplateBox[{"\[SelectionPlaceholder]"}, "NotationTemplateTag"], "]"}], 
+  "infixnotation" -> RowBox[{"InfixNotation", "[", 
+     RowBox[{
+       TemplateBox[{"\[SelectionPlaceholder]"}, "NotationTemplateTag"], ",", 
+       "\[Placeholder]"}], "]"}], "addia" -> RowBox[{"AddInputAlias", "[", 
+     RowBox[{"\"\[SelectionPlaceholder]\"", "\[Rule]", 
+       TemplateBox[{"\[Placeholder]"}, "NotationTemplateTag"]}], "]"}], 
+  "pattwraper" -> 
+  TemplateBox[{"\[SelectionPlaceholder]"}, "NotationPatternTag"], 
+  "madeboxeswraper" -> 
+  TemplateBox[{"\[SelectionPlaceholder]"}, "NotationMadeBoxesTag"], "cf" -> 
+  SubscriptBox["&", "\[Placeholder]"]|>,
+FrontEndVersion->"14.2 for Linux x86 (64-bit) (December 26, 2024)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"14d0bfa5-e13c-4f80-8ca9-a3c04e324b83"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[554, 20, 508, 12, 49, "Input",ExpressionUUID->"61a8bba0-6dfe-442f-9176-445150b95dcd",
+ InitializationCell->True],
+Cell[CellGroupData[{
+Cell[1087, 36, 152, 3, 49, "Section",ExpressionUUID->"bb65ae30-b4a2-4fcd-9f00-6fa9cbaf8190"],
+Cell[1242, 41, 345, 10, 25, "Text",ExpressionUUID->"5efe71ec-0b0d-43b2-a0b1-3a2ed4565a40"],
+Cell[1590, 53, 261, 5, 22, "Input",ExpressionUUID->"d2becf57-4483-48e6-92a4-549d121dfb88"],
+Cell[1854, 60, 474, 14, 25, "Text",ExpressionUUID->"12bffa13-19d3-44ba-8ed1-1f69779b1bec"],
+Cell[CellGroupData[{
+Cell[2353, 78, 313, 6, 22, "Input",ExpressionUUID->"1f867dfa-e1a9-4376-856e-045da5c79c38"],
+Cell[2669, 86, 1116, 29, 52, "Output",ExpressionUUID->"a50f31c9-842b-4dec-85ef-7656597eed22"]
+}, Closed]]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[3834, 121, 151, 3, 40, "Section",ExpressionUUID->"6ad802a7-12da-499d-897a-b7f2cb4fc6bd"],
+Cell[3988, 126, 345, 10, 25, "Text",ExpressionUUID->"c51a7bd2-7f60-4422-8398-14c6d309ba9d"],
+Cell[4336, 138, 261, 5, 22, "Input",ExpressionUUID->"48bd6f63-31c6-420e-8098-9f3c63be1920"],
+Cell[4600, 145, 537, 15, 25, "Text",ExpressionUUID->"c2e4c637-8048-4c46-89aa-e6c7300f2950"],
+Cell[CellGroupData[{
+Cell[5162, 164, 453, 9, 37, "Input",ExpressionUUID->"b807970c-6910-47d9-9aac-ef2fb7ca95d2"],
+Cell[5618, 175, 245, 4, 36, "Output",ExpressionUUID->"c9c39cf7-f403-4c86-b4c7-2e93f8f679b4"]
+}, Closed]]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[5912, 185, 160, 3, 40, "Section",ExpressionUUID->"2581064b-32a5-42a7-8e45-7a12bff4b774"],
+Cell[6075, 190, 185, 3, 25, "Text",ExpressionUUID->"08d45327-570a-4780-90f6-d67b8c829044"],
+Cell[CellGroupData[{
+Cell[6285, 197, 217, 4, 22, "Input",ExpressionUUID->"e5f4d0b0-5d5c-4706-b5b3-9b0cfc8c310e"],
+Cell[6505, 203, 1233, 23, 54, "Output",ExpressionUUID->"d3bc666a-4527-428c-a001-51f8be30f1f7"]
+}, Closed]]
+}, Closed]]
+}
+]
+*)
+

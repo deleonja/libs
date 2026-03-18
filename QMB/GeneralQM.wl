@@ -22,6 +22,12 @@ Purity::usage = FormatUsage[
 ];
 
 
+HaarRandomState::usage = FormatUsage[
+"RandomHaarState[dim] returns a Haar-random quantum state \
+	vector of dimension ```dim```."
+];
+
+
 (* ::Section:: *)
 (*Private definitions*)
 
@@ -100,6 +106,18 @@ MatrixPartialTraceFromPureState[state_, dimA_Integer, dimB_Integer, sysToTrace_]
 
 
 Purity[\[Rho]_] := Chop[Tr[\[Rho] . \[Rho]]]
+
+
+HaarRandomState[Dim_Integer?Positive] := Module[
+    {ComplexVector},
+    
+    (* Sample real and imaginary parts from a standard normal distribution *)
+    ComplexVector = RandomVariate[NormalDistribution[], Dim] + 
+                    I * RandomVariate[NormalDistribution[], Dim];
+    
+    (* Normalizing the isotropic complex Gaussian vector yields a Haar-distributed state *)
+    Normalize[ComplexVector]
+];
 
 
 End[];
