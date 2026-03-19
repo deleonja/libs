@@ -28,6 +28,19 @@ HaarRandomState::usage = FormatUsage[
 ];
 
 
+PartialTranspose::usage = FormatUsage[
+"PartialTranspose[matrix,sysToTranspose,{dimA,dimB}] computes the \
+	partial transpose of a bipartite ```matrix``` over the specified \
+	```sysToTranspose``` (1 or 2).
+PartialTranspose[matrix,sysToTranspose] assumes a bipartite system \
+	of equal dimensions (e.g., two qubits)."
+];
+
+PartialTranspose::invSub = "Subsystem parameter must be 1 or 2.";
+PartialTranspose::invDim = "Matrix dimensions do not match the \
+	provided subsystem dimensions.";
+
+
 (* ::Section:: *)
 (*Private definitions*)
 
@@ -117,6 +130,47 @@ HaarRandomState[Dim_Integer?Positive] := Module[
     
     (* Normalizing the isotropic complex Gaussian vector yields a Haar-distributed state *)
     Normalize[ComplexVector]
+];
+
+
+(* Main polymorphic definition handling generic bipartite dimensions *)
+PartialTranspose[matrix_?MatrixQ, subsystem_Integer, dims_List] := Module[
+    {dimA, dimB, tensorForm, permutedTensor},
+    
+    {dimA, dimB} = dims;
+
+    (* Validation *)
+    If[subsystem =!= 1 && subsystem =!= 2,
+        Message[PartialTranspose::invSub];
+        Return[$Failed]
+    ];
+
+    If[Length[matrix] != dimA * dimB || Length[matrix[[1]]] != dimA * dimB,
+        Message[PartialTranspose::invDim];
+        Return[$Failed]
+    ];
+
+    (* Step 1: Reshape into a 4-index tensor {outA, outB, inA, inB} *)
+    tensorForm = ArrayReshape[matrix, {dimA, dimB, dimA, dimB}];
+
+    (* Step 2: Swap the indices corresponding to the chosen subsystem *)
+    permutedTensor = Transpose[
+        tensorForm, 
+        If[subsystem == 1, {3, 2, 1, 4}, {1, 4, 3, 2}]
+    ];
+
+    (* Step 3: Flatten back to a matrix *)
+    ArrayReshape[permutedTensor, {dimA * dimB, dimA * dimB}]
+];
+
+(* Overload for symmetric bipartite systems (e.g., two identical spins/qubits) *)
+PartialTranspose[matrix_?MatrixQ, subsystem_Integer] := Module[
+    {subDim},
+    
+    (* Infer the dimension assuming dimA == dimB *)
+    subDim = Round[Sqrt[Length[matrix]]];
+    
+    PartialTranspose[matrix, subsystem, {subDim, subDim}]
 ];
 
 
