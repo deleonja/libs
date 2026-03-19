@@ -157,14 +157,6 @@ EigenvectorQ::usage = FormatUsage[
 ];
 
 
-WeylMatrix::usage = FormatUsage[
-"WeylMatrix[m,n,d] returns the Weyl matrix \
-	U(```m```,```n```) of dimension ```d```.
-WeylMatrix[mList,nList,dList] returns the multiparticle Weyl matrix \
-	U(```mList```,```nList```) of dimensions ```dList```."
-];
-
-
 ComplexToPolar::usage = FormatUsage[
 "ComplexToPolar[z] returns the polar form of ```z```."
 ];
@@ -600,13 +592,6 @@ RenyiEntropy[\[Alpha]_,\[Rho]_]:=1/(1-\[Alpha]) Log[Tr[MatrixPower[\[Rho],\[Alph
 
 
 EigenvectorQ[M_?MatrixQ, v_?VectorQ] := MatrixRank[{FullSimplify /@ M . v, v}] == 1
-
-
-WeylMatrix[m_Integer,n_Integer,d_Integer] := 
-	Sum[SparseArray[Mod[{k,k+n},d]+1->\[Omega][d,k*m],{d,d}],{k,0,d-1}]
-	
-WeylMatrix[m_List,n_List,d_List] := 
-	KroneckerProduct@@(WeylMatrix[#1,#2,#3]&@@@Transpose[Join[{m,n},{d}]])
 
 
 ComplexToPolar[z_]/; z\[Element]Complexes := Abs[z] Exp[I Arg[z]]

@@ -6,7 +6,7 @@ BeginPackage["QMB`"];
 Get["ForScience`"];
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Public definitions*)
 
 
@@ -41,7 +41,21 @@ PartialTranspose::invDim = "Matrix dimensions do not match the \
 	provided subsystem dimensions.";
 
 
-(* ::Section:: *)
+\[Omega]::usage = FormatUsage[
+"\[Omega][d] returns the first dth root of unity.
+\[Omega][d,k] returns \[Omega][d]^k."
+];
+
+
+WeylMatrix::usage = FormatUsage[
+"WeylMatrix[m,n,d] returns the Weyl matrix \
+	U(```m```,```n```) of dimension ```d```.
+WeylMatrix[mList,nList,dList] returns the multiparticle Weyl matrix \
+	U(```mList```,```nList```) of dimensions ```dList```."
+];
+
+
+(* ::Section::Closed:: *)
 (*Private definitions*)
 
 
@@ -172,6 +186,17 @@ PartialTranspose[matrix_?MatrixQ, subsystem_Integer] := Module[
     
     PartialTranspose[matrix, subsystem, {subDim, subDim}]
 ];
+
+
+\[Omega][d_] := Exp[ 2*Pi*I / d ]
+\[Omega][d_,k_]:=Exp[ 2k*Pi*I / d ]
+
+
+WeylMatrix[m_Integer,n_Integer,d_Integer] := 
+	Sum[SparseArray[Mod[{k,k+n},d]+1->\[Omega][d,k*m],{d,d}],{k,0,d-1}]
+	
+WeylMatrix[m_List,n_List,d_List] := 
+	KroneckerProduct@@(WeylMatrix[#1,#2,#3]&@@@Transpose[Join[{m,n},{d}]])
 
 
 End[];
