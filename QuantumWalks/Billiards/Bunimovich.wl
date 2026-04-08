@@ -15,7 +15,6 @@ R: Radio de los semic\[IAcute]rculos.";
 Begin["`Bunimovich`Private`"];
 
 
-
 (* --- 1. Geometr\[IAcute]a del Estadio de Bunimovich desimetrizado (1/4) --- *)
 
 (* Eqs A7 y A8 del paper de Alonso-Lobo (2025) *)
@@ -40,10 +39,10 @@ GenerateBunimovichBasis[xc_Integer, nu_Integer] := Module[
     stateToIndex = AssociationThread[coords -> Range[Length[coords]]];
 
     <|
-        "Coordinates" -> coords,
+        "Coords" -> coords,
         "Mapping" -> stateToIndex,
         "Dimension" -> Length[coords],
-        "Parameters" -> {xc, nu},
+        "Params" -> {xc, nu},
         "Type" -> "Bunimovich"
     |>
 ]
@@ -88,10 +87,10 @@ GenerateFullStadiumBasis[L_Integer, R_Integer] := Module[
     stateToIndex = AssociationThread[coords -> Range[Length[coords]]];
 
     <|
-        "Coordinates" -> coords,
+        "Coords" -> coords,
         "Mapping" -> stateToIndex,
         "Dimension" -> Length[coords],
-        "Parameters" -> <|"L" -> L, "R" -> R, "Symmetry" -> "None"|>,
+        "Params" -> <|"L" -> L, "R" -> R, "Symmetry" -> "None"|>,
         "Type" -> "BunimovichFull"
     |>
 ]
