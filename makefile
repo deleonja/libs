@@ -143,3 +143,37 @@ clean:
 	@echo "Cleaning up exported source files..."
 	@rm -f *_v*_Source.txt
 	@echo "Cleanup complete."
+
+###############################################################################
+#                         GOOGLE DRIVE UPLOAD SECTION                         #
+###############################################################################
+
+# Nombre del remoto configurado en rclone
+DriveRemote := gdrive
+# Carpeta destino en Google Drive (crearla previamente o rclone la creará)
+DrivePath := WolframSources
+
+.PHONY: upload
+
+# ---------------------------------------------------------------------------
+# upload:
+#   1. Requiere el parámetro 'pkg' (e.g., make upload pkg=QMB).
+#   2. Verifica si el archivo .txt de la versión actual existe.
+#   3. Si no existe, lo genera invocando la regla del paquete.
+#   4. Sube el archivo a Google Drive usando rclone.
+#
+# Usage: make upload pkg=QuantumWalks
+# ---------------------------------------------------------------------------
+upload:
+ifndef pkg
+	$(error Error: Debes especificar el paquete. Ejemplo: make upload pkg=QMB)
+endif
+	@VER=$$(cat $(pkg)/version.txt); \
+	Filename="$(pkg)_v$${VER}_Source.txt"; \
+	if [ ! -f "$$Filename" ]; then \
+		echo "Archivo $$Filename no encontrado. Generándolo..."; \
+		$(MAKE) $(pkg); \
+	fi; \
+	echo "Subiendo $$Filename a Google Drive ($(DrivePath))..."; \
+	rclone copy "$$Filename" $(DriveRemote):$(DrivePath) --progress && \
+	echo "Carga de $$Filename completada con éxito."
