@@ -19,14 +19,6 @@ all: export-all
 # Target to export all packages in one command
 export-all: $(PACKAGES)
 
-# ---------------------------------------------------------------------------
-# Pattern rule to export a specific package.
-# Usage: make <package_name> (e.g., make QuantumWalks)
-#
-# Concatenates all .m and .wl files into a single text file.
-# Each file is preceded by a header showing its path within the package.
-# Files are sorted to ensure deterministic output.
-# ---------------------------------------------------------------------------
 $(PACKAGES):
 	@echo "Exporting source for package: $@"
 	@VER=$$(cat $@/version.txt); \
@@ -39,23 +31,17 @@ $(PACKAGES):
 
 
 ###############################################################################
-#                              VERSIONING SECTION                             #
+#                               VERSIONING SECTION                            #
 ###############################################################################
+
+# Detectar el Sistema Operativo para compatibilidad de 'sed'
+UNAME_S := $(shell uname -s)
 
 .PHONY: bump
 
 # ---------------------------------------------------------------------------
 # bump:
-#   1. Validates that the current branch is 'develop'.
-#   2. Increments the semantic version (Major.Minor.Patch) in version.txt.
-#   3. Updates the Version field in PacletInfo.wl.
-#   4. Stages and commits these changes.
-#   5. Automatically triggers 'make release'.
-#
-#   Usage:
-#     make bump type=major
-#     make bump type=minor
-#     make bump type=patch
+#   Diseñado para ejecutarse DESDE ADENTRO del directorio del paquete.
 # ---------------------------------------------------------------------------
 bump:
 ifndef type
@@ -81,7 +67,11 @@ endif
 	fi; \
 	NewVersion="$$Major.$$Minor.$$Patch"; \
 	echo $$NewVersion > version.txt; \
-	sed -i "s/^\([ \t]*\)Version -> \"[^\"]*\"/\1Version -> \"$$NewVersion\"/" PacletInfo.wl; \
+	if [ "$(UNAME_S)" = "Darwin" ]; then \
+		sed -i '' "s/^\([ \t]*\)Version -> \"[^\"]*\"/\1Version -> \"$$NewVersion\"/" PacletInfo.wl; \
+	else \
+		sed -i "s/^\([ \t]*\)Version -> \"[^\"]*\"/\1Version -> \"$$NewVersion\"/" PacletInfo.wl; \
+	fi; \
 	git add version.txt PacletInfo.wl; \
 	git commit -m "Bump version to $$NewVersion"; \
 	echo "Successfully bumped $(type) version. New version: $$NewVersion"; \
@@ -89,22 +79,13 @@ endif
 
 
 ###############################################################################
-#                              GIT RELEASE SECTION                            #
+#                               GIT RELEASE SECTION                           #
 ###############################################################################
 
-# Dynamically identify the package name from the current directory
 PKG_NAME ?= $(shell basename $(CURDIR))
 
 .PHONY: release
 
-# ---------------------------------------------------------------------------
-# release:
-#   Automates the git release workflow:
-#   1. Validates current directory (QMB or QuantumWalks) and branch (develop).
-#   2. Merges develop into main and creates a version tag.
-#   3. Pushes changes to origin with retry logic for SSH stability.
-#   4. Merges main back into develop to keep branches synchronized.
-# ---------------------------------------------------------------------------
 release:
 	@if [ "$(PKG_NAME)" != "QMB" ] && [ "$(PKG_NAME)" != "QuantumWalks" ]; then \
 		echo "Error: Release can only be run from the QMB or QuantumWalks directories."; \
@@ -130,39 +111,28 @@ release:
 
 
 ###############################################################################
-#                                CLEAN SECTION                                #
+#                                  CLEAN SECTION                              #
 ###############################################################################
 
 .PHONY: clean
 
-# ---------------------------------------------------------------------------
-# clean:
-#   Removes all generated *_Source.txt files from the root directory.
-# ---------------------------------------------------------------------------
 clean:
 	@echo "Cleaning up exported source files..."
 	@rm -f *_v*_Source.txt
 	@echo "Cleanup complete."
 
 ###############################################################################
-#                         GOOGLE DRIVE UPLOAD SECTION                         #
+#                          GOOGLE DRIVE UPLOAD SECTION                        #
 ###############################################################################
 
-# Nombre del remoto configurado en rclone
 DriveRemote := gdrive
-# Carpeta destino en Google Drive (crearla previamente o rclone la creará)
 DrivePath := WolframSources
 
 .PHONY: upload
 
 # ---------------------------------------------------------------------------
 # upload:
-#   1. Requiere el parámetro 'pkg' (e.g., make upload pkg=QMB).
-#   2. Verifica si el archivo .txt de la versión actual existe.
-#   3. Si no existe, lo genera invocando la regla del paquete.
-#   4. Sube el archivo a Google Drive usando rclone.
-#
-# Usage: make upload pkg=QuantumWalks
+#   Diseñado para ejecutarse DESDE LA RAÍZ del proyecto.
 # ---------------------------------------------------------------------------
 upload:
 ifndef pkg
