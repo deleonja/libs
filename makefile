@@ -69,11 +69,11 @@ endif
 	if [ "$(UNAME_S)" = "Darwin" ]; then \
 		sed -i '' "s/^\([ \t]*\)Version -> \"[^\"]*\"/\1Version -> \"$$NewVersion\"/" PacletInfo.wl; \
 		sed -i '' "s/\(\*\*Current Version\*\*:\) v[0-9.]*/\1 v$$NewVersion/" README.md; \
-		sed -i '' "s/\(\*\*\*$(CURRENT_PKG)\*\*\*:\) v[0-9.]*/\1 v$$NewVersion/" ../README.md; \
+		sed -i '' "s/\(\*\*$(CURRENT_PKG)\*\*:\) v[0-9.]*/\1 v$$NewVersion/" ../README.md; \
 	else \
 		sed -i "s/^\([ \t]*\)Version -> \"[^\"]*\"/\1Version -> \"$$NewVersion\"/" PacletInfo.wl; \
 		sed -i "s/\(\*\*Current Version\*\*:\) v[0-9.]*/\1 v$$NewVersion/" README.md; \
-		sed -i "s/\(\*\*\*$(CURRENT_PKG)\*\*\*:\) v[0-9.]*/\1 v$$NewVersion/" ../README.md; \
+		sed -i "s/\(\*\*$(CURRENT_PKG)\*\*:\) v[0-9.]*/\1 v$$NewVersion/" ../README.md; \
 	fi; \
 	git add version.txt PacletInfo.wl README.md ../README.md; \
 	git commit -m "Bump $(CURRENT_PKG) version to $$NewVersion"; \
