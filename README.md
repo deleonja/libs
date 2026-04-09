@@ -1,6 +1,6 @@
 # Quantum physics toolbox
 
-A collection of Wolfram Language packages for **Quantum Many-Body (QMB)** physics and **Quantum Walks**.
+A collection of two Wolfram Language packages for **Quantum Many-Body (QMB)** physics and **Quantum Walks**.
 
 ------
 
@@ -15,6 +15,13 @@ Get["path/to/libs/QMB/Kernel/init.m"];
 (* Load Quantum Walks package *)
 Get["path/to/libs/QuantumWalks/Kernel/init.m"];
 ```
+
+## 🏷️ Versions
+
+- **QMB**: v0.8.0
+- **QuantumWalks**: v0.1.11
+
+------
 
 ## 👤 Credits
 

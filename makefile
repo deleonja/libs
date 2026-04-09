@@ -36,13 +36,11 @@ $(PACKAGES):
 
 # Detectar el Sistema Operativo para compatibilidad de 'sed'
 UNAME_S := $(shell uname -s)
+# Obtener el nombre del paquete actual (ej. QMB o QuantumWalks)
+CURRENT_PKG := $(shell basename $(CURDIR))
 
 .PHONY: bump
 
-# ---------------------------------------------------------------------------
-# bump:
-#   Diseñado para ejecutarse DESDE ADENTRO del directorio del paquete.
-# ---------------------------------------------------------------------------
 bump:
 ifndef type
 	$(error You must specify a type. Example: make bump type=patch)
@@ -67,13 +65,18 @@ endif
 	fi; \
 	NewVersion="$$Major.$$Minor.$$Patch"; \
 	echo $$NewVersion > version.txt; \
+	echo "Updating files to v$$NewVersion..."; \
 	if [ "$(UNAME_S)" = "Darwin" ]; then \
 		sed -i '' "s/^\([ \t]*\)Version -> \"[^\"]*\"/\1Version -> \"$$NewVersion\"/" PacletInfo.wl; \
+		sed -i '' "s/\(\*\*Current Version\*\*:\) v[0-9.]*/\1 v$$NewVersion/" README.md; \
+		sed -i '' "s/\(\*\*\*$(CURRENT_PKG)\*\*\*:\) v[0-9.]*/\1 v$$NewVersion/" ../README.md; \
 	else \
 		sed -i "s/^\([ \t]*\)Version -> \"[^\"]*\"/\1Version -> \"$$NewVersion\"/" PacletInfo.wl; \
+		sed -i "s/\(\*\*Current Version\*\*:\) v[0-9.]*/\1 v$$NewVersion/" README.md; \
+		sed -i "s/\(\*\*\*$(CURRENT_PKG)\*\*\*:\) v[0-9.]*/\1 v$$NewVersion/" ../README.md; \
 	fi; \
-	git add version.txt PacletInfo.wl; \
-	git commit -m "Bump version to $$NewVersion"; \
+	git add version.txt PacletInfo.wl README.md ../README.md; \
+	git commit -m "Bump $(CURRENT_PKG) version to $$NewVersion"; \
 	echo "Successfully bumped $(type) version. New version: $$NewVersion"; \
 	$(MAKE) release
 
