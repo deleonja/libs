@@ -18,7 +18,7 @@ Get["path/to/libs/QuantumWalks/Kernel/init.m"];
 
 ## 🏷️ Versions
 
-- **QMB**: v0.8.3
+- **QMB**: v0.8.4
 - **QuantumWalks**: v0.1.11
 
 ------
@@ -26,7 +26,7 @@ Get["path/to/libs/QuantumWalks/Kernel/init.m"];
 ## 👤 Credits
 
 - **Versions**: 
-  - **QMB**: v0.8.3
+  - **QMB**: v0.8.4
   - **QuantumWalks**: v0.1.11
 - **Authors & Maintainers**: 
   - Jose Alfredo de Leon (creator)
