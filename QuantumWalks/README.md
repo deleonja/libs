@@ -23,7 +23,7 @@ This package requires the **ForScience** library for usage message formatting.
 
 ## 🏷️ Version
 
-- **Current Version**: v0.1.11
+- **Current Version**: v0.1.14
 
 ## 👤 Credits
 
