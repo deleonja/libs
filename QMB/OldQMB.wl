@@ -22,7 +22,7 @@ Get["ForScience`"]; (* nice formatting of usage definitions *)
 (*Public definitions*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*General quantum mechanics*)
 
 
@@ -326,7 +326,7 @@ Quiet[
 , {FrontEndObject::notavail, First::normal}];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Bose-Hubbard*)
 
 
@@ -455,7 +455,7 @@ FuzzyMeasurementChannel[\[Rho], {\!\(\*SubscriptBox[\(p\), \(totalError\)]\), \!
 Begin["`Private`"]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*General quantum mechanics*)
 
 
@@ -933,7 +933,7 @@ Reshuffle[m_] := ArrayFlatten[ArrayFlatten/@Partition[Partition[ArrayReshape[#,{
 Reshuffle[A_,m_,n_] := ArrayFlatten[ArrayReshape[A, {m, n, m, n}]]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Bose-Hubbard*)
 
 
@@ -967,7 +967,7 @@ Module[
         U/2*PotentialTermBoseHubbardHamiltonian[basis];
     
     (* Para subespacios de simetria, obtenerlos a partir de H *)
-    Switch[OptionValue[SymmetricSubspace],BosonEscapeKrausOperators
+    Switch[OptionValue[SymmetricSubspace],
         "All",
             Nothing,
             
