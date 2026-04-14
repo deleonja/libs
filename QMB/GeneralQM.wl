@@ -55,6 +55,16 @@ WeylMatrix[mList,nList,dList] returns the multiparticle Weyl matrix \
 ];
 
 
+Quiet[
+
+BlochVector::usage = FormatUsage[
+"BlochVector[\[Rho]] returns the Bloch vector of a single-qubit density matrix \[Rho].
+BlochVector[\[Psi]] returns the Bloch vector of a single-qubit pure state \[Psi]."
+];
+
+, {FrontEndObject::notavail, First::normal}];
+
+
 (* ::Section::Closed:: *)
 (*Private definitions*)
 
@@ -197,6 +207,11 @@ WeylMatrix[m_Integer,n_Integer,d_Integer] :=
 	
 WeylMatrix[m_List,n_List,d_List] := 
 	KroneckerProduct@@(WeylMatrix[#1,#2,#3]&@@@Transpose[Join[{m,n},{d}]])
+
+
+BlochVector[\[Rho]_?MatrixQ] := Chop[Tr[Pauli[#] . \[Rho]] & /@ Range[3]]
+
+BlochVector[\[Psi]_?VectorQ] := Chop[Braket[\[Psi], Pauli[#] . \[Psi]]] & /@ Range[3]
 
 
 End[];
