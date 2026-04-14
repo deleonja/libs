@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       154,          7]
-NotebookDataLength[    172472,       3616]
-NotebookOptionsPosition[    162991,       3433]
-NotebookOutlinePosition[    168920,       3555]
-CellTagsIndexPosition[    168877,       3552]
+NotebookDataLength[    175978,       3703]
+NotebookOptionsPosition[    166489,       3520]
+NotebookOutlinePosition[    172423,       3642]
+CellTagsIndexPosition[    172380,       3639]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -69,7 +69,7 @@ Cell[BoxData[{
    RowBox[{"n", ",", "L", ",", "J", ",", "U"}], "]"}], "//", 
   "MatrixForm"}]}], "Input",
  CellChangeTimes->{{3.959802352663494*^9, 3.959802375390912*^9}},
- CellLabel->"In[21]:=",ExpressionUUID->"3cb04c4c-0e40-49cf-afaa-f4bf02583117"],
+ CellLabel->"In[3]:=",ExpressionUUID->"3cb04c4c-0e40-49cf-afaa-f4bf02583117"],
 
 Cell[BoxData[
  TagBox[
@@ -123,21 +123,22 @@ Cell[BoxData[
    SparseArray[
     Automatic, {10, 10}, 0., {
      1, {{0, 2, 6, 9, 13, 18, 21, 24, 28, 32, 34}, {{1}, {2}, {2}, {1}, {3}, {
-       4}, {3}, {2}, {5}, {4}, {2}, {5}, {7}, {5}, {4}, {3}, {6}, {8}, {6}, {
-       5}, {9}, {7}, {4}, {8}, {8}, {7}, {5}, {9}, {9}, {8}, {6}, {10}, {
+       4}, {3}, {2}, {5}, {4}, {2}, {5}, {7}, {5}, {3}, {4}, {6}, {8}, {6}, {
+       5}, {9}, {7}, {4}, {8}, {8}, {5}, {7}, {9}, {9}, {6}, {8}, {10}, {
        10}, {9}}}, {3., -1.7320508075688772`, 
       1., -1.7320508075688772`, -1., -2., 1., -1., -1.4142135623730951`, 
       1., -2., -1.4142135623730951`, -1.7320508075688772`, 
       0., -1.4142135623730951`, -1.4142135623730951`, -1.4142135623730951`, \
 -1.4142135623730951`, 1., -1.4142135623730951`, -1., 
       3., -1.7320508075688772`, -1.7320508075688772`, 
-      1., -1.7320508075688772`, -1.4142135623730951`, -2., 
-      1., -2., -1., -1.7320508075688772`, 
+      1., -1.4142135623730951`, -1.7320508075688772`, -2., 
+      1., -1., -2., -1.7320508075688772`, 
       3., -1.7320508075688772`}}]]]]], "Output",
- CellChangeTimes->{{3.9598023716313763`*^9, 3.9598023756247797`*^9}},
+ CellChangeTimes->{{3.9598023716313763`*^9, 3.9598023756247797`*^9}, 
+   3.984848071423984*^9},
  CellLabel->
-  "Out[23]//MatrixForm=",ExpressionUUID->"7736ef1d-8930-46c4-a082-\
-832b918e5c19"]
+  "Out[5]//MatrixForm=",ExpressionUUID->"dba24544-cd73-43d4-a736-\
+352838d50676"]
 }, Open  ]],
 
 Cell["\<\
@@ -162,7 +163,7 @@ Cell[BoxData[
       RowBox[{"SymmetricSubspace", "->", "\"\<OddParity\>\""}]}], "]"}]}], 
    "}"}]}]], "Input",
  CellChangeTimes->{{3.959802424755522*^9, 3.9598024542559853`*^9}},
- CellLabel->"In[25]:=",ExpressionUUID->"a8751f11-4ac9-4f3d-a9ea-7ed91161589f"],
+ CellLabel->"In[6]:=",ExpressionUUID->"a8751f11-4ac9-4f3d-a9ea-7ed91161589f"],
 
 Cell[BoxData[
  RowBox[{"{", 
@@ -170,23 +171,23 @@ Cell[BoxData[
    TagBox[
     RowBox[{"(", "\[NoBreak]", GridBox[{
        {"3.`", 
-        RowBox[{"-", "1.732050807568877`"}], "0.`", "0.`", "0.`", "0.`"},
+        RowBox[{"-", "1.7320508075688772`"}], "0.`", "0.`", "0.`", "0.`"},
        {
-        RowBox[{"-", "1.732050807568877`"}], "1.`", 
-        RowBox[{"-", "0.9999999999999998`"}], 
-        RowBox[{"-", "1.9999999999999996`"}], "0.`", "0.`"},
+        RowBox[{"-", "1.7320508075688772`"}], "1.`", 
+        RowBox[{"-", "1.`"}], 
+        RowBox[{"-", "2.`"}], "0.`", "0.`"},
        {"0.`", 
-        RowBox[{"-", "0.9999999999999998`"}], "1.`", "0.`", 
+        RowBox[{"-", "1.`"}], "1.`", "0.`", 
         RowBox[{"-", "2.`"}], "0.`"},
        {"0.`", 
-        RowBox[{"-", "1.9999999999999996`"}], "0.`", "1.`", 
+        RowBox[{"-", "2.`"}], "0.`", "1.`", 
         RowBox[{"-", "2.`"}], 
         RowBox[{"-", "2.449489742783178`"}]},
        {"0.`", "0.`", 
         RowBox[{"-", "2.`"}], 
         RowBox[{"-", "2.`"}], "0.`", "0.`"},
        {"0.`", "0.`", "0.`", 
-        RowBox[{"-", "2.449489742783178`"}], "0.`", "3.`"}
+        RowBox[{"-", "2.449489742783178`"}], "0.`", "2.9999999999999996`"}
       },
       GridBoxAlignment->{"Columns" -> {{Center}}, "Rows" -> {{Baseline}}},
       GridBoxSpacings->{"Columns" -> {
@@ -200,13 +201,11 @@ Cell[BoxData[
      MatrixForm[
      SparseArray[
       Automatic, {6, 6}, 0., {
-       1, {{0, 2, 6, 9, 13, 16, 18}, {{1}, {2}, {2}, {1}, {3}, {4}, {3}, {
-         2}, {5}, {4}, {2}, {5}, {6}, {5}, {3}, {4}, {6}, {4}}}, {
-        3., -1.732050807568877, 
-        1., -1.732050807568877, -0.9999999999999998, -1.9999999999999996`, 
-        1., -0.9999999999999998, -2., 
-        1., -1.9999999999999996`, -2., -2.449489742783178, 0., -2., -2., 
-        3., -2.449489742783178}}]]]], ",", 
+       1, {{0, 2, 6, 9, 13, 16, 18}, {{1}, {2}, {1}, {2}, {3}, {4}, {2}, {
+         3}, {5}, {2}, {4}, {5}, {6}, {3}, {4}, {5}, {4}, {6}}}, {
+        3., -1.7320508075688772`, -1.7320508075688772`, 1., -1., -2., -1., 
+        1., -2., -2., 1., -2., -2.449489742783178, -2., -2., 
+        0., -2.449489742783178, 2.9999999999999996`}}]]]], ",", 
    TagBox[
     RowBox[{"(", "\[NoBreak]", GridBox[{
        {"3.`", 
@@ -235,8 +234,9 @@ Cell[BoxData[
        1, {{0, 2, 6, 8, 10}, {{1}, {2}, {2}, {1}, {3}, {4}, {3}, {2}, {4}, {
          2}}}, {3., -1.7320508075688772`, 1., -1.7320508075688772`, -1., -2., 
         1., -1., 1., -2.}}]]]]}], "}"}]], "Output",
- CellChangeTimes->{{3.959802449860858*^9, 3.959802454509892*^9}},
- CellLabel->"Out[25]=",ExpressionUUID->"e71e5b77-2523-4a50-ae8b-3a7984529bd0"]
+ CellChangeTimes->{{3.959802449860858*^9, 3.959802454509892*^9}, 
+   3.9848481910022783`*^9},
+ CellLabel->"Out[6]=",ExpressionUUID->"a5117b92-7b35-4bd9-a208-1f3f28e2f607"]
 }, Open  ]],
 
 Cell["Definici\[OAcute]n de la rutina:", "Text",
@@ -249,7 +249,7 @@ Cell[CellGroupData[{
 Cell[BoxData[
  RowBox[{"?", "BoseHubbardHamiltonian"}]], "Input",
  CellChangeTimes->{{3.959802470054763*^9, 3.9598024716539183`*^9}},
- CellLabel->"In[26]:=",ExpressionUUID->"7ca2f5a5-b298-4a93-a641-5ef782f004bc"],
+ CellLabel->"In[7]:=",ExpressionUUID->"7ca2f5a5-b298-4a93-a641-5ef782f004bc"],
 
 Cell[BoxData[
  InterpretationBox[
@@ -285,21 +285,13 @@ Cell[BoxData[
             StyleBox["\<\"\\!\\(\\*StyleBox[RowBox[{\\\"\
 BoseHubbardHamiltonian\\\", \\\"[\\\", StyleBox[\\\"n\\\", \\\"TI\\\"], \\\",\
 \\\", StyleBox[\\\"L\\\", \\\"TI\\\"], \\\",\\\", StyleBox[\\\"J\\\", \
-\\\"TI\\\"], \\\",\\\", StyleBox[\\\"U\\\", \\\"TI\\\"], \\\"]\\\"}], \
-\\\"MR\\\"]\\) returns the BH Hamiltonian for \\!\\(\\*StyleBox[\\\"n\\\", \\\
-\"TI\\\"]\\) bosons and \\!\\(\\*StyleBox[\\\"L\\\", \\\"TI\\\"]\\) sites \
-with hopping parameter \\!\\(\\*StyleBox[\\\"J\\\", \\\"TI\\\"]\\), and \
-interaction parameter \\!\\(\\*StyleBox[\\\"U\\\", \
-\\\"TI\\\"]\\).\\n\\!\\(\\*StyleBox[RowBox[{\\\"BoseHubbardHamiltonian\\\", \
-\\\"[\\\", StyleBox[\\\"n\\\", \\\"TI\\\"], \\\",\\\", StyleBox[\\\"L\\\", \\\
-\"TI\\\"], \\\",\\\", StyleBox[\\\"J\\\", \\\"TI\\\"], \\\",\\\", StyleBox[\\\
-\"U\\\", \\\"TI\\\"], \\\",\\\", StyleBox[\\\"SymmetricSubspace\\\", \\\"TI\\\
-\"], \\\"]\\\"}], \\\"MR\\\"]\\) returns the Hamiltonian in a symmetric \
-subspace; option SymmetricSubspace takes the options \\\"All\\\" | \
-\\\"EvenParity\\\" | \\\"OddParity\\\". \\n\\!\\(\\)\\n\\!\\(\\)Notes: \\n\\!\
-\\(\\)- BoseHubbardHamiltonian[n,L,J,U] is equivalent to \
-BoseHubbardHamiltonian[n,L,J,U, SymmetricSubspace->\\\"All\\\"].\\n\\!\\(\\)- \
-Open boundary conditions are used.\"\>", "InformationUsageText",
+\\\"TI\\\"], \\\",\\\", StyleBox[\\\"U\\\", \\\"TI\\\"], \\\",\\\", StyleBox[\
+\\\"opts\\\", \\\"TI\\\"], \\\"]\\\"}], \\\"MR\\\"]\\) returns the \
+Bose-Hubbard Hamiltonian for \\!\\(\\*StyleBox[\\\"n\\\", \\\"TI\\\"]\\) \
+bosons and \\!\\(\\*StyleBox[\\\"L\\\", \\\"TI\\\"]\\) sites with hopping \
+parameter \\!\\(\\*StyleBox[\\\"J\\\", \\\"TI\\\"]\\) and interaction \
+parameter \\!\\(\\*StyleBox[\\\"U\\\", \\\"TI\\\"]\\). Options: \
+SymmetricSubspace.\"\>", "InformationUsageText",
              StripOnInput->False,
              LineSpacing->{1.5, 1.5, 3.}],
             FrameMargins->{{10, 10}, {8, 10}}],
@@ -336,120 +328,166 @@ Open boundary conditions are used.\"\>", "InformationUsageText",
                     RowBox[{"{", 
                     
                     RowBox[{"QMB`Private`tags", ",", "QMB`Private`basis", ",",
-                     "QMB`Private`T", ",", "QMB`Private`V"}], "}"}], ",", 
+                     "QMB`Private`basiseven", ",", "QMB`Private`rbasiseven", 
+                    ",", "QMB`Private`rbasisodd", ",", "QMB`Private`basisodd",
+                     ",", "QMB`Private`H", ",", "QMB`Private`T", ",", 
+                    "QMB`Private`V", ",", "QMB`Private`map"}], "}"}], ",", 
                     RowBox[{
+                    RowBox[{"QMB`Private`basis", "=", 
+                    RowBox[{"N", "[", 
+                    RowBox[{"FockBasis", "[", 
+                    RowBox[{"QMB`Private`n", ",", "QMB`Private`L"}], "]"}], 
+                    "]"}]}], ";", 
+                    RowBox[{"QMB`Private`H", "=", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "QMB`Private`J"}], " ", 
+                    
+                    RowBox[{"KineticTermBoseHubbardHamiltonian", "[", 
+                    "QMB`Private`basis", "]"}]}], "+", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", "QMB`Private`U", " ", 
+                    RowBox[{"PotentialTermBoseHubbardHamiltonian", "[", 
+                    "QMB`Private`basis", "]"}]}]}]}], ";", 
                     RowBox[{"Switch", "[", 
                     RowBox[{
                     RowBox[{"OptionValue", "[", "SymmetricSubspace", "]"}], 
-                    ",", "\"All\"", ",", 
+                    ",", "\"All\"", ",", "Nothing", ",", "\"EvenParity\"", 
+                    ",", 
                     RowBox[{
-                    RowBox[{
-                    RowBox[{"{", 
-                    RowBox[{"QMB`Private`tags", ",", "QMB`Private`basis"}], 
-                    "}"}], "=", 
-                    RowBox[{"SortFockBasis", "[", 
-                    RowBox[{"N", "[", 
-                    RowBox[{"FockBasis", "[", 
-                    RowBox[{"QMB`Private`n", ",", "QMB`Private`L"}], "]"}], 
-                    "]"}], "]"}]}], ";", 
-                    RowBox[{"QMB`Private`T", "=", 
-                    RowBox[{"KineticTermBoseHubbardHamiltonian", "[", 
-                    
-                    RowBox[{"QMB`Private`n", ",", "QMB`Private`L", ",", 
-                    "QMB`Private`tags", ",", "QMB`Private`basis"}], "]"}]}], 
-                    ";"}], ",", "\"EvenParity\"", ",", 
-                    RowBox[{
-                    RowBox[{"QMB`Private`basis", "=", 
-                    RowBox[{"GatherBy", "[", 
-                    RowBox[{
-                    RowBox[{"N", "[", 
-                    RowBox[{"FockBasis", "[", 
-                    RowBox[{"QMB`Private`n", ",", "QMB`Private`L"}], "]"}], 
-                    "]"}], ",", 
+                    RowBox[{"QMB`Private`basiseven", "=", 
+                    RowBox[{"DeleteDuplicatesBy", "[", 
+                    RowBox[{"QMB`Private`basis", ",", 
                     RowBox[{
                     RowBox[{"Sort", "[", 
                     RowBox[{"{", 
                     RowBox[{"#1", ",", 
                     RowBox[{"Reverse", "[", "#1", "]"}]}], "}"}], "]"}], 
                     "&"}]}], "]"}]}], ";", 
-                    RowBox[{"QMB`Private`tags", "=", 
-                    RowBox[{"QMB`Private`tags", "=", 
-                    RowBox[{"Tag", "/@", 
-                    RowBox[{"QMB`Private`basis", "\[LeftDoubleBracket]", 
-                    RowBox[{"All", ",", "1"}], 
-                    "\[RightDoubleBracket]"}]}]}]}], ";", 
-                    RowBox[{"QMB`Private`T", "=", 
-                    RowBox[{"KineticTermBoseHubbardHamiltonian", "[", 
-                    
-                    RowBox[{"QMB`Private`n", ",", "QMB`Private`L", ",", 
-                    "QMB`Private`tags", ",", "QMB`Private`basis", ",", 
-                    
-                    RowBox[{"SymmetricSubspace", "\[Rule]", 
-                    "\"EvenParity\""}]}], "]"}]}], ";", 
-                    RowBox[{"QMB`Private`basis", "=", 
-                    RowBox[{"QMB`Private`basis", "\[LeftDoubleBracket]", 
-                    RowBox[{"All", ",", "1"}], "\[RightDoubleBracket]"}]}], 
-                    ";"}], ",", "\"OddParity\"", ",", 
+                    RowBox[{"QMB`Private`rbasiseven", "=", 
+                    RowBox[{"Reverse", "/@", "QMB`Private`basiseven"}]}], ";", 
+                    RowBox[{"QMB`Private`map", "=", 
+                    RowBox[{"AssociationThread", "[", 
+                    RowBox[{"QMB`Private`basis", "\[Rule]", 
+                    RowBox[{"Range", "[", 
+                    RowBox[{"BoseHubbardHilbertSpaceDimension", "[", 
+                    RowBox[{"QMB`Private`n", ",", "QMB`Private`L"}], "]"}], 
+                    "]"}]}], "]"}]}], ";", 
+                    RowBox[{"QMB`Private`H", "=", 
                     RowBox[{
-                    RowBox[{"QMB`Private`basis", "=", 
-                    RowBox[{"GatherBy", "[", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"#1", ".", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"QMB`Private`H", "\[LeftDoubleBracket]", 
+                    RowBox[{"#1", ",", "#1"}], "\[RightDoubleBracket]"}], "+", 
+                    RowBox[{"QMB`Private`H", "\[LeftDoubleBracket]", 
+                    RowBox[{"#1", ",", "#2"}], "\[RightDoubleBracket]"}], "+", 
+                    RowBox[{"QMB`Private`H", "\[LeftDoubleBracket]", 
+                    RowBox[{"#2", ",", "#1"}], "\[RightDoubleBracket]"}], "+", 
+                    RowBox[{"QMB`Private`H", "\[LeftDoubleBracket]", 
+                    RowBox[{"#2", ",", "#2"}], "\[RightDoubleBracket]"}]}], 
+                    "&"}], ")"}], "@@", 
+                    RowBox[{"Map", "[", 
+                    RowBox[{"QMB`Private`map", ",", 
+                    RowBox[{"{", 
+                    
+                    RowBox[{"QMB`Private`basiseven", ",", 
+                    "QMB`Private`rbasiseven"}], "}"}], ",", 
+                    RowBox[{"{", "2", "}"}]}], "]"}]}], ".", "#1"}]}], "&"}], 
+                    ")"}], "[", 
+                    RowBox[{"DiagonalMatrix", "[", 
+                    RowBox[{
+                    RowBox[{"ReplacePart", "[", 
+                    RowBox[{
+                    RowBox[{"ConstantArray", "[", 
+                    RowBox[{"1.`", ",", 
+                    RowBox[{"Length", "[", "QMB`Private`basiseven", "]"}]}], 
+                    "]"}], ",", 
+                    RowBox[{"Thread", "[", 
+                    RowBox[{
+                    RowBox[{"Flatten", "[", 
+                    RowBox[{"Position", "[", 
+                    RowBox[{"QMB`Private`basiseven", ",", 
+                    RowBox[{"_", "?", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"PalindromeQ", "[", "#1", "]"}], "&"}], ")"}]}], 
+                    ",", 
+                    RowBox[{"{", "1", "}"}]}], "]"}], "]"}], "\[Rule]", 
+                    FractionBox["1", 
+                    SqrtBox["2.`"]]}], "]"}]}], "]"}], ",", 
+                    RowBox[{"TargetStructure", "\[Rule]", "\"Sparse\""}]}], 
+                    "]"}], "]"}]}]}], ",", "\"OddParity\"", ",", 
+                    RowBox[{
+                    RowBox[{"QMB`Private`basisodd", "=", 
+                    RowBox[{"DeleteDuplicatesBy", "[", 
                     RowBox[{
                     RowBox[{"Discard", "[", 
-                    RowBox[{
-                    RowBox[{"FockBasis", "[", 
-                    RowBox[{"QMB`Private`n", ",", "QMB`Private`L"}], "]"}], 
-                    ",", "PalindromeQ"}], "]"}], ",", 
+                    RowBox[{"QMB`Private`basis", ",", "PalindromeQ"}], "]"}], 
+                    ",", 
                     RowBox[{
                     RowBox[{"Sort", "[", 
                     RowBox[{"{", 
                     RowBox[{"#1", ",", 
                     RowBox[{"Reverse", "[", "#1", "]"}]}], "}"}], "]"}], 
                     "&"}]}], "]"}]}], ";", 
-                    RowBox[{"QMB`Private`tags", "=", 
-                    RowBox[{"Tag", "/@", 
-                    RowBox[{"QMB`Private`basis", "\[LeftDoubleBracket]", 
-                    RowBox[{"All", ",", "1"}], "\[RightDoubleBracket]"}]}]}], 
-                    ";", 
-                    RowBox[{"QMB`Private`T", "=", 
-                    RowBox[{"KineticTermBoseHubbardHamiltonian", "[", 
+                    RowBox[{"QMB`Private`rbasisodd", "=", 
+                    RowBox[{"Reverse", "/@", "QMB`Private`basisodd"}]}], ";", 
                     
-                    RowBox[{"QMB`Private`n", ",", "QMB`Private`L", ",", 
-                    "QMB`Private`tags", ",", "QMB`Private`basis", ",", 
+                    RowBox[{"QMB`Private`map", "=", 
+                    RowBox[{"AssociationThread", "[", 
+                    RowBox[{"QMB`Private`basis", "\[Rule]", 
+                    RowBox[{"Range", "[", 
+                    RowBox[{"BoseHubbardHilbertSpaceDimension", "[", 
+                    RowBox[{"QMB`Private`n", ",", "QMB`Private`L"}], "]"}], 
+                    "]"}]}], "]"}]}], ";", 
+                    RowBox[{"QMB`Private`H", "=", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"QMB`Private`H", "\[LeftDoubleBracket]", 
+                    RowBox[{"#1", ",", "#1"}], "\[RightDoubleBracket]"}], "-", 
+                    RowBox[{"QMB`Private`H", "\[LeftDoubleBracket]", 
+                    RowBox[{"#1", ",", "#2"}], "\[RightDoubleBracket]"}], "-", 
+                    RowBox[{"QMB`Private`H", "\[LeftDoubleBracket]", 
+                    RowBox[{"#2", ",", "#1"}], "\[RightDoubleBracket]"}], "+", 
+                    RowBox[{"QMB`Private`H", "\[LeftDoubleBracket]", 
+                    RowBox[{"#2", ",", "#2"}], "\[RightDoubleBracket]"}]}], 
+                    "&"}], ")"}], "@@", 
+                    RowBox[{"Map", "[", 
+                    RowBox[{"QMB`Private`map", ",", 
+                    RowBox[{"{", 
                     
-                    RowBox[{"SymmetricSubspace", "\[Rule]", 
-                    "\"OddParity\""}]}], "]"}]}], ";", 
-                    RowBox[{"QMB`Private`basis", "=", 
-                    RowBox[{"QMB`Private`basis", "\[LeftDoubleBracket]", 
-                    RowBox[{"All", ",", "1"}], "\[RightDoubleBracket]"}]}], 
-                    ";"}], ",", "_", ",", 
+                    RowBox[{"QMB`Private`basisodd", ",", 
+                    "QMB`Private`rbasisodd"}], "}"}], ",", 
+                    RowBox[{"{", "2", "}"}]}], "]"}]}]}]}]}], ",", "_", ",", 
                     RowBox[{
                     RowBox[{"Message", "[", 
                     RowBox[{
                     StyleBox[
                     
-                    RowBox[{"KineticTermBoseHubbardHamiltonian", "::", 
+                    RowBox[{"BoseHubbardHamiltonian", "::", 
                     "badSymmetricSubspace"}], "MessageName"], ",", 
                     RowBox[{"OptionValue", "[", "SymmetricSubspace", "]"}]}], 
                     "]"}], ";", 
                     RowBox[{"Return", "[", "$Failed", "]"}], ";"}]}], "]"}], 
-                    ";", 
-                    RowBox[{"QMB`Private`V", "=", 
-                    
-                    RowBox[{"PotentialTermBoseHubbardHamiltonian", "[", 
-                    "QMB`Private`basis", "]"}]}], ";", 
-                    RowBox[{
-                    RowBox[{
-                    RowBox[{"-", "QMB`Private`J"}], " ", "QMB`Private`T"}], 
-                    "+", 
-                    FractionBox[
-                    RowBox[{"QMB`Private`U", " ", "QMB`Private`V"}], 
-                    "2"]}]}]}], "]"}]}]}, {" "}, {
+                    ";", "QMB`Private`H"}]}], "]"}]}]}, {" "}, {
                     RowBox[{
                     RowBox[{"BoseHubbardHamiltonian", "[", 
                     
                     RowBox[{
                     "N_", ",", "QMB`Private`L_", ",", "QMB`Private`J_", ",", 
-                    "QMB`Private`U_"}], "]"}], ":=", 
+                    "QMB`Private`U_", ",", 
+                    RowBox[{"OptionsPattern", "[", "]"}]}], "]"}], ":=", 
                     RowBox[{"Module", "[", 
                     RowBox[{
                     RowBox[{"{", "}"}], ",", 
@@ -512,12 +550,56 @@ Open boundary conditions are used.\"\>", "InformationUsageText",
                   {
                    TagBox[
                     TooltipBox[
+                    
+                    StyleBox["\<\" Default Definitions\"\>", 
+                    "InformationRowLabel",
+                    StripOnInput->False],
+                    "\"DefaultValues\"",
+                    TooltipStyle->"TextStyling"],
+                    Annotation[#, "DefaultValues", "Tooltip"]& ], 
+                   InterpretationBox[GridBox[{
+                    {
+                    RowBox[{
+                    RowBox[{
+                    "SyntaxInformation", "[", "BoseHubbardHamiltonian", "]"}],
+                     "=", 
+                    RowBox[{"\[LeftAssociation]", 
+                    RowBox[{"\<\"ArgumentsPattern\"\>", "\[Rule]", 
+                    RowBox[{"{", 
+                    RowBox[{"_", ",", "_", ",", "_", ",", "_", ",", 
+                    RowBox[{"OptionsPattern", "[", "]"}]}], "}"}]}], 
+                    "\[RightAssociation]"}]}]},
+                    {" "}
+                    },
+                    BaselinePosition->{Baseline, {1, 1}},
+                    
+                    GridBoxAlignment->{
+                    "Columns" -> {{Left}}, "Rows" -> {{Baseline}}}],
+                    
+                    ColumnForm[{
+                    SyntaxInformation[QMB`BoseHubbardHamiltonian] = <|
+                    "ArgumentsPattern" -> {
+                    Blank[], 
+                    Blank[], 
+                    Blank[], 
+                    Blank[], 
+                    OptionsPattern[]}|>, 
+                    SpaceForm[1]}],
+                    Editable->False]},
+                  {
+                   TagBox[
+                    TooltipBox[
                     StyleBox["\<\" Options\"\>", "InformationRowLabel",
                     StripOnInput->False],
                     "\"Options\"",
                     TooltipStyle->"TextStyling"],
                     Annotation[#, "Options", "Tooltip"]& ], 
-                   RowBox[{"SymmetricSubspace", "\[Rule]", "\<\"All\"\>"}]},
+                   RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"SymmetricSubspace", "\[Rule]", "\<\"All\"\>"}], ",", 
+                    RowBox[{
+                    "QMB`Private`Version", "\[Rule]", "\<\"New\"\>"}]}], 
+                    "}"}]},
                   {
                    TagBox[
                     TooltipBox[
@@ -626,25 +708,16 @@ Open boundary conditions are used.\"\>", "InformationUsageText",
             StyleBox["\<\"\\!\\(\\*StyleBox[RowBox[{\\\"\
 BoseHubbardHamiltonian\\\", \\\"[\\\", StyleBox[\\\"n\\\", \\\"TI\\\"], \\\",\
 \\\", StyleBox[\\\"L\\\", \\\"TI\\\"], \\\",\\\", StyleBox[\\\"J\\\", \
-\\\"TI\\\"], \\\",\\\", StyleBox[\\\"U\\\", \\\"TI\\\"], \\\"]\\\"}], \
-\\\"MR\\\"]\\) returns the BH Hamiltonian for \\!\\(\\*StyleBox[\\\"n\\\", \\\
-\"TI\\\"]\\) bosons and \\!\\(\\*StyleBox[\\\"L\\\", \\\"TI\\\"]\\) sites \
-with hopping parameter \\!\\(\\*StyleBox[\\\"J\\\", \\\"TI\\\"]\\), and \
-interaction parameter \\!\\(\\*StyleBox[\\\"U\\\", \
-\\\"TI\\\"]\\).\\n\\!\\(\\*StyleBox[RowBox[{\\\"BoseHubbardHamiltonian\\\", \
-\\\"[\\\", StyleBox[\\\"n\\\", \\\"TI\\\"], \\\",\\\", StyleBox[\\\"L\\\", \\\
-\"TI\\\"], \\\",\\\", StyleBox[\\\"J\\\", \\\"TI\\\"], \\\",\\\", StyleBox[\\\
-\"U\\\", \\\"TI\\\"], \\\",\\\", StyleBox[\\\"SymmetricSubspace\\\", \\\"TI\\\
-\"], \\\"]\\\"}], \\\"MR\\\"]\\) returns the Hamiltonian in a symmetric \
-subspace; option SymmetricSubspace takes the options \\\"All\\\" | \
-\\\"EvenParity\\\" | \\\"OddParity\\\". \\n\\!\\(\\)\\n\\!\\(\\)Notes: \\n\\!\
-\\(\\)- BoseHubbardHamiltonian[n,L,J,U] is equivalent to \
-BoseHubbardHamiltonian[n,L,J,U, SymmetricSubspace->\\\"All\\\"].\\n\\!\\(\\)- \
-Open boundary conditions are used.\"\>", "InformationUsageText",
+\\\"TI\\\"], \\\",\\\", StyleBox[\\\"U\\\", \\\"TI\\\"], \\\",\\\", StyleBox[\
+\\\"opts\\\", \\\"TI\\\"], \\\"]\\\"}], \\\"MR\\\"]\\) returns the \
+Bose-Hubbard Hamiltonian for \\!\\(\\*StyleBox[\\\"n\\\", \\\"TI\\\"]\\) \
+bosons and \\!\\(\\*StyleBox[\\\"L\\\", \\\"TI\\\"]\\) sites with hopping \
+parameter \\!\\(\\*StyleBox[\\\"J\\\", \\\"TI\\\"]\\) and interaction \
+parameter \\!\\(\\*StyleBox[\\\"U\\\", \\\"TI\\\"]\\). Options: \
+SymmetricSubspace.\"\>", "InformationUsageText",
              StripOnInput->False,
              LineSpacing->{1.5, 1.5, 3.}],
-            FrameMargins->{{10, 10}, {8, 10}},
-            ScrollPosition->{0., 0.}],
+            FrameMargins->{{10, 10}, {8, 10}}],
            BaseStyle->"InformationUsageSubtitleBackground",
            StripOnInput->False], 
           ItemBox["\<\"\"\>",
@@ -706,20 +779,13 @@ Open boundary conditions are used.\"\>", "InformationUsageText",
    "ObjectType" -> "Symbol", "Usage" -> 
     "\!\(\*StyleBox[RowBox[{\"BoseHubbardHamiltonian\", \"[\", \
 StyleBox[\"n\", \"TI\"], \",\", StyleBox[\"L\", \"TI\"], \",\", \
-StyleBox[\"J\", \"TI\"], \",\", StyleBox[\"U\", \"TI\"], \"]\"}], \"MR\"]\) \
-returns the BH Hamiltonian for \!\(\*StyleBox[\"n\", \"TI\"]\) bosons and \
-\!\(\*StyleBox[\"L\", \"TI\"]\) sites with hopping parameter \
-\!\(\*StyleBox[\"J\", \"TI\"]\), and interaction parameter \!\(\*StyleBox[\"U\
-\", \"TI\"]\).\n\!\(\*StyleBox[RowBox[{\"BoseHubbardHamiltonian\", \"[\", \
-StyleBox[\"n\", \"TI\"], \",\", StyleBox[\"L\", \"TI\"], \",\", \
 StyleBox[\"J\", \"TI\"], \",\", StyleBox[\"U\", \"TI\"], \",\", \
-StyleBox[\"SymmetricSubspace\", \"TI\"], \"]\"}], \"MR\"]\) returns the \
-Hamiltonian in a symmetric subspace; option SymmetricSubspace takes the \
-options \"All\" | \"EvenParity\" | \"OddParity\". \n\!\(\)\n\!\(\)Notes: \n\!\
-\(\)- BoseHubbardHamiltonian[n,L,J,U] is equivalent to \
-BoseHubbardHamiltonian[n,L,J,U, SymmetricSubspace->\"All\"].\n\!\(\)- Open \
-boundary conditions are used.", "Documentation" -> None, "OwnValues" -> None, 
-    "UpValues" -> None, "DownValues" -> 
+StyleBox[\"opts\", \"TI\"], \"]\"}], \"MR\"]\) returns the Bose-Hubbard \
+Hamiltonian for \!\(\*StyleBox[\"n\", \"TI\"]\) bosons and \!\(\*StyleBox[\"L\
+\", \"TI\"]\) sites with hopping parameter \!\(\*StyleBox[\"J\", \"TI\"]\) \
+and interaction parameter \!\(\*StyleBox[\"U\", \"TI\"]\). Options: \
+SymmetricSubspace.", "Documentation" -> None, "OwnValues" -> None, "UpValues" -> 
+    None, "DownValues" -> 
     Information`InformationValueForm[
      DownValues, QMB`BoseHubbardHamiltonian, {QMB`BoseHubbardHamiltonian[
          Pattern[QMB`Private`n, 
@@ -731,47 +797,57 @@ boundary conditions are used.", "Documentation" -> None, "OwnValues" -> None,
          Pattern[QMB`Private`U, 
           Blank[Real]], 
          OptionsPattern[]] :> 
-       Module[{QMB`Private`tags, QMB`Private`basis, QMB`Private`T, 
-          QMB`Private`V}, Switch[
-           OptionValue[QMB`SymmetricSubspace], 
-           "All", {QMB`Private`tags, QMB`Private`basis} = QMB`SortFockBasis[
-              N[
-               QMB`FockBasis[QMB`Private`n, QMB`Private`L]]]; 
-           QMB`Private`T = 
-            QMB`KineticTermBoseHubbardHamiltonian[
-             QMB`Private`n, QMB`Private`L, QMB`Private`tags, 
-              QMB`Private`basis]; Null, "EvenParity", 
-           QMB`Private`basis = GatherBy[
-              N[
-               QMB`FockBasis[QMB`Private`n, QMB`Private`L]], Sort[{#, 
+       Module[{QMB`Private`tags, QMB`Private`basis, QMB`Private`basiseven, 
+          QMB`Private`rbasiseven, QMB`Private`rbasisodd, QMB`Private`basisodd,
+           QMB`Private`H, QMB`Private`T, QMB`Private`V, QMB`Private`map}, 
+         QMB`Private`basis = N[
+            QMB`FockBasis[QMB`Private`n, QMB`Private`L]]; 
+         QMB`Private`H = (-QMB`Private`J) 
+            QMB`KineticTermBoseHubbardHamiltonian[QMB`Private`basis] + (
+             QMB`Private`U/2) 
+            QMB`PotentialTermBoseHubbardHamiltonian[QMB`Private`basis]; Switch[
+           OptionValue[QMB`SymmetricSubspace], "All", Nothing, "EvenParity", 
+           QMB`Private`basiseven = 
+            DeleteDuplicatesBy[QMB`Private`basis, Sort[{#, 
                 Reverse[#]}]& ]; 
-           QMB`Private`tags = (QMB`Private`tags = Map[QMB`Tag, 
-               Part[QMB`Private`basis, All, 1]]); 
-           QMB`Private`T = 
-            QMB`KineticTermBoseHubbardHamiltonian[
-             QMB`Private`n, QMB`Private`L, QMB`Private`tags, 
-              QMB`Private`basis, QMB`SymmetricSubspace -> "EvenParity"]; 
-           QMB`Private`basis = Part[QMB`Private`basis, All, 1]; Null, 
-           "OddParity", QMB`Private`basis = GatherBy[
-              Discard[
-               QMB`FockBasis[QMB`Private`n, QMB`Private`L], PalindromeQ], 
-              Sort[{#, 
-                Reverse[#]}]& ]; QMB`Private`tags = Map[QMB`Tag, 
-              Part[QMB`Private`basis, All, 1]]; 
-           QMB`Private`T = 
-            QMB`KineticTermBoseHubbardHamiltonian[
-             QMB`Private`n, QMB`Private`L, QMB`Private`tags, 
-              QMB`Private`basis, QMB`SymmetricSubspace -> "OddParity"]; 
-           QMB`Private`basis = Part[QMB`Private`basis, All, 1]; Null, 
+           QMB`Private`rbasiseven = Map[Reverse, QMB`Private`basiseven]; 
+           QMB`Private`map = AssociationThread[QMB`Private`basis -> Range[
+                QMB`BoseHubbardHilbertSpaceDimension[
+                QMB`Private`n, QMB`Private`L]]]; QMB`Private`H = ((1/2) Dot[#, 
+               Apply[
+               Part[QMB`Private`H, #, #] + Part[QMB`Private`H, #, #2] + 
+                Part[QMB`Private`H, #2, #] + Part[QMB`Private`H, #2, #2]& , 
+                Map[
+                QMB`Private`map, {
+                 QMB`Private`basiseven, QMB`Private`rbasiseven}, {2}]], #]& )[
+             
+              DiagonalMatrix[
+               ReplacePart[
+                ConstantArray[1., 
+                 Length[QMB`Private`basiseven]], 
+                Thread[Flatten[
+                   Position[QMB`Private`basiseven, 
+                    PatternTest[
+                    Blank[], PalindromeQ[#]& ], {1}]] -> 1/Sqrt[2.]]], 
+               TargetStructure -> "Sparse"]], "OddParity", 
+           QMB`Private`basisodd = DeleteDuplicatesBy[
+              Discard[QMB`Private`basis, PalindromeQ], Sort[{#, 
+                Reverse[#]}]& ]; 
+           QMB`Private`rbasisodd = Map[Reverse, QMB`Private`basisodd]; 
+           QMB`Private`map = AssociationThread[QMB`Private`basis -> Range[
+                QMB`BoseHubbardHilbertSpaceDimension[
+                QMB`Private`n, QMB`Private`L]]]; 
+           QMB`Private`H = (1/2) 
+             Apply[Part[QMB`Private`H, #, #] - Part[QMB`Private`H, #, #2] - 
+               Part[QMB`Private`H, #2, #] + Part[QMB`Private`H, #2, #2]& , 
+               Map[
+               QMB`Private`map, {
+                QMB`Private`basisodd, QMB`Private`rbasisodd}, {2}]], 
            Blank[], Message[
-             MessageName[
-             QMB`KineticTermBoseHubbardHamiltonian, "badSymmetricSubspace"], 
+             MessageName[QMB`BoseHubbardHamiltonian, "badSymmetricSubspace"], 
+             
              OptionValue[QMB`SymmetricSubspace]]; Return[$Failed]; Null]; 
-         QMB`Private`V = 
-          QMB`PotentialTermBoseHubbardHamiltonian[
-           QMB`Private`basis]; (-QMB`Private`J) 
-           QMB`Private`T + (QMB`Private`U/2) QMB`Private`V], 
-       QMB`BoseHubbardHamiltonian[
+         QMB`Private`H], QMB`BoseHubbardHamiltonian[
          Pattern[N, 
           Blank[]], 
          Pattern[QMB`Private`L, 
@@ -779,7 +855,8 @@ boundary conditions are used.", "Documentation" -> None, "OwnValues" -> None,
          Pattern[QMB`Private`J, 
           Blank[]], 
          Pattern[QMB`Private`U, 
-          Blank[]]] :> Module[{}, If[
+          Blank[]], 
+         OptionsPattern[]] :> Module[{}, If[
            Or[
             Not[
              IntegerQ[N]], 
@@ -791,13 +868,23 @@ boundary conditions are used.", "Documentation" -> None, "OwnValues" -> None,
            Message[
              MessageName[QMB`BoseHubbardHamiltonian, "real"], QMB`Private`J, 
              QMB`Private`U]; Return[$Failed]; Null]; Null]}], "SubValues" -> 
-    None, "DefaultValues" -> None, "NValues" -> None, "FormatValues" -> None, 
-    "Options" -> {QMB`SymmetricSubspace -> "All"}, "Attributes" -> {}, 
-    "FullName" -> "QMB`BoseHubbardHamiltonian"|>, False]]], "Output",
- CellChangeTimes->{3.9598024721618032`*^9},
- CellLabel->"Out[26]=",ExpressionUUID->"19280415-8097-412b-bf99-895ea1363799"]
+    None, "DefaultValues" -> 
+    Information`InformationValueForm[
+     DefaultValues, QMB`BoseHubbardHamiltonian, {
+      SyntaxInformation[QMB`BoseHubbardHamiltonian] -> <|"ArgumentsPattern" -> {
+           Blank[], 
+           Blank[], 
+           Blank[], 
+           Blank[], 
+           OptionsPattern[]}|>}], "NValues" -> None, "FormatValues" -> None, 
+    "Options" -> {
+     QMB`SymmetricSubspace -> "All", QMB`Private`Version -> "New"}, 
+    "Attributes" -> {}, "FullName" -> "QMB`BoseHubbardHamiltonian"|>, 
+   False]]], "Output",
+ CellChangeTimes->{3.9598024721618032`*^9, 3.9848481924488277`*^9},
+ CellLabel->"Out[7]=",ExpressionUUID->"1fd088df-7642-42e4-b8b4-f6c9dc4f7d4b"]
 }, Open  ]]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -3539,7 +3626,7 @@ InputAliases-><|"intt" -> RowBox[{"\[Integral]",
   "madeboxeswraper" -> 
   TemplateBox[{"\[SelectionPlaceholder]"}, "NotationMadeBoxesTag"], "cf" -> 
   SubscriptBox["&", "\[Placeholder]"]|>,
-FrontEndVersion->"14.3 for Linux x86 (64-bit) (July 8, 2025)",
+FrontEndVersion->"14.2 for Linux x86 (64-bit) (December 26, 2024)",
 StyleDefinitions->"Default.nb",
 ExpressionUUID->"811c502a-d95d-4a56-9d60-6d0233d518ee"
 ]
@@ -3560,62 +3647,62 @@ Cell[CellGroupData[{
 Cell[1236, 38, 191, 3, 49, "Section",ExpressionUUID->"688bcaf6-9ec4-4d81-8887-da0c6fba9cff"],
 Cell[1430, 43, 453, 12, 25, "Text",ExpressionUUID->"62f97d22-943c-42aa-8f28-57cabdf1ff71"],
 Cell[CellGroupData[{
-Cell[1908, 59, 487, 12, 52, "Input",ExpressionUUID->"3cb04c4c-0e40-49cf-afaa-f4bf02583117"],
-Cell[2398, 73, 2948, 66, 149, "Output",ExpressionUUID->"7736ef1d-8930-46c4-a082-832b918e5c19"]
+Cell[1908, 59, 486, 12, 52, "Input",ExpressionUUID->"3cb04c4c-0e40-49cf-afaa-f4bf02583117"],
+Cell[2397, 73, 2973, 67, 149, "Output",ExpressionUUID->"dba24544-cd73-43d4-a736-352838d50676"]
 }, Open  ]],
-Cell[5361, 142, 236, 6, 25, "Text",ExpressionUUID->"3b65b3d4-a6d7-4b80-8a31-0ba03435a844"],
+Cell[5385, 143, 236, 6, 25, "Text",ExpressionUUID->"3b65b3d4-a6d7-4b80-8a31-0ba03435a844"],
 Cell[CellGroupData[{
-Cell[5622, 152, 592, 12, 37, "Input",ExpressionUUID->"a8751f11-4ac9-4f3d-a9ea-7ed91161589f"],
-Cell[6217, 166, 2812, 72, 86, "Output",ExpressionUUID->"e71e5b77-2523-4a50-ae8b-3a7984529bd0"]
+Cell[5646, 153, 591, 12, 37, "Input",ExpressionUUID->"a8751f11-4ac9-4f3d-a9ea-7ed91161589f"],
+Cell[6240, 167, 2730, 71, 86, "Output",ExpressionUUID->"a5117b92-7b35-4bd9-a208-1f3f28e2f607"]
 }, Open  ]],
-Cell[9044, 241, 197, 3, 25, "Text",ExpressionUUID->"76368416-6c93-46bd-9850-17df9412398e"],
+Cell[8985, 241, 197, 3, 25, "Text",ExpressionUUID->"76368416-6c93-46bd-9850-17df9412398e"],
 Cell[CellGroupData[{
-Cell[9266, 248, 212, 3, 22, "Input",ExpressionUUID->"7ca2f5a5-b298-4a93-a641-5ef782f004bc"],
-Cell[9481, 253, 24888, 544, 205, "Output",ExpressionUUID->"19280415-8097-412b-bf99-895ea1363799"]
+Cell[9207, 248, 211, 3, 22, "Input",ExpressionUUID->"7ca2f5a5-b298-4a93-a641-5ef782f004bc"],
+Cell[9421, 253, 28446, 631, 88, "Output",ExpressionUUID->"1fd088df-7642-42e4-b8b4-f6c9dc4f7d4b"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[37916, 890, 261, 4, 49, "Section",ExpressionUUID->"f7bc98c3-e17d-4b19-a5d2-c4b810441b76"],
+Cell[38180, 896, 735, 22, 25, "Text",ExpressionUUID->"fde1d8c3-4bc6-448a-989a-ad70b3f508d6"],
+Cell[CellGroupData[{
+Cell[38940, 922, 824, 19, 52, "Input",ExpressionUUID->"d94fdeab-5aee-48da-9d06-0060db065e9b"],
+Cell[39767, 943, 3632, 83, 149, "Output",ExpressionUUID->"0788ed94-ed51-4acb-9d8c-5f767896bfbb"]
 }, Open  ]]
 }, Closed]],
 Cell[CellGroupData[{
-Cell[34418, 803, 261, 4, 40, "Section",ExpressionUUID->"f7bc98c3-e17d-4b19-a5d2-c4b810441b76"],
-Cell[34682, 809, 735, 22, 25, "Text",ExpressionUUID->"fde1d8c3-4bc6-448a-989a-ad70b3f508d6"],
+Cell[43448, 1032, 200, 3, 40, "Section",ExpressionUUID->"44f81772-c283-4d5b-a5c3-65797f87ea00"],
+Cell[43651, 1037, 282, 4, 25, "Text",ExpressionUUID->"4442d96a-ad56-4be6-ae3d-820e5d609cef"],
 Cell[CellGroupData[{
-Cell[35442, 835, 824, 19, 52, "Input",ExpressionUUID->"d94fdeab-5aee-48da-9d06-0060db065e9b"],
-Cell[36269, 856, 3632, 83, 149, "Output",ExpressionUUID->"0788ed94-ed51-4acb-9d8c-5f767896bfbb"]
+Cell[43958, 1045, 759, 19, 52, "Input",ExpressionUUID->"b9d8dd08-19c7-4254-87d1-410553ff3277"],
+Cell[44720, 1066, 3615, 75, 162, "Output",ExpressionUUID->"153b3c4b-9a92-45a6-b8b5-373229b0970f"]
+}, Open  ]],
+Cell[48350, 1144, 270, 6, 25, "Text",ExpressionUUID->"7c2e78b0-1713-4853-af5d-f653e3f14668"],
+Cell[CellGroupData[{
+Cell[48645, 1154, 657, 17, 52, "Input",ExpressionUUID->"e80a7715-0c8b-4bed-85ca-2af632d01c1f"],
+Cell[49305, 1173, 1590, 41, 71, "Output",ExpressionUUID->"574f4f93-2d2a-4a25-9540-5be6d9ee2fe0"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[50932, 1219, 659, 17, 52, "Input",ExpressionUUID->"8abce74f-966f-4971-8885-6813c0412973"],
+Cell[51594, 1238, 1415, 36, 65, "Output",ExpressionUUID->"87ab7988-921e-4b7c-837b-f477d2d4d0b2"]
 }, Open  ]]
 }, Closed]],
 Cell[CellGroupData[{
-Cell[39950, 945, 200, 3, 40, "Section",ExpressionUUID->"44f81772-c283-4d5b-a5c3-65797f87ea00"],
-Cell[40153, 950, 282, 4, 25, "Text",ExpressionUUID->"4442d96a-ad56-4be6-ae3d-820e5d609cef"],
+Cell[53058, 1280, 158, 3, 53, "Title",ExpressionUUID->"8fcf6e76-724c-4c5e-a77f-cae09d77888a"],
 Cell[CellGroupData[{
-Cell[40460, 958, 759, 19, 52, "Input",ExpressionUUID->"b9d8dd08-19c7-4254-87d1-410553ff3277"],
-Cell[41222, 979, 3615, 75, 162, "Output",ExpressionUUID->"153b3c4b-9a92-45a6-b8b5-373229b0970f"]
-}, Open  ]],
-Cell[44852, 1057, 270, 6, 25, "Text",ExpressionUUID->"7c2e78b0-1713-4853-af5d-f653e3f14668"],
+Cell[53241, 1287, 321, 5, 39, "Subsection",ExpressionUUID->"438cace7-5f90-4adf-bb76-ecc7d5d25fc0"],
 Cell[CellGroupData[{
-Cell[45147, 1067, 657, 17, 52, "Input",ExpressionUUID->"e80a7715-0c8b-4bed-85ca-2af632d01c1f"],
-Cell[45807, 1086, 1590, 41, 71, "Output",ExpressionUUID->"574f4f93-2d2a-4a25-9540-5be6d9ee2fe0"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[47434, 1132, 659, 17, 52, "Input",ExpressionUUID->"8abce74f-966f-4971-8885-6813c0412973"],
-Cell[48096, 1151, 1415, 36, 65, "Output",ExpressionUUID->"87ab7988-921e-4b7c-837b-f477d2d4d0b2"]
+Cell[53587, 1296, 843, 22, 52, "Input",ExpressionUUID->"29d7ae72-c37b-4765-a074-d1929c10da1c"],
+Cell[54433, 1320, 16402, 493, 178, "Output",ExpressionUUID->"ef3c2437-3a1b-4ebf-a5a7-c0e363c2ad5d"]
 }, Open  ]]
 }, Closed]],
 Cell[CellGroupData[{
-Cell[49560, 1193, 158, 3, 53, "Title",ExpressionUUID->"8fcf6e76-724c-4c5e-a77f-cae09d77888a"],
+Cell[70884, 1819, 218, 4, 28, "Subsection",ExpressionUUID->"dc170b2e-8c76-48e4-8f41-204118e4c820"],
 Cell[CellGroupData[{
-Cell[49743, 1200, 321, 5, 39, "Subsection",ExpressionUUID->"438cace7-5f90-4adf-bb76-ecc7d5d25fc0"],
-Cell[CellGroupData[{
-Cell[50089, 1209, 843, 22, 52, "Input",ExpressionUUID->"29d7ae72-c37b-4765-a074-d1929c10da1c"],
-Cell[50935, 1233, 16402, 493, 178, "Output",ExpressionUUID->"ef3c2437-3a1b-4ebf-a5a7-c0e363c2ad5d"]
-}, Open  ]]
-}, Closed]],
-Cell[CellGroupData[{
-Cell[67386, 1732, 218, 4, 28, "Subsection",ExpressionUUID->"dc170b2e-8c76-48e4-8f41-204118e4c820"],
-Cell[CellGroupData[{
-Cell[67629, 1740, 3817, 98, 103, "Input",ExpressionUUID->"ebc5028b-dd28-4abc-bedd-4fec8b079d56"],
-Cell[71449, 1840, 88935, 1505, 270, "Output",ExpressionUUID->"7f7d7950-0c74-494a-8c0e-f9162f653399"]
+Cell[71127, 1827, 3817, 98, 103, "Input",ExpressionUUID->"ebc5028b-dd28-4abc-bedd-4fec8b079d56"],
+Cell[74947, 1927, 88935, 1505, 270, "Output",ExpressionUUID->"7f7d7950-0c74-494a-8c0e-f9162f653399"]
 }, Open  ]],
-Cell[160399, 3348, 1847, 56, 85, "Input",ExpressionUUID->"967a67ec-277b-4bb9-80ed-e47f7f995cc4"],
-Cell[162249, 3406, 714, 23, 16, "Input",ExpressionUUID->"3135452e-19e2-4124-a7d7-d217dbd8326b"]
+Cell[163897, 3435, 1847, 56, 85, "Input",ExpressionUUID->"967a67ec-277b-4bb9-80ed-e47f7f995cc4"],
+Cell[165747, 3493, 714, 23, 16, "Input",ExpressionUUID->"3135452e-19e2-4124-a7d7-d217dbd8326b"]
 }, Closed]]
 }, Open  ]]
 }

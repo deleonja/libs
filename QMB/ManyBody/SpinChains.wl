@@ -10,88 +10,96 @@ Get["ForScience`"];
 (*Public definitions*)
 
 
-(* ::Subsection:: *)
-(*Symmetries and bases*)
+(* 
+------------- GUIDE FOR CONTRIBUTORS ------------- 
+
+Your implementation MUST obey the current phylosophy: 
+- Every spin chain Hamiltonian routine shall have as options:
+	> BoundaryConditions: "Open" (default) or "Periodic". 
+	> An option to return the Hamiltonian in a symmetric sector, like ParitySector, 
+	  MomentumSector or MagnonSector. If your system has a symmetry not already 
+	  implemented, you are kindly asked to include it and make it an agnostic option 
+	  of your particular system (at least, it should work for any other spin chain 
+	  model).
+*)
 
 
-Quiet[
-SpinParityEigenvectors::usage = FormatUsage[
-"SpinParityEigenvectors[NumSites] gives a list of {Even, Odd} \
-	eigenvectors of the parity operator."
-];
+(* ::Subsection::Closed:: *)
+(*Symmetries and boundary conditions options*)
 
-TranslationEigenvectorRepresentatives::usage = FormatUsage[
-"TranslationEigenvectorRepresentatives[NumSites] returns a list of \
-	sublists, each containing: the decimal representation of a bit-string \
-	representative eigenvector, its pseudomomentum k, and the length of \
-	its translation orbit."
-];
 
-BlockDiagonalize::usage = FormatUsage[
-"BlockDiagonalize[Matrix, Opts] returns ```Matrix``` in block-diagonal \
-	form. Only option is '''Symmetry'''."
-];
+BoundaryConditions::usage = 
+"BoundaryConditions specifies boundary conditions of the 1D chain \"Open\" \
+(default) or \"Periodic\"."
 
-Symmetry::usage = FormatUsage[
-"Symmetry is an option for '''BlockDiagonalize'''. Takes the value \
-	\"Translation\" (default)."
-];
-, {FrontEndObject::notavail, First::normal}];
+MomentumSector::usage = 
+"MomentumSector specifies the quasi-momentum sector: \"All\" (default), or \
+an integer k such that 0 <= k <= L-1, with L the number of sites in the chain.";
+
+ParitySector::usage = "ParitySector: \"None\" (default), 1 or -1.";
+
+MagnonSector::usage = 
+"MagnonSector specifies the magnon (spin excitations, number of spins up) sector: \
+\"All\" (default), or an integer k such that 0 <= k <= L, , with L the number of \
+sites in the chain.";
 
 
 (* ::Subsection::Closed:: *)
 (*1D Hamiltonians*)
 
 
+(*====================================================================================*)
 Quiet[
+
+ProjectToSymmetrySector::usage = FormatUsage[
+"ProjectToSymmetrySector[Matrix,L,Opts] projects a generic ```L```-site \
+	Hamiltonian ```Matrix``` into the specified symmetry sector.
+ProjectToSymmetrySector '''Options''': MomentumSector, ParitySector, and MagnonSector.
+ProjectToSymmetrySector '''Note''': Simultaneous projection of Magnon and Spatial \
+	(Momentum/Parity) symmetries is not currently supported by the basis generator."
+];
+
 IsingHamiltonian::usage = FormatUsage[
-"IsingHamiltonian[Hx, Hz, JCoupling, NumSites, Opts] returns the \
-Hamiltonian H = \[Sum] (Hx \[Sigma]_i^x + Hz \[Sigma]_i^z) - \
-JCoupling \[Sum] \[Sigma]^z_i \[Sigma]^z_{i+1}. Option \
-BoundaryConditions (default \"Open\")."
+"IsingHamiltonian[hx,hz,J,L,Opts] returns the mixed-field Ising Hamiltonian of ```L``` \
+	spins with transverse and longitudinal fields, respectively, ```h_x``` and ```h_z```, \
+	and coupling ```J```. H = \[Sum] (```h_x``` \[Sigma]_i^{* x*} + ```h_z``` \[Sigma]_i^{* z*}) - \
+	```J``` \[Sum] \[Sigma]^{* z*}_i \[Sigma]^{* z*}_{*i+1*}.
+IsingHamiltonian '''Options''': BoundaryConditions, ParitySector, and MomentumSector (only with \
+	BoundaryConditions->\"Periodic\").
+IsingHamiltonian More details in arxiv:2512.11030 [Eq. (9)]."
 ];
 
-BoundaryConditions::usage = FormatUsage[
-"BoundaryConditions specifies boundary conditions. \"Open\" or \
-\"Periodic\"."
+XXZwLocalDefectHamiltonian::usage = FormatUsage[
+"XXZwLocalDefectHamiltonian[J_{*xy*},J_{*z*},\[Omega],\[Epsilon]_d,L,d,Opts] returns \
+	the XXZ Hamiltonian of ```L``` spins with global Z-field ```\[Omega]```, a local \
+	defect of strength ```\[Epsilon]_d``` at site ```d```, and couplings ```J_xy``` \
+	and ```J_z```. H = 1/4 \[Sum]_{*i*} \
+	[ ```J_{*xy*}``` (\[Sigma]_{*i*}^{*x*} \[Sigma]_{*i+1*}^{*x*} + \
+	\[Sigma]_{*i*}^{*y*} \[Sigma]_{*i+1*}^{*y*}) + \
+	```J_{*z*}``` \[Sigma]_{*i*}^{*z*} \[Sigma]_{*i+1*}^{*z*} ] + \
+	1/2 ```\[Omega]``` \[Sum]_{*i=1*}^{*L*} \[Sigma]_{*i*}^{*z*} + \
+	1/2 ```\[Epsilon]_d``` \[Sigma]_{*```d```*}^{*z*}.
+XXZwLocalDefectHamiltonian '''Options''': BoundaryConditions and MagnonSector.
+XXZwLocalDefectHamiltonian More details in arxiv:2512.11030 [Eq. (11).]"
 ];
 
-ClosedXXZHamiltonian::usage = 
-"ClosedXXZHamiltonian[NumSites, Delta] returns the closed XXZ chain.";
-
-OpenXXZHamiltonian::usage = 
-"OpenXXZHamiltonian[NumSites, Delta, H1, H2] returns the open XXZ chain.";
-
-LeaSpinChainHamiltonian::usage = FormatUsage[
-"LeaSpinChainHamiltonian[Jxy, Jz, Omega, EpsilonD, NumSites, DSite] \
-returns the spin-1/2 chain with local defect."
+HeisenbergXXXwNoise::usage = FormatUsage[
+"HeisenbergXXXwNoise[hList,L,Opts] returns the Heisenberg XXX Hamiltonian of \
+	```L``` spins single onsite fields ```hList```. H = 1/4 \[Sum]_{*i*} \
+	(\[Sigma]_{*i*}^{*x*} \[Sigma]_{*i+1*}^{*x*} + \[Sigma]_{*i*}^{*y*} \[Sigma]_{*i+1*}^{*y*} + \
+	\[Sigma]_{*i*}^{*z*} \[Sigma]_{*i+1*}^{*z*}) + 1/2 \[Sum]_{*i=1*}^{*L*} ```h_{*i*}``` \[Sigma]_{*i*}^{*z*}.
+HeisenbergXXXwNoise '''Options''': BoundaryConditions andMagnonSector.
+HeisenbergXXXwNoise More details in arxiv:2512.11030 [Eq. (10)]."
 ];
 
-XXZOpenHamiltonian::usage = FormatUsage[
-"XXZOpenHamiltonian[Jxy, Jz, Omega, EpsilonD, NumSites, DSite] \
-returns the open XXZ chain."
-];
-
-HeisenbergXXXwNoise::usage = 
-"HeisenbergXXXwNoise[HList, NumSites] returns the Heisenberg XXX \
-spin 1/2 chain with local noise.";
-, {FrontEndObject::notavail, First::normal}];
-
-
-(* ::Subsection::Closed:: *)
-(*Quantum Game of Life*)
-
-
-Quiet[
 QuantumGameOfLifeHamiltonian::usage = FormatUsage[
-"QuantumGameOfLifeHamiltonian[NumSites, Opts] returns the Hamiltonian \
-for the Quantum Game of Life. Options: Momentum -> \"All\" (default) \
-| Integer k. Parity -> \"None\" (default) | 1 | -1."
+"QuantumGameOfLifeHamiltonian[L,Opts] returns the 1D Quantum Game of Life \
+	Hamiltonian for a chain of ```L``` spins. H = \[Sum] P_{*i*} \[Sigma]_{*i*}^{*x*}
+QuantumGameOfLifeHamiltonian '''Options''': MomentumSector, and ParitySector.
+QuantumGameOfLifeHamiltonian More details on the Hamiltonian you can see in \
+	arxiv:2510.16570v2 [Eq. (4)]."
 ];
 
-Momentum::usage = "Momentum is an option for QuantumGameOfLifeHamiltonian.";
-
-Parity::usage = "Parity is an option for QuantumGameOfLifeHamiltonian.";
 , {FrontEndObject::notavail, First::normal}];
 
 
@@ -192,6 +200,15 @@ ApplyCentralIsingInteraction::usage = FormatUsage[
 , {FrontEndObject::notavail, First::normal}];
 
 
+(* ::Subsection::Closed:: *)
+(*Deprecated functions*)
+
+
+XXZOpenHamiltonian::deprecated = 
+"XXZOpenHamiltonian is deprecated and has been removed. Use \
+XXZwLocalDefectHamiltonian instead.";
+
+
 (* ::Section:: *)
 (*Private definitions*)
 
@@ -200,342 +217,520 @@ Begin["`SpinChains`Private`"];
 
 
 (* ::Subsection::Closed:: *)
-(*Symmetries and bases*)
+(* Utility functions*)
 
 
-SpinParityEigenvectors[NumSites_Integer] := Module[
-    {TuplesList, NonPalindromes, Palindromes},
-    TuplesList = Tuples[{0, 1}, NumSites];
+(* ============================================================ *)
+(* Utility: Standardized Validation for Symmetries & Options    *)
+(* ============================================================ *)
+
+ValidateHamiltonianOptions::badBC = 
+  "BoundaryConditions -> `1` is invalid. Use \"Open\" or \"Periodic\".";
+ValidateHamiltonianOptions::badMom = 
+  "MomentumSector -> `1` must be \"All\" or an integer k: 0 <= k < L-1.";
+ValidateHamiltonianOptions::momOpen = 
+  "Momentum is only a conserved quantity for Periodic boundary conditions.";
+ValidateHamiltonianOptions::badPar = 
+  "ParitySector -> `1` must be \"None\", 1, or -1.";
+ValidateHamiltonianOptions::badMag = 
+  "MagnonSector -> `1` must be \"All\" or an integer m: 0 <= m <= L.";
+ValidateHamiltonianOptions::symClash = 
+  "Simultaneous projection of Magnon and Spatial (Momentum/Parity) symmetries " <>
+  "is not yet supported. Apply one or the other.";
+
+ValidateHamiltonianOptions[L_Integer, bc_, mom_, par_, mag_] := 
+  Module[{},
     
-    (* Filter states invariant under spatial inversion (palindromes) *)
-    NonPalindromes = Select[TuplesList, # != Reverse[#] &];
-    Palindromes = Complement[TuplesList, NonPalindromes];
-    
-    (* Keep only one representative per mirrored pair *)
-    NonPalindromes = DeleteDuplicatesBy[NonPalindromes, 
-        Sort[{#, Reverse[#]}] &];
-        
-    Normal[{
-        Join[
-            SparseArray[FromDigits[#, 2] + 1 -> 1., 2^NumSites] & /@ 
-                Palindromes,
-            Normalize[SparseArray[{FromDigits[#, 2] + 1 -> 1., 
-                FromDigits[Reverse[#], 2] + 1 -> 1.}, 2^NumSites]] & /@ 
-                NonPalindromes
-        ],
-        Normalize[SparseArray[{FromDigits[#, 2] + 1 -> -1., 
-            FromDigits[Reverse[#], 2] + 1 -> 1.}, 2^NumSites]] & /@ 
-            NonPalindromes
-    }]
-];
-
-(* Shifts bits for translation symmetry via fast bitwise operations *)
-Translation[StateVector_, NumSites_Integer] := 
-    BitShiftRight[StateVector] + BitAnd[StateVector, 1] * 2^(NumSites - 1);
-
-BinaryNecklaces[NumSites_Integer] := Module[
-    {TuplesList = Tuples[{0, 1}, NumSites]},
-    Union[Table[First[Sort[NestList[RotateLeft, TList, NumSites - 1]]], 
-        {TList, TuplesList}]]
-];
-
-OmegaFactor[NumSites_, MomentumValue_] := 
-    Exp[2 * Pi * MomentumValue * I / NumSites];
-
-TranslationEigenvectorRepresentatives[NumSites_Integer] := Module[
-    {Necklaces, OrbitsList},
-    Necklaces = FromDigits[#, 2] & /@ BinaryNecklaces[NumSites];
-    
-    (* Group states into cyclic orbits *)
-    OrbitsList = DeleteDuplicates[
-        Sort[NestWhileList[Translation[#, NumSites] &, #, 
-            UnsameQ[##] &, All][[;; -2]]] & /@ Necklaces
+    (* 1. Boundary Conditions *)
+    If[!MatchQ[bc, "Open" | "Periodic"],
+      Message[ValidateHamiltonianOptions::badBC, bc]; Return[False]
     ];
-    
-    Catenate[
-        Outer[
-            If[Mod[Length[#1] * #2, NumSites] == 0, 
-                {First[#1], #2, Length[#1]}, 
-                Nothing
-            ] &, 
-            OrbitsList, 
-            Range[0, NumSites - 1], 
-            1
+
+    (* 2. Momentum Sector (Must be "All" or integer 0 <= k < L) *)
+    If[mom =!= "All" && !(IntegerQ[mom] && 0 <= mom < L),
+      Message[ValidateHamiltonianOptions::badMom, mom, L]; Return[False]
+    ];
+
+    (* 3. Physical Compatibility: Momentum needs Periodic BC *)
+    If[mom =!= "All" && bc =!= "Periodic",
+      Message[ValidateHamiltonianOptions::momOpen]; Return[False]
+    ];
+
+    (* 4. Parity Sector *)
+    If[!MatchQ[par, "None" | 1 | -1],
+      Message[ValidateHamiltonianOptions::badPar, par]; Return[False]
+    ];
+
+    (* 5. Magnon Sector (Must be "All" or integer 0 <= m <= L) *)
+    If[mag =!= "All" && !(IntegerQ[mag] && 0 <= mag <= L),
+      Message[ValidateHamiltonianOptions::badMag, mag, L]; Return[False]
+    ];
+
+    (* 6. Engine Compatibility: No Magnons + Spatial Symmetries simultaneously *)
+    If[mag =!= "All" && (mom =!= "All" || par =!= "None"),
+      Message[ValidateHamiltonianOptions::symClash]; Return[False]
+    ];
+
+    True
+  ];
+
+
+(* ::Subsection::Closed:: *)
+(*Symmetries*)
+
+
+(* ::Subsubsection::Closed:: *)
+(*Primitives*)
+
+
+RotateLeftBits[StateInt_Integer, NumSites_Integer] := 
+  BitOr[
+    BitShiftLeft[BitAnd[StateInt, 2^(NumSites - 1) - 1], 1], 
+	BitShiftRight[StateInt, NumSites - 1]
+  ];
+
+ReverseBits[StateInt_Integer, NumSites_Integer] := 
+  FromDigits[Reverse[IntegerDigits[StateInt, 2, NumSites]], 2];
+
+OrbitRepresentative[StateInt_Integer, NumSites_Integer] := 
+  Min @ NestList[RotateLeftBits[#, NumSites] &, StateInt, NumSites - 1];
+
+
+(* ::Subsubsection::Closed:: *)
+(*Non-primitives*)
+
+
+(* Memoized Basis Generation *)
+TranslationParityBasis[NumSites_Integer, MomentumVal_, ParityVal_] := 
+  TranslationParityBasis[NumSites, MomentumVal, ParityVal] = 
+  Module[
+    {DimHilbert = 2^NumSites, RepsList, RawBasis, PermutationIndices, SparseBasis},
+
+    (* Translation Orbits *)
+    RepsList = DeleteDuplicates @ Table[
+      OrbitRepresentative[StateInt, NumSites],
+      {StateInt, 0, DimHilbert - 1}
+    ];
+
+    (* Momentum Eigenstates *)
+    RawBasis = DeleteMissing @ Map[
+      Function[RepState,
+        Module[
+          {Orbit = DeleteDuplicates @ NestList[
+              RotateLeftBits[#, NumSites] &, RepState, NumSites - 1
+            ],
+            OrbitLen, Vec
+          },
+          OrbitLen = Length[Orbit];
+          If[MomentumVal === "All" || Divisible[MomentumVal * OrbitLen, NumSites],
+            (* Construccion matricial 100% Sparse *)
+            Vec = SparseArray[
+              MapIndexed[
+                {#1 + 1} -> Exp[-I * 2. * Pi * If[MomentumVal === "All", 0, MomentumVal] * (#2[[1]] - 1) / NumSites] &,
+                Orbit
+              ],
+              {DimHilbert}
+            ];
+            Vec,
+            Missing[]
+          ]
         ]
-    ]
-];
-
-RepresentativesOddBasis[BasisList_] := DeleteDuplicatesBy[
-    Discard[BasisList, PalindromeQ], Sort[{#, Reverse[#]}] &];
-
-RepresentativesEvenBasis[BasisList_] := DeleteDuplicatesBy[
-    BasisList, Sort[{#, Reverse[#]}] &];
-
-Options[BlockDiagonalize] = {Symmetry -> "Translation"};
-
-BlockDiagonalize[MatrixObject_, Opts:OptionsPattern[]] := 
-    Switch[OptionValue[Symmetry],
-        "Translation",
-            Module[{DimL = Log[2, Length[MatrixObject]], RepsG, ProjMat},
-                RepsG = GatherBy[
-                    TranslationEigenvectorRepresentatives[DimL], #[[2]] &];
-                
-                (* Construct change-of-basis matrix into momentum sectors *)
-                ProjMat = SparseArray[
-                    Catenate[
-                        Apply[
-                            Normalize[SparseArray[
-                                Thread[FoldList[Translation[#, DimL] &, #1, 
-                                    Range[#3 - 1]] + 1 -> 
-                                    Power[OmegaFactor[DimL, #2], 
-                                        Range[0., #3 - 1]]
-                                ], 2^DimL
-                            ]] &,
-                            RepsG, {2}
-                        ]
-                    ]
-                ];
-                BlockDiagonalMatrix[Chop[
-                    Conjugate[ProjMat] . MatrixObject . Transpose[ProjMat]]]
-            ],
-        "Parity",
-            Module[{DimL = Log[2, Length[MatrixObject]], BasisL, RepsL, 
-                RulesL, Heven, Hodd},
-                BasisL = Tuples[{0, 1}, DimL];
-                RulesL = AssociationThread[BasisL -> Range[Length[BasisL]]];
-                RepsL = Comap[{RepresentativesEvenBasis, 
-                    RepresentativesOddBasis}, BasisL];
-                
-                (* Evaluate symmetric and antisymmetric superpositions *)
-                Heven = 1/2 * (MatrixObject[[#1, #1]] + 
-                    MatrixObject[[#1, #2]] + MatrixObject[[#2, #1]] + 
-                    MatrixObject[[#2, #2]] & @@ 
-                    Map[RulesL, {#, Reverse /@ #} &[RepsL[[1]]], {2}]);
-                    
-                Hodd = 1/2 * (MatrixObject[[#1, #1]] - 
-                    MatrixObject[[#1, #2]] - MatrixObject[[#2, #1]] + 
-                    MatrixObject[[#2, #2]] & @@ 
-                    Map[RulesL, {#, Reverse /@ #} &[RepsL[[2]]], {2}]);
-                    
-                Heven = # . Heven . # &[DiagonalMatrix[
-                    ReplacePart[ConstantArray[1., Length[RepsL[[1]]]], 
-                        Thread[Catenate[Position[RepsL[[1]], _?PalindromeQ, 
-                            1]] -> 1/Sqrt[2.]]], 
-                    TargetStructure -> "Sparse"]];
-                {Heven, Hodd}
-            ],
-        _,
-            Message[BlockDiagonalize::badSymmetry, OptionValue[Symmetry]];
-            $Failed
+      ],
+      RepsList
     ];
 
-BlockDiagonalize::badSymmetry = 
-    "Option badSymmetry -> `1` is not valid. Valid options: \"Translation\".";
+    If[RawBasis === {}, Return[{}]];
+
+    (* Parity Projection *)
+    If[ParityVal =!= "None",
+      PermutationIndices = Table[
+        ReverseBits[StateInt, NumSites] + 1,
+        {StateInt, 0, DimHilbert - 1}
+      ];
+      RawBasis = Map[
+        Function[Vec, Vec + ParityVal * Vec[[PermutationIndices]]],
+        RawBasis
+      ];
+    ];
+
+    (* Filtrar nulos *)
+    RawBasis = Select[RawBasis, Norm[#] > 1.*^-10 &];
+    If[RawBasis === {}, Return[{}]];
+
+    (* Normalizar manteniendolos estrictamente Sparse *)
+    RawBasis = Chop @ Map[# / Norm[#] &, RawBasis];
+
+    (* Identificar y borrar duplicados O(N) sin Orthogonalize (Gram-Schmidt denso) *)
+    SparseBasis = DeleteDuplicatesBy[
+      RawBasis,
+      Function[v,
+        Module[{pos = v["NonzeroPositions"]},
+          If[Length[pos] > 0, Chop[v / v[[ pos[[1, 1]] ]] ], v]
+        ]
+      ]
+    ];
+
+    (* Empaquetar como Matriz 2D Sparse *)
+    SparseArray[SparseBasis]
+  ];
+
+
+(* ---- Optimized Parity Basis Generator ---- *)
+OptimizedParityBasis[NumSites_Integer, ParityVal_Integer] := 
+  OptimizedParityBasis[NumSites, ParityVal] = 
+  Module[
+    {DimH, AllStates, RevStates, Palindromes, NonPalReps, 
+     PalRules, NonPalRules, NumPal},
+    
+    DimH = 2^NumSites;
+    AllStates = Range[0, DimH - 1];
+    
+    (* Vectorized bit reversal *)
+    RevStates = ReverseBits[#, NumSites] & /@ AllStates;
+    
+    (* Robust selection using differences (Avoids Thread over Equal/Less) *)
+    Palindromes = Pick[AllStates, AllStates - RevStates, 0];
+    
+    (* Pick only the smaller integer of the pair to avoid duplicates *)
+    NonPalReps = Pick[AllStates, UnitStep[RevStates - AllStates - 1], 1];
+    
+    If[ParityVal == 1,
+      (* ---- Even Parity Sector (+) ---- *)
+      NumPal = Length[Palindromes];
+      
+      PalRules = MapIndexed[
+        {#2[[1]], #1 + 1} -> 1. &, 
+        Palindromes
+      ];
+      
+      NonPalRules = Catenate @ MapIndexed[
+        {
+          {#2[[1]] + NumPal, #1 + 1} -> 1. / Sqrt[2.],
+          {#2[[1]] + NumPal, RevStates[[#1 + 1]] + 1} -> 1. / Sqrt[2.]
+        } &,
+        NonPalReps
+      ];
+      
+      SparseArray[
+        Join[PalRules, NonPalRules], 
+        {NumPal + Length[NonPalReps], DimH}
+      ],
+      
+      (* ---- Odd Parity Sector (-) ---- *)
+      NonPalRules = Catenate @ MapIndexed[
+        {
+          {#2[[1]], #1 + 1} -> 1. / Sqrt[2.],
+          {#2[[1]], RevStates[[#1 + 1]] + 1} -> -1. / Sqrt[2.]
+        } &,
+        NonPalReps
+      ];
+      
+      SparseArray[NonPalRules, {Length[NonPalReps], DimH}]
+    ]
+  ];
+
+
+
+(* ---- Updated Universal Projector Router ---- *)
+ProjectOperator[Operator_?MatrixQ, NumSites_Integer, MomentumVal_, ParityVal_] := 
+  Module[{BasisMatrixU},
+    
+    (* Caso trivial sin simetrias *)
+    If[MomentumVal === "All" && ParityVal === "None", Return[Operator]];
+    
+    (* Router: Usar la via ultra-rapida de paridad pura si Momentum es "All" *)
+    If[MomentumVal === "All" && ParityVal =!= "None",
+      BasisMatrixU = OptimizedParityBasis[NumSites, ParityVal];
+    ,
+      (* Fallback: Base combinada para Traslacion o Traslacion+Paridad *)
+      BasisMatrixU = TranslationParityBasis[NumSites, MomentumVal, ParityVal];
+    ];
+
+    (* Proyeccion y Chop final *)
+    If[BasisMatrixU === {} || Length[BasisMatrixU] == 0,
+      SparseArray[{}, {0, 0}],
+      Chop[BasisMatrixU . Operator . ConjugateTranspose[BasisMatrixU]]
+    ]
+  ];
+
+
+MagnonSectorIndices[L_Integer, M_Integer] :=
+  MagnonSectorIndices[L, M] =
+  Pick[Range[0, 2^L - 1],
+       DigitCount[Range[0, 2^L - 1], 2, 1],
+       M] + 1;
 
 
 (* ::Subsection::Closed:: *)
 (*1D Hamiltonians*)
 
 
-Options[IsingHamiltonian] = {BoundaryConditions -> "Open"};
+(* ::Subsubsection::Closed:: *)
+(*Primitives*)
 
-IsingHamiltonian[Hx_, Hz_, JCoupling_, NumSites_, Opts:OptionsPattern[]] := 
-    Module[{NNIndices},
-        NNIndices = Switch[OptionValue[BoundaryConditions],
-            "Open",
-                Normal[SparseArray[Thread[{#, # + 1} -> 3], {NumSites}] & /@ 
-                    Range[NumSites - 1]],
-            "Periodic",
-                Normal[SparseArray[Thread[{#, Mod[# + 1, NumSites, 1]} -> 3], 
-                    {NumSites}] & /@ Range[NumSites]],
-            _,
-                Message[IsingHamiltonian::badBoundaryCondition, 
-                    OptionValue[BoundaryConditions]];
-                Return[$Failed];
-        ];
-        Total[{Hx * Pauli[#] + Hz * Pauli[3 * #] & /@ 
-            IdentityMatrix[NumSites], -JCoupling * (Pauli /@ NNIndices)}, 2]
+
+(* ---- Nearest-neighbor index matrices --------------------------------- *)
+
+NNIndices["Open", alpha_Integer, L_Integer] :=
+  Normal @ SparseArray[Thread[{#, #+1} -> alpha], L] & /@ Range[L-1];
+
+NNIndices["Periodic", alpha_Integer, L_Integer] :=
+  Normal @ SparseArray[Thread[{#, Mod[#+1, L, 1]} -> alpha], L] & /@ Range[L];
+ 
+
+
+(* ---- T\[EAcute]rmino de campo de un sitio ------------------------- *)
+(*  Sum_i  h_i * sigma^alpha_i                                  *)
+
+(*====================================================================================*)
+OneSiteSum[fields_List, alpha_Integer] :=
+  Total[fields * (Pauli /@ DiagonalMatrix[ConstantArray[alpha, Length[fields]]])];
+  
+OneSiteSum[h_?NumericQ, alpha_Integer, L_Integer] :=
+  OneSiteSum[ConstantArray[h, L], alpha];
+
+
+(* ---- T\[EAcute]rmino de interacci\[OAcute]n de dos sitios ----------------- *)
+(*  Sum_{<i,j>}  J_{ij} * sigma^alpha_i sigma^alpha_j          *)
+
+TwoSiteSum[alpha_Integer, bc_String, L_Integer] :=
+  Total[Pauli /@ NNIndices[bc, alpha, L]];
+
+TwoSiteSum[J_?NumericQ, alpha_Integer, bc_String, L_Integer] :=
+  -J * Total[Pauli /@ NNIndices[bc, alpha, L]];
+
+
+
+(* ::Subsubsection::Closed:: *)
+(*Non-primitives*)
+
+
+Options[ProjectToSymmetrySector] = {
+  BoundaryConditions -> "Periodic",
+  MomentumSector -> "All",
+  ParitySector -> "None",
+  MagnonSector -> "All"
+};
+
+ProjectToSymmetrySector::badDim = 
+  "Matrix dimensions (`1`x`2`) do not match the Hilbert space dimension " <>
+  "for L = `3` sites (2^`3` = `4`).";
+
+ProjectToSymmetrySector::symClash = 
+  "Simultaneous evaluation of MagnonSector and Spatial Symmetries " <> 
+  "(Momentum/Parity) is not yet supported. Apply one or the other.";
+
+ProjectToSymmetrySector[Matrix_?MatrixQ, NumSites_Integer, Opts:OptionsPattern[]] := 
+  Module[
+    {bc, mom, par, mag, DimH, SectorIndices},
+    
+    bc = OptionValue[BoundaryConditions];
+    mom = OptionValue[MomentumSector];
+    par = OptionValue[ParitySector];
+    mag = OptionValue[MagnonSector];
+    DimH = 2^NumSites;
+
+    (* ---- Validation ---- *)
+    If[!ValidateHamiltonianOptions[NumSites, bc, mom, par, mag], 
+      Return[$Failed]
     ];
 
-IsingHamiltonian::badBoundaryCondition = 
-    "Option BoundaryConditions -> `1` not valid. \"Open\" or \"Periodic\".";
-
-
-ClosedXXZHamiltonian[NumSites_, Delta_] := Module[{NNIndices},
-    NNIndices = Normal[SparseArray[Thread[{#, Mod[# + 1, NumSites, 1]} -> 1], 
-        {NumSites}] & /@ Range[NumSites]];
-    N[Normal[-1/2 * Total[Join[Pauli /@ NNIndices, Pauli /@ (2 * NNIndices), 
-        Delta * (Pauli[#] - IdentityMatrix[2^NumSites]) & /@ (3 * NNIndices)]]]]
-];
-
-
-
-OpenXXZHamiltonian[NumSites_, Delta_, H1_, H2_] := Module[{NNIndices},
-    NNIndices = Normal[SparseArray[Thread[{#, Mod[# + 1, NumSites, 1]} -> 1], 
-        {NumSites}] & /@ Range[NumSites - 1]];
-    N[Normal[-1/2 * Total[Join[Pauli /@ NNIndices, Pauli /@ (2 * NNIndices), 
-        Delta * (Pauli[#] - IdentityMatrix[2^NumSites]) & /@ 
-        (3 * NNIndices)]] - 1/2 * (H1 * Pauli[Join[{1}, 
-        ConstantArray[0, NumSites - 1]]] + H2 * Pauli[Join[
-        ConstantArray[0, NumSites - 1], {1}]]) + 
-        1/2 * (H1 + H2) * IdentityMatrix[2^NumSites]]]
-];
-
-
-
-HamiltonianNN[Jxy_, Jz_, NumSites_] := Module[{NNIndices},
-    NNIndices = Normal[SparseArray[Thread[{#, Mod[# + 1, NumSites, 1]} -> 1], 
-        {NumSites}] & /@ Range[NumSites - 1]];
-    N[Normal[(1/4) * Total[Join[Jxy * (Pauli /@ NNIndices), 
-        Jxy * (Pauli /@ (2 * NNIndices)), 
-        Jz * (Pauli[#] & /@ (3 * NNIndices))]]]]
-];
-
-HamiltonianZ[Omega_, EpsilonD_, NumSites_, DSite_] := N[(1/2) * (Omega * Total[Pauli /@ (3 * IdentityMatrix[NumSites])] + EpsilonD * Pauli[Normal[SparseArray[DSite -> 3, NumSites]]])];
-
-LeaSpinChainHamiltonian[Jxy_, Jz_, Omega_, EpsilonD_, NumSites_, DSite_] := 
-    HamiltonianNN[Jxy, Jz, NumSites] + 
-    HamiltonianZ[Omega, EpsilonD, NumSites, DSite];
-
-XXZOpenHamiltonian[Jxy_, Jz_, Omega_, EpsilonD_, NumSites_, DSite_] := 
-    HamiltonianNN[Jxy, Jz, NumSites] + 
-    HamiltonianZ[Omega, EpsilonD, NumSites, DSite];
-
-
-HeisenbergXXXwNoise[HList_List, NumSites_] := Module[
-    {NNIndices, FirstSum, SecondSum},
-    NNIndices = Normal[SparseArray[Thread[{#, # + 1} -> 1], {NumSites}] & /@ 
-        Range[NumSites - 1]];
-    FirstSum = 1/4 * Total[Table[Pauli[i * #] & /@ NNIndices, {i, 3}], 2];
-    SecondSum = 1/2 * HList . 
-        (Pauli /@ DiagonalMatrix[ConstantArray[3, NumSites]]);
-    FirstSum + SecondSum
-];
-
-
-(* ::Subsection::Closed:: *)
-(*Quantum Game of Life*)
-
-
-Options[QuantumGameOfLifeHamiltonian] = {Momentum -> "All", Parity -> "None"};
-
-QuantumGameOfLifeHamiltonian[NumSites_Integer, Opts:OptionsPattern[]] := 
-    Module[{
-        MomVal = OptionValue[Momentum],
-        ParVal = OptionValue[Parity],
-        DimHilbert = 2^NumSites,
-        HFull, RulesList, BasisVecs, ProjMatrix
-    },
-
-    If[MomVal =!= "All" && !IntegerQ[MomVal], 
-        Return[Message[QuantumGameOfLifeHamiltonian::invMom, MomVal]; 
-        $Failed]
-    ];
-    If[ParVal =!= "None" && !MemberQ[{1, -1}, ParVal], 
-        Return[Message[QuantumGameOfLifeHamiltonian::invPar, ParVal]; 
-        $Failed]
-    ];
-    If[IntegerQ[MomVal] && ParVal =!= "None",
-        If[MomVal != 0 && MomVal != NumSites/2, 
-            Message[QuantumGameOfLifeHamiltonian::parityWarning, MomVal]]
+    (* ---- Magnon Sector Projection ---- *)
+    If[mag =!= "All",
+      (* Reutilizamos la rutina privada ultrarrapida *)
+      SectorIndices = MagnonSectorIndices[NumSites, mag];
+      Return[Matrix[[SectorIndices, SectorIndices]]]
     ];
 
-    (* 1. PURE FUNCTIONAL HAMILTONIAN CONSTRUCTION *)
-    (* Calculates sum of next-nearest neighbors dynamically per basis state *)
-    RulesList = Flatten @ Table[
-        Module[{NeighborsSum},
-            Map[
-                Function[i,
-                    NeighborsSum = BitGet[StateVar, Mod[i - 2, NumSites]] + 
-                        BitGet[StateVar, Mod[i - 1, NumSites]] + 
-                        BitGet[StateVar, Mod[i + 1, NumSites]] + 
-                        BitGet[StateVar, Mod[i + 2, NumSites]];
-                    If[NeighborsSum == 2 || NeighborsSum == 3,
-                        {StateVar + 1, BitXor[StateVar, 2^i] + 1} -> 1.0,
-                        Nothing
-                    ]
-                ],
-                Range[0, NumSites - 1]
-            ]
-        ],
-        {StateVar, 0, DimHilbert - 1}
+    (* ---- Spatial Symmetry Projection ---- *)
+    (* ProjectOperator maneja Momentum y/o Parity internamente *)
+    ProjectOperator[Matrix, NumSites, mom, par]
+  ];
+
+
+Options[IsingHamiltonian] = {
+  BoundaryConditions -> "Open",
+  MomentumSector -> "All",
+  ParitySector -> "None"
+};
+
+IsingHamiltonian[hx_, hz_, J_, L_Integer, opts:OptionsPattern[]] := 
+  Module[
+    {bc, mom, par, HamFull},
+    
+    bc  = OptionValue[BoundaryConditions];
+    mom = OptionValue[MomentumSector];
+    par = OptionValue[ParitySector];
+
+    (* ---- Validation ---- *)
+    If[!ValidateHamiltonianOptions[L, bc, mom, par, "All"], 
+      Return[$Failed]
     ];
 
-    HFull = SparseArray[RulesList, {DimHilbert, DimHilbert}];
-    If[MomVal === "All", Return[HFull]];
+    (* ---- Full Hamiltonian Construction ---- *)
+    HamFull = 
+      TwoSiteSum[J, 3, bc, L] + 
+      OneSiteSum[hx, 1, L] + 
+      OneSiteSum[hz, 3, L];
 
-    (* 2. MOMENTUM BASIS CONSTRUCTION *)
-    BasisVecs = Module[{NecklacesDict, KBasisList},
-        NecklacesDict = GroupBy[Range[0, DimHilbert - 1], 
-            Function[x, Min[NestList[RotateLeftBits[#, NumSites] &, x, 
-                NumSites - 1]]]
-        ];
+    (* ---- Symmetry Projection ---- *)
+    ProjectOperator[HamFull, L, mom, par]
+  ];
+
+
+Options[XXZwLocalDefectHamiltonian] = {
+  BoundaryConditions -> "Open",
+  MagnonSector -> "All"
+};
+
+XXZwLocalDefectHamiltonian[Jxy_?NumericQ, Jz_?NumericQ, Omega_?NumericQ, EpsD_?NumericQ, 
+               NumSites_Integer, DSite_Integer, Opts:OptionsPattern[]] := 
+  Module[
+    {bc, mag, DefectField, HamFull, SectorIndices},
+    
+    bc  = OptionValue[BoundaryConditions];
+    mag = OptionValue[MagnonSector];
+
+    (* ---- Validation ---- *)
+    If[!ValidateHamiltonianOptions[NumSites, bc, "All", "None", mag], 
+      Return[$Failed]
+    ];
+
+    (* ---- Local Defect Field Construction ---- *)
+    (* Creamos un arreglo de ceros y ponemos el defecto solo en DSite *)
+    DefectField = Normal @ SparseArray[{DSite -> EpsD}, NumSites];
+
+    (* ---- Full Hamiltonian Construction (Layer 1 Primitives) ---- *)
+    (* Factores 1/4 y 1/2 respetan la convencion de espin 1/2 rigurosa *)
+    HamFull = 
+      1./4 * Jxy * TwoSiteSum[1, bc, NumSites] + 
+      1./4 * Jxy * TwoSiteSum[2, bc, NumSites] + 
+      1./4 * Jz  * TwoSiteSum[3, bc, NumSites] + 
+      1./2 * Omega * OneSiteSum[ConstantArray[1.0, NumSites], 3] + 
+      1./2 * OneSiteSum[DefectField, 3];
+
+    (* ---- Magnon Sector Projection (U(1) Symmetry) ---- *)
+    If[mag =!= "All",
+      SectorIndices = MagnonSectorIndices[NumSites, mag];
+      Return[HamFull[[SectorIndices, SectorIndices]]]
+    ];
+
+    (* ---- Trivial Case ---- *)
+    HamFull
+  ];
+
+
+Options[HeisenbergXXXwNoise] = {
+  MagnonSector -> "All",
+  BoundaryConditions -> "Open"
+};
+
+HeisenbergXXXwNoise[FieldList_List, NumSites_Integer, Opts:OptionsPattern[]] := 
+  Module[
+    {OptMagnonSector, BoundCond, FullHamiltonian, SectorIndices},
+    
+    OptMagnonSector = OptionValue[MagnonSector];
+    BoundCond = OptionValue[BoundaryConditions];
+
+    (* ---- Validation ---- *)
+    If[!ValidateHamiltonianOptions[NumSites, BoundCond, "All", "None", OptMagnonSector], 
+      Return[$Failed]
+    ];
+
+    (* ---- Full Hamiltonian using Modular Primitives ---- *)
+    (* BoundCond ("Open" or "Periodic") is delegated directly to TwoSiteSum *)
+    FullHamiltonian = 
+      1./4 * ( 
+        TwoSiteSum[1, BoundCond, NumSites] + 
+        TwoSiteSum[2, BoundCond, NumSites] + 
+        TwoSiteSum[3, BoundCond, NumSites]
+      ) + 
+      1./2 * OneSiteSum[FieldList, 3];
+
+    (* ---- Trivial Case ---- *)
+    If[OptMagnonSector === "All", Return[FullHamiltonian]];
+
+    (* ---- Fast Sector Projection via Submatrix ---- *)
+    SectorIndices = MagnonSectorIndices[NumSites, OptMagnonSector];
+    
+    (* Returns the exact block without needing Basis Transformation *)
+    FullHamiltonian[[SectorIndices, SectorIndices]]
+  ];
+
+HeisenbergXXXwNoise::invM =
+  "MagnonSector `1` must be \"All\" or an integer M such that 0 \[LessEqual] M \[LessEqual] L = `2`.";
+HeisenbergXXXwNoise::invBC = 
+  "Option BoundaryConditions -> `1` is invalid. Valid options are \
+\"Open\" or \"Periodic\".";
+
+
+(* ============================================================ *)
+(*  Full Hamiltonian  (cached by NumSites)                      *)
+(* ============================================================ *)
+
+QGoLHamFull[NumSites_Integer] := QGoLHamFull[NumSites] =
+  Module[
+    {DimH = 2^NumSites, AllStates, CoordsList, SparseCoords},
+    
+    (* Full Hilbert space vector. Generated only once to avoid loops *)
+    AllStates = Range[0, DimH - 1];
+    
+    CoordsList = Table[
+      Module[
+        {NbSum, ValidMask, ValidStates},
         
-        KBasisList = DeleteMissing @ Map[
-            Function[OrbitList,
-                Module[{OrbitLength = Length[OrbitList], VecState},
-                    If[Divisible[MomVal * OrbitLength, NumSites],
-                        VecState = Total @ MapIndexed[
-                            SparseArray[{OrbitList[[First[#2]]] + 1} -> 
-                                Exp[-I * 2. * Pi * MomVal * (#2[[1]] - 1) / NumSites], DimHilbert] &,
-                            OrbitList
-                        ];
-                        Normalize[VecState],
-                        Missing[]
-                    ]
-                ]
-            ],
-            Values[NecklacesDict]
-        ];
+        (* 1. Vectorized sum of the 4 neighbors for ALL states simultaneously *)
+        NbSum = 
+          BitGet[AllStates, Mod[SiteIndex - 2, NumSites]] + 
+          BitGet[AllStates, Mod[SiteIndex - 1, NumSites]] + 
+          BitGet[AllStates, Mod[SiteIndex + 1, NumSites]] + 
+          BitGet[AllStates, Mod[SiteIndex + 2, NumSites]];
+          
+        (* 2. Fast mathematical filter: 1 if NbSum == 2 or 3, 0 otherwise *)
+        ValidMask = UnitStep[(NbSum - 2) * (3 - NbSum)];
         
-        If[KBasisList === {}, Return[SparseArray[{}, {0, 0}]]];
-        Flatten[KBasisList, 1]
+        (* 3. Fast O(N) extraction of the states that yielded 1 in the mask *)
+        ValidStates = Pick[AllStates, ValidMask, 1];
+        
+        (* 4. Creation of {Row, Column} coordinates for the sparse matrix *)
+        Transpose[{BitXor[ValidStates, 2^SiteIndex] + 1, ValidStates + 1}]
+      ],
+      {SiteIndex, 0, NumSites - 1}
+    ];
+    
+    (* Flatten coordinates and build the SparseArray in a single operation *)
+    SparseCoords = Join @@ CoordsList;
+    
+    SparseArray[SparseCoords -> 1., {DimH, DimH}]
+  ];
+  
+(* ============================================================ *)
+(* Public Entry Point                                           *)
+(* ============================================================ *)
+
+Options[QuantumGameOfLifeHamiltonian] = {
+    MomentumSector -> "All",
+    ParitySector -> "None"
+};
+
+QuantumGameOfLifeHamiltonian[NumSites_Integer, Opts:OptionsPattern[]] :=
+  Module[
+    {MomSector, ParSector, FullHamiltonian},
+
+    MomSector = OptionValue[MomentumSector];
+    ParSector = OptionValue[ParitySector];
+
+    (* ---- Validation ---- *)
+    If[!ValidateHamiltonianOptions[NumSites, "Periodic", MomSector, ParSector, "All"], 
+      Return[$Failed]
     ];
 
-    (* 3. PARITY PROJECTION *)
-    If[ParVal =!= "None",
-        BasisVecs = DeleteMissing @ Map[
-            Function[VecBasis,
-                Module[{VecInv, VecProj},
-                    (* Fast spatial inversion using position bit reversal *)
-                    VecInv = SparseArray[
-                        Thread[(ReverseBits[# - 1, NumSites] + 1 & /@ 
-                            VecBasis["NonzeroPositions"][[All, 1]]) -> 
-                            VecBasis["NonzeroValues"]], 
-                        DimHilbert
-                    ];
-                    VecProj = VecBasis + ParVal * VecInv;
-                    If[Norm[VecProj] > 10^-10, Normalize[VecProj], Missing[]]
-                ]
-            ], 
-            BasisVecs
-        ];
+    (* ---- Full Hamiltonian Construction ---- *)
+    FullHamiltonian = N[QGoLHamFull[NumSites]]; 
 
-        If[BasisVecs =!= {},
-             BasisVecs = DeleteDuplicates[Flatten[BasisVecs, 1], 
-                 (Norm[#1 - #2] < 10^-8 || Norm[#1 + #2] < 10^-8) &];
-        ,
-             Return[SparseArray[{}, {0, 0}]]
-        ];
-    ];
-
-    ProjMatrix = Transpose[SparseArray[BasisVecs]];
-    Chop[ConjugateTranspose[ProjMatrix] . HFull . ProjMatrix]
-];
-
-QuantumGameOfLifeHamiltonian::invMom = 
-    "Momentum `1` must be \"All\" or an integer 0 <= k < L.";
-QuantumGameOfLifeHamiltonian::invPar = 
-    "Parity `1` must be \"None\", 1, or -1.";
-QuantumGameOfLifeHamiltonian::parityWarning = 
-    "Warning: Inversion Parity is not a good quantum number for momentum `1`.";
-
-RotateLeftBits[IntObj_, NumSites_] := 
-    BitOr[BitShiftLeft[BitAnd[IntObj, 2^(NumSites - 1) - 1], 1], 
-        BitShiftRight[IntObj, NumSites - 1]];
-
-ReverseBits[IntObj_, NumSites_] := 
-    FromDigits[Reverse[IntegerDigits[IntObj, 2, NumSites]], 2];
+    (* ---- Symmetry Projection ---- *)
+    ProjectOperator[FullHamiltonian, NumSites, MomSector, ParSector]
+  ];
 
 
 (* ::Subsection::Closed:: *)
@@ -744,6 +939,17 @@ ApplyCentralIsingInteraction[State_?VectorQ, JInt_] := Module[
     NetPairs = (2 * Center - 1) * (2 * MEnv - (NumQ - 1));
     Exp[-I * JInt * NetPairs] * State
 ];
+
+
+(* ::Subsection::Closed:: *)
+(*Deprecated functions*)
+
+
+XXZOpenHamiltonian[args___] := 
+  Module[{},
+    Message[XXZOpenHamiltonian::deprecated];
+    Return[$Failed]
+  ];
 
 
 End[];
