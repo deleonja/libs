@@ -62,7 +62,19 @@ BlochVector::usage = FormatUsage[
 BlochVector[\[Psi]] returns the Bloch vector of a single-qubit pure state \[Psi]."
 ];
 
+QubitStateFromBlochVector::usage = FormatUsage[
+"QubitStateFromBlochVector[\[Theta],\[Phi]] returns the state cos(```\[Theta]```/2)|0\[RightAngleBracket] + \[ExponentialE]^```\[Phi]``` sin(```\[Theta]```/2)|1\[RightAngleBracket]"
+];
+
 , {FrontEndObject::notavail, First::normal}];
+
+
+(* ::Subsection::Closed:: *)
+(*Deprecated functions*)
+
+
+Qubit::deprecated = "Qubit is deprecated and has been removed. Use \
+QubitStateFromBlochVector instead.";
 
 
 (* ::Section::Closed:: *)
@@ -212,6 +224,36 @@ WeylMatrix[m_List,n_List,d_List] :=
 BlochVector[\[Rho]_?MatrixQ] := Chop[Tr[Pauli[#] . \[Rho]] & /@ Range[3]]
 
 BlochVector[\[Psi]_?VectorQ] := Chop[Braket[\[Psi], Pauli[#] . \[Psi]]] & /@ Range[3]
+
+
+QubitStateFromBlochVector[\[Theta]_, \[Phi]_] := {Cos[\[Theta]/2], Exp[I*\[Phi]]*Sin[\[Theta]/2]}
+
+QubitStateFromBlochVector[{r_, \[Theta]_, \[Phi]_}] /; Chop[r - 1] == 0 := 
+    QubitStateFromBlochVector[\[Theta], \[Phi]]
+
+QubitStateFromBlochVector[{r_, \[Theta]_, \[Phi]_}] /; r < 1 := 
+    Module[{CartesianVector, IdentityPart, InteractionPart},
+        (* Convert Spherical to Cartesian Bloch Vector *)
+        CartesianVector = r * {
+            Sin[\[Theta]] * Cos[\[Phi]], 
+            Sin[\[Theta]] * Sin[\[Phi]], 
+            Cos[\[Theta]]
+        };
+        
+        (* Resulting Density Matrix: 1/2 * (I + b . sigma) *)
+        Chop[0.5 * (Pauli[0] + Total[CartesianVector * (Pauli /@ Range[3])])]
+    ]
+
+
+(* ::Subsection::Closed:: *)
+(*Deprecated functions*)
+
+
+Qubit[args___] := 
+  Module[{},
+    Message[Qubit::deprecated];
+    Return[$Failed]
+  ];
 
 
 End[];

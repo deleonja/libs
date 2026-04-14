@@ -18,11 +18,11 @@ Get["ForScience`"]; (* nice formatting of usage definitions *)
 (*Hay cosas de Heisenberg meets fuzzy que tambi\[EAcute]n tengo que pasar para ac\[AAcute]*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Public definitions*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*General quantum mechanics*)
 
 
@@ -109,13 +109,6 @@ KroneckerVectorProduct::usage = "KroneckerVectorProduct[a,b] calculates \!\(\*Te
 Quiet[
 Concurrence::usage = FormatUsage[
 "Concurrence[\[Rho]] returns the two-qubit concurrence of density matrix ```\[Rho]```."
-];
-, {FrontEndObject::notavail, First::normal}];
-
-
-Quiet[
-Qubit::usage = FormatUsage[
-"Qubit[\[Theta],\[Phi]] returns the state cos(```\[Theta]```/2)|0\[RightAngleBracket] + \[ExponentialE]^\[Phi] sin(```\[Theta]```/2)|1\[RightAngleBracket]"
 ];
 , {FrontEndObject::notavail, First::normal}];
 
@@ -321,7 +314,7 @@ Quiet[
 , {FrontEndObject::notavail, First::normal}];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Bose-Hubbard*)
 
 
@@ -443,14 +436,14 @@ FuzzyMeasurementChannel::usage =
 FuzzyMeasurementChannel[\[Rho], {\!\(\*SubscriptBox[\(p\), \(totalError\)]\), \!\(\*SubscriptBox[\(p\), \(NN\)]\), \!\(\*SubscriptBox[\(p\), \(SNN\)]\)}, {{\!\(\*SubscriptBox[\(S\), \(i, i + 1\)]\)}, {\!\(\*SubscriptBox[\(S\), \(i, i + 2\)]\)}}] returns \[ScriptCapitalE](\[Rho])=(1-\!\(\*SubscriptBox[\(p\), \(totalError\)]\))\[Rho] + \!\(\*SubscriptBox[\(p\), \(totalError\)]\)(\!\(\*FractionBox[SubscriptBox[\(p\), \(NN\)], \(L - 1\)]\)) \!\(\*SuperscriptBox[SubscriptBox[\(\[Sum]\), \(i = 1\)], \(L - 1\)]\) \!\(\*SubscriptBox[\(S\), \(i, i + 1\)]\) \[Rho] \!\(\*SubscriptBox[\(S\), \(i, i + 1\)]\) + \!\(\*SubscriptBox[\(p\), \(totalError\)]\)(\!\(\*FractionBox[SubscriptBox[\(p\), \(SNN\)], \(L - 2\)]\)) \!\(\*SuperscriptBox[SubscriptBox[\(\[Sum]\), \(i = 1\)], \(L - 2\)]\) \!\(\*SubscriptBox[\(S\), \(i, i + 2\)]\) \[Rho] \!\(\*SubscriptBox[\(S\), \(i, i + 2\)]\).";
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Private definitions*)
 
 
 Begin["`Private`"]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*General quantum mechanics*)
 
 
@@ -537,9 +530,6 @@ Module[{\[Rho]tilde, R, \[Lambda]},
 	\[Lambda]=ReverseSort[Chop[Eigenvalues[R]]];
 	Max[0,\[Lambda][[1]]-Total[\[Lambda][[2;;]]]]
 ]
-
-
-Qubit[\[Theta]_,\[Phi]_] := {Cos[\[Theta]/2],Exp[I \[Phi]]Sin[\[Theta]/2]}
 
 
 SU2Rotation[sphCoord_List?VectorQ,\[Theta]_]/; Length[sphCoord]==2 :=
@@ -925,7 +915,7 @@ Reshuffle[m_] := ArrayFlatten[ArrayFlatten/@Partition[Partition[ArrayReshape[#,{
 Reshuffle[A_,m_,n_] := ArrayFlatten[ArrayReshape[A, {m, n, m, n}]]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Bose-Hubbard*)
 
 
