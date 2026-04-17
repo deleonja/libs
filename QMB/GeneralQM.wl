@@ -6,7 +6,7 @@ BeginPackage["QMB`"];
 Get["ForScience`"];
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Public definitions*)
 
 
@@ -69,15 +69,18 @@ QubitStateFromBlochVector::usage = FormatUsage[
 , {FrontEndObject::notavail, First::normal}];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Deprecated functions*)
 
+
+Qubit::usage = "Qubit is deprecated and has been removed. Use \
+QubitStateFromBlochVector instead.";
 
 Qubit::deprecated = "Qubit is deprecated and has been removed. Use \
 QubitStateFromBlochVector instead.";
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Private definitions*)
 
 
@@ -245,7 +248,7 @@ QubitStateFromBlochVector[{r_, \[Theta]_, \[Phi]_}] /; r < 1 :=
     ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Deprecated functions*)
 
 
