@@ -10,23 +10,21 @@ Get["ForScience`"];
 (*Public definitions*)
 
 
+Quiet[
 MatrixPartialTraceFromPureState::usage = FormatUsage[
 "MatrixPartialTraceFromPureState[stateVector,dimA,dimB,sysToTrace] \
 	computes the partial trace over ```sysToTrace``` of the density \
 	matrix of a pure bipartite state ```stateVector```."
 ];
 
-
 Purity::usage = FormatUsage[
 "Purity[\[Rho]] calculates the purity of ```\[Rho]```."
 ];
-
 
 HaarRandomState::usage = FormatUsage[
 "RandomHaarState[dim] returns a Haar-random quantum state \
 	vector of dimension ```dim```."
 ];
-
 
 PartialTranspose::usage = FormatUsage[
 "PartialTranspose[matrix,sysToTranspose,{dimA,dimB}] computes the \
@@ -40,12 +38,10 @@ PartialTranspose::invSub = "Subsystem parameter must be 1 or 2.";
 PartialTranspose::invDim = "Matrix dimensions do not match the \
 	provided subsystem dimensions.";
 
-
 \[Omega]::usage = FormatUsage[
 "\[Omega][d] returns the first dth root of unity.
 \[Omega][d,k] returns \[Omega][d]^k."
 ];
-
 
 WeylMatrix::usage = FormatUsage[
 "WeylMatrix[m,n,d] returns the Weyl matrix \
@@ -53,9 +49,6 @@ WeylMatrix::usage = FormatUsage[
 WeylMatrix[mList,nList,dList] returns the multiparticle Weyl matrix \
 	U(```mList```,```nList```) of dimensions ```dList```."
 ];
-
-
-Quiet[
 
 BlochVector::usage = FormatUsage[
 "BlochVector[\[Rho]] returns the Bloch vector of a single-qubit density matrix \[Rho].
@@ -66,10 +59,23 @@ QubitStateFromBlochVector::usage = FormatUsage[
 "QubitStateFromBlochVector[\[Theta],\[Phi]] returns the state cos(```\[Theta]```/2)|0\[RightAngleBracket] + \[ExponentialE]^```\[Phi]``` sin(```\[Theta]```/2)|1\[RightAngleBracket]"
 ];
 
+SU2RotationParameters::usage = FormatUsage[
+"SU2RotationParameters[Matrix] computes the spherical coordinates \[CurlyTheta] \
+and \[Phi] of the rotation axis, and the rotation angle \[Theta] from an SU(2) \
+matrix ```Matrix```."
+];
+
+RandomSU2Parameters::usage = FormatUsage[
+"RandomSU2Parameters[] gives a random list {\[CurlyTheta],\[Phi],\[Theta]} of the spherical coordinates \
+\[CurlyTheta] and \[Phi] of the rotation axis, and the rotation angle \[Theta] to generate a Haar \
+random SU(2) operator in \[DoubleStruckCapitalC]^2 . 
+RandomSU2Parameters[n] gives n random lists."
+];
+
 , {FrontEndObject::notavail, First::normal}];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Deprecated functions*)
 
 
@@ -246,6 +252,63 @@ QubitStateFromBlochVector[{r_, \[Theta]_, \[Phi]_}] /; r < 1 :=
         (* Resulting Density Matrix: 1/2 * (I + b . sigma) *)
         Chop[0.5 * (Pauli[0] + Total[CartesianVector * (Pauli /@ Range[3])])]
     ]
+
+
+SU2RotationParameters[uMatrix_?MatrixQ] := Module[
+    {
+        HalfAngleCos, 
+        VectorX, VectorY, VectorZ, 
+        NormV, 
+        ThetaR, VarTheta, Phi
+    },
+    
+    (* Extract the half-angle cosine from the real part of the first element *)
+    HalfAngleCos = Re[uMatrix[[1, 1]]];
+    ThetaR = 2.0 * ArcCos[HalfAngleCos];
+    
+    (* Extract the unnormalized Cartesian components of the rotation axis *)
+    VectorX = -Im[uMatrix[[1, 2]]];
+    VectorY = -Re[uMatrix[[1, 2]]];
+    VectorZ = -Im[uMatrix[[1, 1]]];
+    
+    NormV = Norm[{VectorX, VectorY, VectorZ}];
+    
+    (* Handle the identity matrix case (zero rotation) *)
+    If[Chop[NormV] == 0,
+        Return[{0.0, 0.0, 0.0}]
+    ];
+    
+    (* Calculate spherical coordinates from the normalized vector *)
+    VarTheta = ArcCos[VectorZ / NormV];
+    Phi = Mod[ArcTan[VectorX, VectorY], 2Pi];
+    
+    {VarTheta, Phi, ThetaR}
+]
+
+
+RandomSU2Parameters[] := Module[
+    {PhiAngle, CosTheta, PolarAngle, RotationAngle, UniformSample, ArgVar},
+    
+    (* Step 1: Sample azimuthal angle uniformly in [0, 2Pi] *)
+    PhiAngle = RandomReal[{0, 2 Pi}];
+    
+    (* Step 2: Sample polar angle uniformly on the sphere *)
+    CosTheta = RandomReal[{-1, 1}];
+    PolarAngle = ArcCos[CosTheta];
+    
+    (* Step 3: Sample rotation angle theta with PDF p(theta) = (1-Cos[theta])/(2Pi) *)
+    (* We solve the CDF equation: (theta - Sin[theta])/(2Pi) == u *)
+    UniformSample = RandomReal[];
+    RotationAngle = ArgVar /. FindRoot[
+        (ArgVar - Sin[ArgVar]) / (2 Pi) == UniformSample, 
+        {ArgVar, Pi}
+    ];
+    
+    (* Returns {PolarAngle, AzimuthalAngle, RotationAngle} *)
+    {PolarAngle, PhiAngle, RotationAngle}
+]
+
+RandomSU2Parameters[n_] := Table[RandomSU2Parameters[], n]
 
 
 (* ::Subsection:: *)
