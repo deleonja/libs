@@ -72,6 +72,11 @@ random SU(2) operator in \[DoubleStruckCapitalC]^2 .
 RandomSU2Parameters[n] gives n random lists."
 ];
 
+RandomSU2Rotation::usage = FormatUsage[
+"RandomSU2Rotation[] gives a Haar random SU(2) operator in \[DoubleStruckCapitalC]^2 .
+RandomSU2Rotation[n] gives ```n``` Haar random SU(2) operators. "
+];
+
 , {FrontEndObject::notavail, First::normal}];
 
 
@@ -309,6 +314,18 @@ RandomSU2Parameters[] := Module[
 ]
 
 RandomSU2Parameters[n_] := Table[RandomSU2Parameters[], n]
+
+
+RandomSU2Rotation[] := Module[
+    {PolarAngle, PhiAngle, RotationAngle},
+    
+    {PolarAngle, PhiAngle, RotationAngle} = RandomSU2Parameters[];
+    
+    (* Reutilizing the existing SU2Rotation function from QMB *)
+    SU2Rotation[{PolarAngle, PhiAngle}, RotationAngle]
+]
+
+RandomSU2Rotation[n_] := Table[RandomSU2Operator[], n]
 
 
 (* ::Subsection:: *)
