@@ -7,7 +7,7 @@ BeginPackage["QuantumWalks`"]
 <<ForScience`;
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Public definitions*)
 
 
@@ -57,6 +57,16 @@ ExpValPosition::usage = FormatUsage["ExpValPosition[\[Psi],t] returns the expect
 ];
 
 
+TransportVector::usage = FormatUsage[
+"TransportVector[CoinMatrix] gives the transport vector for a DTQW given \
+	the ```CoinMatrix```.
+TransportVector[C1,C2] gives the transport vector for a \
+	DTQW with step operator U = S.```C2```.S.```C1```
+TransportVector[\[CurlyTheta],\[Phi],\[Theta]] gives the transport vector for a DTQW with a SU(2) \
+	coin operator with axis {```\[CurlyTheta]```,```\[Phi]```} and angle of rotation ```\[Theta]```.
+"];
+
+
 (* ::Subsection::Closed:: *)
 (*Parrondo's paradox*)
 
@@ -78,7 +88,7 @@ CriticalAngle::usage = FormatUsage[
 ];
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Private definitions*)
 
 
@@ -170,6 +180,103 @@ PositionProbabilityDistribution[psi_, tmax_] := Chop[
 
 
 ExpValPosition[\[Psi]_, t_]:=PositionProbabilityDistribution[\[Psi],t] . Range[-t-1,t+1]
+
+
+TransportVector[c_?MatrixQ] := Module[
+  {k, s, uk, trU, omegaK, vgK, nVectorK, integrand, sigmas},
+  
+  (* Matrices de Pauli *)
+  sigmas = {PauliMatrix[1], PauliMatrix[2], PauliMatrix[3]};
+  
+  (* Operador de desplazamiento est\[AAcute]ndar en el espacio de momentos *)
+  s = DiagonalMatrix[{Exp[-I*k], Exp[I*k]}];
+  
+  (* Operador de evoluci\[OAcute]n *)
+  uk = s . c;
+  
+  (* Cuasi-energ\[IAcute]a *)
+  trU = ComplexExpand[Re[Tr[uk]]];
+  omegaK = ArcCos[trU / 2];
+  
+  (* Velocidad de grupo *)
+  vgK = D[omegaK, k];
+  
+  (* Vector espectral unitario *)
+  nVectorK = Table[
+    (I / (2 * Sin[omegaK])) * Tr[uk . sigmas[[j]]],
+    {j, 1, 3}
+  ];
+  
+  (* Integrando *)
+  integrand = vgK * nVectorK;
+  
+  (* Integraci\[OAcute]n num\[EAcute]rica *)
+  Re[ 1/(2 Pi) * NIntegrate[integrand, {k, -Pi, Pi}, 
+      Method -> "LocalAdaptive", 
+      Exclusions -> {Sin[omegaK] == 0}] 
+  ]
+]
+
+TransportVector[c1_?MatrixQ, c2_?MatrixQ] := Module[
+  {k, s, uk, trU, omegaK, vgK, nVectorK, integrand, sigmas},
+  
+  (* Matrices de Pauli *)
+  sigmas = {PauliMatrix[1], PauliMatrix[2], PauliMatrix[3]};
+  
+  (* Operadores de desplazamiento en el espacio de Fourier (simb\[OAcute]licos en k) *)
+  s = DiagonalMatrix[{Exp[-I*k], Exp[I*k]}];
+  
+  (* Operador de evoluci\[OAcute]n en el espacio de momentos *)
+  uk = s . c2 . s . c1;
+  
+  (* Cuasi-energ\[IAcute]a (banda positiva) *)
+  (* ComplexExpand y Re aseguran que no queden residuos imaginarios que confundan a ArcCos *)
+  trU = ComplexExpand[Re[Tr[uk]]];
+  omegaK = ArcCos[trU / 2];
+  
+  (* Velocidad de grupo obtenida por derivaci\[OAcute]n anal\[IAcute]tica exacta de omega *)
+  vgK = D[omegaK, k];
+  
+  (* Vector espectral unitario *)
+  (* Nota: Se usa 'nVectorK' para evitar el conflicto con el s\[IAcute]mbolo protegido 'N' *)
+  nVectorK = Table[
+    (I / (2 * Sin[omegaK])) * Tr[uk . sigmas[[j]]],
+    {j, 1, 3}
+  ];
+  
+  (* Integrando del vector de transporte *)
+  integrand = vgK * nVectorK;
+  
+  (* Integraci\[OAcute]n num\[EAcute]rica sobre la zona de Brillouin *)
+  (* Re limpia cualquier ruido num\[EAcute]rico imaginario del orden de $10^{-16}i$ *)
+  Re[ 1/(2 Pi) * NIntegrate[integrand, {k, -Pi, Pi}, 
+      Method -> "LocalAdaptive", 
+      Exclusions -> {Sin[omegaK] == 0}] 
+  ]
+]
+
+TransportVector[alpha_, phi_, theta_] := Module[
+    {nVector, zVector, cosHalf, sinHalf, prefactorA, term1, term2, term3},
+    
+    (* 1. Definici\[OAcute]n de vectores base y eje de rotaci\[OAcute]n *)
+    nVector = {Sin[alpha] * Cos[phi], Sin[alpha] * Sin[phi], Cos[alpha]};
+    zVector = {0, 0, 1};
+    
+    (* 2. Pre-c\[AAcute]lculo de t\[EAcute]rminos trigonom\[EAcute]tricos de la moneda *)
+    cosHalf = Cos[theta / 2];
+    sinHalf = Sin[theta / 2];
+    
+    (* 3. C\[AAcute]lculo del prefactor escalar A *)
+    prefactorA = (1 - sinHalf * Sin[alpha]) / (cosHalf^2 + sinHalf^2 * Cos[alpha]^2);
+    
+    (* 4. Construcci\[OAcute]n geom\[EAcute]trica del vector *)
+    term1 = sinHalf^2 * Dot[nVector, zVector] * nVector;
+    term2 = cosHalf^2 * zVector;
+    term3 = sinHalf * cosHalf * Cross[zVector, nVector];
+    
+    (* Retorno simplificado *)
+    Simplify[prefactorA * (term1 + term2 + term3)]
+]
 
 
 (* ::Subsection::Closed:: *)
