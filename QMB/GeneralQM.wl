@@ -325,7 +325,7 @@ RandomSU2Rotation[] := Module[
     SU2Rotation[{PolarAngle, PhiAngle}, RotationAngle]
 ]
 
-RandomSU2Rotation[n_] := Table[RandomSU2Operator[], n]
+RandomSU2Rotation[n_] := Table[RandomSU2Rotation[], n]
 
 
 (* ::Subsection:: *)
