@@ -694,7 +694,7 @@ ComplexSpacingRatios[eigs_List?VectorQ] := Module[
 (* Base calculation for a single time step *)
 (* O(N) complexity using packed array vectorization *)
 SpectralFormFactor[spectrumList_List, t_?NumericQ] := 
-    Abs[Total[Exp[-I * spectrumList * t]]]^2 / Length[spectrumList];
+    Abs[Total[Exp[-I * spectrumList * t]]]^2;
 
 (* Vectorized and memory-efficient calculation for a list of times *)
 (* Map is preferred over Outer here to prevent massive RAM spikes for large spectra *)
