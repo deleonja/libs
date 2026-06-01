@@ -6,7 +6,7 @@ BeginPackage["QMB`"];
 Get["ForScience`"];
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Public definitions*)
 
 
