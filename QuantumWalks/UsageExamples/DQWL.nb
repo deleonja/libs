@@ -1,0 +1,986 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     44740,        978]
+NotebookOptionsPosition[     37943,        840]
+NotebookOutlinePosition[     43740,        960]
+CellTagsIndexPosition[     43697,        957]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{"Load", " ", "QMB"}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"Get", "[", 
+   RowBox[{"StringJoin", "[", 
+    RowBox[{
+     RowBox[{"DirectoryName", "[", 
+      RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+     ",", "\"\<Kernel/init.m\>\""}], "]"}], "]"}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.982865779622978*^9, 3.982865798465619*^9}, {
+  3.98649515181789*^9, 3.9864951524976063`*^9}, {3.986495522137439*^9, 
+  3.986495523500133*^9}, {3.986496600998168*^9, 3.986496601396738*^9}},
+ CellLabel->"In[84]:=",ExpressionUUID->"c3934d3e-2037-446b-86a7-3791e98c8781"],
+
+Cell[CellGroupData[{
+
+Cell["TransportVector", "Section",
+ CellChangeTimes->{
+  3.986497828314961*^9},ExpressionUUID->"048432b3-ae2b-4a07-96dd-\
+6ca7de50bf3b"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "TransportVector"}]], "Input",
+ CellChangeTimes->{3.986497830906248*^9},
+ CellLabel->"In[85]:=",ExpressionUUID->"94e7fe42-e2af-4276-acc8-edc75616cd09"],
+
+Cell[BoxData[
+ InterpretationBox[
+  StyleBox[
+   FrameBox[
+    DynamicModuleBox[{System`InformationDump`open$$ = False, 
+     System`InformationDump`mouseOver$$ = False}, 
+     PaneSelectorBox[{True->
+      TagBox[GridBox[{
+         {
+          ItemBox[
+           PaneBox[
+            StyleBox[
+             TagBox[
+              TooltipBox[
+               StyleBox["\<\" Symbol\"\>", "InformationRowLabel",
+                StripOnInput->False],
+               "\"Symbol\"",
+               TooltipStyle->"TextStyling"],
+              Annotation[#, "Symbol", "Tooltip"]& ], "InformationTitleText",
+             StripOnInput->False,
+             BaseStyle -> None],
+            FrameMargins->{{4, 0}, {-1, 1}}],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False]},
+         {
+          ItemBox[
+           PaneBox[
+            
+            StyleBox["\<\"\\!\\(\\*StyleBox[RowBox[{\\\"TransportVector\\\", \
+\\\"[\\\", StyleBox[\\\"CoinMatrix\\\", \\\"TI\\\"], \\\"]\\\"}], \\\"MR\\\"]\
+\\) gives the transport vector for a DTQW given the \
+\\!\\(\\*StyleBox[\\\"CoinMatrix\\\", \
+\\\"TI\\\"]\\).\\n\\!\\(\\*StyleBox[RowBox[{\\\"TransportVector\\\", \
+\\\"[\\\", StyleBox[\\\"C1\\\", \\\"TI\\\"], \\\",\\\", StyleBox[\\\"C2\\\", \
+\\\"TI\\\"], \\\"]\\\"}], \\\"MR\\\"]\\) gives the transport vector for a \
+DTQW with step operator U = S.\\!\\(\\*StyleBox[\\\"C2\\\", \\\"TI\\\"]\\).S.\
+\\!\\(\\*StyleBox[\\\"C1\\\", \
+\\\"TI\\\"]\\)\\n\\!\\(\\*StyleBox[RowBox[{\\\"TransportVector\\\", \
+\\\"[\\\", StyleBox[\\\"\[CurlyTheta]\\\", \\\"TI\\\"], \\\",\\\", \
+StyleBox[\\\"\[Phi]\\\", \\\"TI\\\"], \\\",\\\", StyleBox[\\\"\[Theta]\\\", \
+\\\"TI\\\"], \\\"]\\\"}], \\\"MR\\\"]\\) gives the transport vector for a \
+DTQW with a SU(2) coin operator with axis \
+{\\!\\(\\*StyleBox[\\\"\[CurlyTheta]\\\", \\\"TI\\\"]\\), \
+\\!\\(\\*StyleBox[\\\"\[Phi]\\\", \\\"TI\\\"]\\)} and angle of rotation \
+\\!\\(\\*StyleBox[\\\"\[Theta]\\\", \\\"TI\\\"]\\).\"\>", 
+             "InformationUsageText",
+             StripOnInput->False,
+             LineSpacing->{1.5, 1.5, 3.}],
+            FrameMargins->{{10, 10}, {8, 10}}],
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False]},
+         {
+          PaneBox[
+           TagBox[GridBox[{
+              {
+               StyleBox[
+                TagBox[
+                 TooltipBox[
+                  StyleBox["\<\" Definitions\"\>", "InformationRowLabel",
+                   StripOnInput->False],
+                  "\"Definitions\"",
+                  TooltipStyle->"TextStyling"],
+                 Annotation[#, "Definitions", "Tooltip"]& ], "DialogStyle",
+                StripOnInput->False]},
+              {
+               TemplateBox[{"\"\[ThinSpace]\"", 
+                 GridBox[{{
+                    RowBox[{
+                    RowBox[{"TransportVector", "[", 
+                    RowBox[{"QuantumWalks`DQWL`Private`c_", "?", "MatrixQ"}], 
+                    "]"}], ":=", 
+                    RowBox[{"Module", "[", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    
+                    RowBox[{"QuantumWalks`DQWL`Private`k", ",", 
+                    "QuantumWalks`DQWL`Private`s", ",", 
+                    "QuantumWalks`DQWL`Private`uk", ",", 
+                    "QuantumWalks`DQWL`Private`trU", ",", 
+                    "QuantumWalks`DQWL`Private`omegaK", ",", 
+                    "QuantumWalks`DQWL`Private`vgK", ",", 
+                    "QuantumWalks`DQWL`Private`nVectorK", ",", 
+                    "QuantumWalks`DQWL`Private`integrand", ",", 
+                    "QuantumWalks`DQWL`Private`sigmas"}], "}"}], ",", 
+                    RowBox[{
+                    RowBox[{"QuantumWalks`DQWL`Private`sigmas", "=", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"PauliMatrix", "[", "1", "]"}], ",", 
+                    RowBox[{"PauliMatrix", "[", "2", "]"}], ",", 
+                    RowBox[{"PauliMatrix", "[", "3", "]"}]}], "}"}]}], ";", 
+                    RowBox[{"QuantumWalks`DQWL`Private`s", "=", 
+                    RowBox[{"DiagonalMatrix", "[", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"Exp", "[", 
+                    RowBox[{
+                    RowBox[{"-", "\[ImaginaryI]"}], " ", 
+                    "QuantumWalks`DQWL`Private`k"}], "]"}], ",", 
+                    RowBox[{"Exp", "[", 
+                    
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    "QuantumWalks`DQWL`Private`k"}], "]"}]}], "}"}], "]"}]}], 
+                    ";", 
+                    RowBox[{"QuantumWalks`DQWL`Private`uk", "=", 
+                    
+                    RowBox[{"QuantumWalks`DQWL`Private`s", ".", 
+                    "QuantumWalks`DQWL`Private`c"}]}], ";", 
+                    RowBox[{"QuantumWalks`DQWL`Private`trU", "=", 
+                    RowBox[{"ComplexExpand", "[", 
+                    RowBox[{"Re", "[", 
+                    RowBox[{"Tr", "[", "QuantumWalks`DQWL`Private`uk", "]"}], 
+                    "]"}], "]"}]}], ";", 
+                    RowBox[{"QuantumWalks`DQWL`Private`omegaK", "=", 
+                    RowBox[{"ArcCos", "[", 
+                    FractionBox["QuantumWalks`DQWL`Private`trU", "2"], 
+                    "]"}]}], ";", 
+                    RowBox[{"QuantumWalks`DQWL`Private`vgK", "=", 
+                    RowBox[{
+                    SubscriptBox["\[PartialD]", 
+                    RowBox[{"QuantumWalks`DQWL`Private`k"}]], 
+                    "QuantumWalks`DQWL`Private`omegaK"}]}], ";", 
+                    RowBox[{"QuantumWalks`DQWL`Private`nVectorK", "=", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    FractionBox[
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"Tr", "[", 
+                    RowBox[{"QuantumWalks`DQWL`Private`uk", ".", 
+                    
+                    RowBox[{"QuantumWalks`DQWL`Private`sigmas", 
+                    "\[LeftDoubleBracket]", "QuantumWalks`DQWL`Private`j", 
+                    "\[RightDoubleBracket]"}]}], "]"}]}], 
+                    RowBox[{"2", " ", 
+                    
+                    RowBox[{"Sin", "[", "QuantumWalks`DQWL`Private`omegaK", 
+                    "]"}]}]], ",", 
+                    RowBox[{"{", 
+                    
+                    RowBox[{"QuantumWalks`DQWL`Private`j", ",", "1", ",", 
+                    "3"}], "}"}]}], "]"}]}], ";", 
+                    RowBox[{"QuantumWalks`DQWL`Private`integrand", "=", 
+                    
+                    RowBox[{"QuantumWalks`DQWL`Private`vgK", " ", 
+                    "QuantumWalks`DQWL`Private`nVectorK"}]}], ";", 
+                    RowBox[{"Re", "[", 
+                    FractionBox[
+                    RowBox[{"NIntegrate", "[", 
+                    RowBox[{"QuantumWalks`DQWL`Private`integrand", ",", 
+                    RowBox[{"{", 
+                    RowBox[{"QuantumWalks`DQWL`Private`k", ",", 
+                    RowBox[{"-", "\[Pi]"}], ",", "\[Pi]"}], "}"}], ",", 
+                    RowBox[{"Method", "\[Rule]", "\"LocalAdaptive\""}], ",", 
+                    RowBox[{"Exclusions", "\[Rule]", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    
+                    RowBox[{"Sin", "[", "QuantumWalks`DQWL`Private`omegaK", 
+                    "]"}], "\[Equal]", "0"}], "}"}]}]}], "]"}], 
+                    RowBox[{"2", " ", "\[Pi]"}]], "]"}]}]}], "]"}]}]}, {" "}, {
+                    RowBox[{
+                    RowBox[{"TransportVector", "[", 
+                    RowBox[{
+                    RowBox[{"QuantumWalks`DQWL`Private`c1_", "?", "MatrixQ"}],
+                     ",", 
+                    
+                    RowBox[{
+                    "QuantumWalks`DQWL`Private`c2_", "?", "MatrixQ"}]}], 
+                    "]"}], ":=", 
+                    RowBox[{"Module", "[", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    
+                    RowBox[{"QuantumWalks`DQWL`Private`k", ",", 
+                    "QuantumWalks`DQWL`Private`s", ",", 
+                    "QuantumWalks`DQWL`Private`uk", ",", 
+                    "QuantumWalks`DQWL`Private`trU", ",", 
+                    "QuantumWalks`DQWL`Private`omegaK", ",", 
+                    "QuantumWalks`DQWL`Private`vgK", ",", 
+                    "QuantumWalks`DQWL`Private`nVectorK", ",", 
+                    "QuantumWalks`DQWL`Private`integrand", ",", 
+                    "QuantumWalks`DQWL`Private`sigmas"}], "}"}], ",", 
+                    RowBox[{
+                    RowBox[{"QuantumWalks`DQWL`Private`sigmas", "=", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"PauliMatrix", "[", "1", "]"}], ",", 
+                    RowBox[{"PauliMatrix", "[", "2", "]"}], ",", 
+                    RowBox[{"PauliMatrix", "[", "3", "]"}]}], "}"}]}], ";", 
+                    RowBox[{"QuantumWalks`DQWL`Private`s", "=", 
+                    RowBox[{"DiagonalMatrix", "[", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"Exp", "[", 
+                    RowBox[{
+                    RowBox[{"-", "\[ImaginaryI]"}], " ", 
+                    "QuantumWalks`DQWL`Private`k"}], "]"}], ",", 
+                    RowBox[{"Exp", "[", 
+                    
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    "QuantumWalks`DQWL`Private`k"}], "]"}]}], "}"}], "]"}]}], 
+                    ";", 
+                    RowBox[{"QuantumWalks`DQWL`Private`uk", "=", 
+                    
+                    RowBox[{"QuantumWalks`DQWL`Private`s", ".", 
+                    "QuantumWalks`DQWL`Private`c2", ".", 
+                    "QuantumWalks`DQWL`Private`s", ".", 
+                    "QuantumWalks`DQWL`Private`c1"}]}], ";", 
+                    RowBox[{"QuantumWalks`DQWL`Private`trU", "=", 
+                    RowBox[{"ComplexExpand", "[", 
+                    RowBox[{"Re", "[", 
+                    RowBox[{"Tr", "[", "QuantumWalks`DQWL`Private`uk", "]"}], 
+                    "]"}], "]"}]}], ";", 
+                    RowBox[{"QuantumWalks`DQWL`Private`omegaK", "=", 
+                    RowBox[{"ArcCos", "[", 
+                    FractionBox["QuantumWalks`DQWL`Private`trU", "2"], 
+                    "]"}]}], ";", 
+                    RowBox[{"QuantumWalks`DQWL`Private`vgK", "=", 
+                    RowBox[{
+                    SubscriptBox["\[PartialD]", 
+                    RowBox[{"QuantumWalks`DQWL`Private`k"}]], 
+                    "QuantumWalks`DQWL`Private`omegaK"}]}], ";", 
+                    RowBox[{"QuantumWalks`DQWL`Private`nVectorK", "=", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    FractionBox[
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"Tr", "[", 
+                    RowBox[{"QuantumWalks`DQWL`Private`uk", ".", 
+                    
+                    RowBox[{"QuantumWalks`DQWL`Private`sigmas", 
+                    "\[LeftDoubleBracket]", "QuantumWalks`DQWL`Private`j", 
+                    "\[RightDoubleBracket]"}]}], "]"}]}], 
+                    RowBox[{"2", " ", 
+                    
+                    RowBox[{"Sin", "[", "QuantumWalks`DQWL`Private`omegaK", 
+                    "]"}]}]], ",", 
+                    RowBox[{"{", 
+                    
+                    RowBox[{"QuantumWalks`DQWL`Private`j", ",", "1", ",", 
+                    "3"}], "}"}]}], "]"}]}], ";", 
+                    RowBox[{"QuantumWalks`DQWL`Private`integrand", "=", 
+                    
+                    RowBox[{"QuantumWalks`DQWL`Private`vgK", " ", 
+                    "QuantumWalks`DQWL`Private`nVectorK"}]}], ";", 
+                    RowBox[{"Re", "[", 
+                    FractionBox[
+                    RowBox[{"NIntegrate", "[", 
+                    RowBox[{"QuantumWalks`DQWL`Private`integrand", ",", 
+                    RowBox[{"{", 
+                    RowBox[{"QuantumWalks`DQWL`Private`k", ",", 
+                    RowBox[{"-", "\[Pi]"}], ",", "\[Pi]"}], "}"}], ",", 
+                    RowBox[{"Method", "\[Rule]", "\"LocalAdaptive\""}], ",", 
+                    RowBox[{"Exclusions", "\[Rule]", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    
+                    RowBox[{"Sin", "[", "QuantumWalks`DQWL`Private`omegaK", 
+                    "]"}], "\[Equal]", "0"}], "}"}]}]}], "]"}], 
+                    RowBox[{"2", " ", "\[Pi]"}]], "]"}]}]}], "]"}]}]}, {" "}, {
+                    RowBox[{
+                    RowBox[{"TransportVector", "[", 
+                    
+                    RowBox[{
+                    "QuantumWalks`DQWL`Private`alpha_", ",", 
+                    "QuantumWalks`DQWL`Private`phi_", ",", 
+                    "QuantumWalks`DQWL`Private`theta_"}], "]"}], ":=", 
+                    RowBox[{"Module", "[", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    
+                    RowBox[{"QuantumWalks`DQWL`Private`nVector", ",", 
+                    "QuantumWalks`DQWL`Private`zVector", ",", 
+                    "QuantumWalks`DQWL`Private`cosHalf", ",", 
+                    "QuantumWalks`DQWL`Private`sinHalf", ",", 
+                    "QuantumWalks`DQWL`Private`prefactorA", ",", 
+                    "QuantumWalks`DQWL`Private`term1", ",", 
+                    "QuantumWalks`DQWL`Private`term2", ",", 
+                    "QuantumWalks`DQWL`Private`term3"}], "}"}], ",", 
+                    RowBox[{
+                    RowBox[{"QuantumWalks`DQWL`Private`nVector", "=", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{
+                    
+                    RowBox[{"Sin", "[", "QuantumWalks`DQWL`Private`alpha", 
+                    "]"}], " ", 
+                    
+                    RowBox[{"Cos", "[", "QuantumWalks`DQWL`Private`phi", 
+                    "]"}]}], ",", 
+                    RowBox[{
+                    
+                    RowBox[{"Sin", "[", "QuantumWalks`DQWL`Private`alpha", 
+                    "]"}], " ", 
+                    
+                    RowBox[{"Sin", "[", "QuantumWalks`DQWL`Private`phi", 
+                    "]"}]}], ",", 
+                    
+                    RowBox[{"Cos", "[", "QuantumWalks`DQWL`Private`alpha", 
+                    "]"}]}], "}"}]}], ";", 
+                    RowBox[{"QuantumWalks`DQWL`Private`zVector", "=", 
+                    RowBox[{"{", 
+                    RowBox[{"0", ",", "0", ",", "1"}], "}"}]}], ";", 
+                    RowBox[{"QuantumWalks`DQWL`Private`cosHalf", "=", 
+                    RowBox[{"Cos", "[", 
+                    FractionBox["QuantumWalks`DQWL`Private`theta", "2"], 
+                    "]"}]}], ";", 
+                    RowBox[{"QuantumWalks`DQWL`Private`sinHalf", "=", 
+                    RowBox[{"Sin", "[", 
+                    FractionBox["QuantumWalks`DQWL`Private`theta", "2"], 
+                    "]"}]}], ";", 
+                    RowBox[{"QuantumWalks`DQWL`Private`prefactorA", "=", 
+                    FractionBox[
+                    RowBox[{"1", "-", 
+                    RowBox[{"QuantumWalks`DQWL`Private`sinHalf", " ", 
+                    
+                    RowBox[{"Sin", "[", "QuantumWalks`DQWL`Private`alpha", 
+                    "]"}]}]}], 
+                    RowBox[{
+                    SuperscriptBox["QuantumWalks`DQWL`Private`cosHalf", "2"], 
+                    "+", 
+                    RowBox[{
+                    SuperscriptBox["QuantumWalks`DQWL`Private`sinHalf", "2"], 
+                    " ", 
+                    SuperscriptBox[
+                    
+                    RowBox[{"Cos", "[", "QuantumWalks`DQWL`Private`alpha", 
+                    "]"}], "2"]}]}]]}], ";", 
+                    RowBox[{"QuantumWalks`DQWL`Private`term1", "=", 
+                    RowBox[{
+                    SuperscriptBox["QuantumWalks`DQWL`Private`sinHalf", "2"], 
+                    " ", 
+                    
+                    RowBox[{"QuantumWalks`DQWL`Private`nVector", ".", 
+                    "QuantumWalks`DQWL`Private`zVector"}], " ", 
+                    "QuantumWalks`DQWL`Private`nVector"}]}], ";", 
+                    RowBox[{"QuantumWalks`DQWL`Private`term2", "=", 
+                    RowBox[{
+                    SuperscriptBox["QuantumWalks`DQWL`Private`cosHalf", "2"], 
+                    " ", "QuantumWalks`DQWL`Private`zVector"}]}], ";", 
+                    RowBox[{"QuantumWalks`DQWL`Private`term3", "=", 
+                    
+                    RowBox[{"QuantumWalks`DQWL`Private`sinHalf", " ", 
+                    "QuantumWalks`DQWL`Private`cosHalf", " ", 
+                    
+                    RowBox[{"QuantumWalks`DQWL`Private`zVector", "\[Cross]", 
+                    "QuantumWalks`DQWL`Private`nVector"}]}]}], ";", 
+                    RowBox[{"Simplify", "[", 
+                    RowBox[{"QuantumWalks`DQWL`Private`prefactorA", " ", 
+                    RowBox[{"(", 
+                    
+                    RowBox[{"QuantumWalks`DQWL`Private`term1", "+", 
+                    "QuantumWalks`DQWL`Private`term2", "+", 
+                    "QuantumWalks`DQWL`Private`term3"}], ")"}]}], "]"}]}]}], 
+                    "]"}]}]}, {" "}}, 
+                  GridBoxAlignment -> {"Columns" -> {{Left}}}, 
+                  DefaultBaseStyle -> "Column", 
+                  GridBoxItemSize -> {
+                   "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}]},
+                "RowDefault"]}
+             },
+             DefaultBaseStyle->"Column",
+             GridBoxAlignment->{"Columns" -> {{Left}}},
+             
+             GridBoxItemSize->{
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+            "Column"],
+           FrameMargins->{{6, 0}, {3, 6}}], "\<\"\"\>"},
+         {
+          PaneBox[GridBox[{
+             {
+              
+              DynamicModuleBox[{System`InformationDump`open$$ = {
+               False, False, False, False, False, False}}, 
+               StyleBox[GridBox[{
+                  {
+                   TagBox[
+                    TooltipBox[
+                    StyleBox["\<\" Full Name\"\>", "InformationRowLabel",
+                    StripOnInput->False],
+                    "\"FullName\"",
+                    TooltipStyle->"TextStyling"],
+                    
+                    Annotation[#, "FullName", 
+                    "Tooltip"]& ], "\<\"QuantumWalks`TransportVector\"\>"}
+                 },
+                 AutoDelete->False,
+                 GridBoxAlignment->{"Columns" -> {Right, Left}},
+                 GridBoxDividers->None,
+                 GridBoxItemSize->{"Columns" -> {Automatic, Automatic}},
+                 GridBoxSpacings->{"Columns" -> {
+                    Offset[0.27999999999999997`], {
+                    Offset[0.5599999999999999]}, 
+                    Offset[0.27999999999999997`]}, "Rows" -> {
+                    Offset[0.2], {
+                    Offset[0.8]}, 
+                    Offset[0.2]}}], "DialogStyle",
+                StripOnInput->False],
+               DynamicModuleValues:>{}]}
+            },
+            DefaultBaseStyle->"Column",
+            GridBoxAlignment->{"Columns" -> {{Left}}},
+            GridBoxDividers->{"Columns" -> {{False}}, "Rows" -> {{False}}},
+            
+            GridBoxItemSize->{
+             "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}},
+            GridBoxSpacings->{"Columns" -> {
+                Offset[0.27999999999999997`], {
+                 Offset[0.5599999999999999]}, 
+                Offset[0.27999999999999997`]}, "Rows" -> {
+                Offset[0.2], {
+                 Offset[3.6]}, 
+                Offset[0.2]}}],
+           FrameMargins->{{6, 6}, {6, 3}}], ""},
+         {
+          ItemBox[
+           TagBox[
+            ButtonBox[
+             PaneSelectorBox[{False->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "UpPointerOpener"]], True->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "UpPointerOpenerHot"]]}, Dynamic[
+              System`InformationDump`mouseOver$$]],
+             Alignment->Left,
+             Appearance->{"Default" -> None},
+             
+             ButtonFunction:>FEPrivate`Set[
+              System`InformationDump`open$$, False],
+             Evaluator->Automatic,
+             FrameMargins->{{9, 0}, {0, 0}},
+             ImageMargins->0,
+             ImageSize->Full,
+             Method->"Preemptive"],
+            
+            EventHandlerTag[{
+             "MouseEntered" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, True], 
+              "MouseExited" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, False], 
+              Method -> "Preemptive", PassEventsDown -> Automatic, 
+              PassEventsUp -> True}]],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], "\[SpanFromLeft]"}
+        },
+        AutoDelete->False,
+        FrameStyle->Directive[
+          GrayLevel[0.8], 
+          Thickness[Tiny]],
+        GridBoxAlignment->{"Columns" -> {Left, Right}, "Rows" -> {{Center}}},
+        GridBoxDividers->{
+         "Columns" -> {{None}}, "Rows" -> {False, {True}, False}},
+        GridBoxItemSize->{
+         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+       "Grid"], False->
+      TagBox[GridBox[{
+         {
+          ItemBox[
+           PaneBox[
+            StyleBox[
+             TagBox[
+              TooltipBox[
+               StyleBox["\<\" Symbol\"\>", "InformationRowLabel",
+                StripOnInput->False],
+               "\"Symbol\"",
+               TooltipStyle->"TextStyling"],
+              Annotation[#, "Symbol", "Tooltip"]& ], "InformationTitleText",
+             StripOnInput->False],
+            FrameMargins->{{4, 0}, {-1, 1}}],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False]},
+         {
+          ItemBox[
+           PaneBox[
+            
+            StyleBox["\<\"\\!\\(\\*StyleBox[RowBox[{\\\"TransportVector\\\", \
+\\\"[\\\", StyleBox[\\\"CoinMatrix\\\", \\\"TI\\\"], \\\"]\\\"}], \\\"MR\\\"]\
+\\) gives the transport vector for a DTQW given the \
+\\!\\(\\*StyleBox[\\\"CoinMatrix\\\", \
+\\\"TI\\\"]\\).\\n\\!\\(\\*StyleBox[RowBox[{\\\"TransportVector\\\", \
+\\\"[\\\", StyleBox[\\\"C1\\\", \\\"TI\\\"], \\\",\\\", StyleBox[\\\"C2\\\", \
+\\\"TI\\\"], \\\"]\\\"}], \\\"MR\\\"]\\) gives the transport vector for a \
+DTQW with step operator U = S.\\!\\(\\*StyleBox[\\\"C2\\\", \\\"TI\\\"]\\).S.\
+\\!\\(\\*StyleBox[\\\"C1\\\", \
+\\\"TI\\\"]\\)\\n\\!\\(\\*StyleBox[RowBox[{\\\"TransportVector\\\", \
+\\\"[\\\", StyleBox[\\\"\[CurlyTheta]\\\", \\\"TI\\\"], \\\",\\\", \
+StyleBox[\\\"\[Phi]\\\", \\\"TI\\\"], \\\",\\\", StyleBox[\\\"\[Theta]\\\", \
+\\\"TI\\\"], \\\"]\\\"}], \\\"MR\\\"]\\) gives the transport vector for a \
+DTQW with a SU(2) coin operator with axis \
+{\\!\\(\\*StyleBox[\\\"\[CurlyTheta]\\\", \\\"TI\\\"]\\), \
+\\!\\(\\*StyleBox[\\\"\[Phi]\\\", \\\"TI\\\"]\\)} and angle of rotation \
+\\!\\(\\*StyleBox[\\\"\[Theta]\\\", \\\"TI\\\"]\\).\"\>", 
+             "InformationUsageText",
+             StripOnInput->False,
+             LineSpacing->{1.5, 1.5, 3.}],
+            FrameMargins->{{10, 10}, {8, 10}}],
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False]},
+         {
+          ItemBox[
+           TagBox[
+            ButtonBox[
+             PaneSelectorBox[{False->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "DownPointerOpener"],
+               ImageSizeCache->{7.5, {2.009765625, 5.490234375}}], True->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "DownPointerOpenerHot"],
+               ImageSizeCache->{7.5, {2.009765625, 5.490234375}}]}, Dynamic[
+              System`InformationDump`mouseOver$$]],
+             Alignment->Left,
+             Appearance->{"Default" -> None},
+             
+             ButtonFunction:>FEPrivate`Set[
+              System`InformationDump`open$$, True],
+             Evaluator->Automatic,
+             FrameMargins->{{9, 0}, {0, 0}},
+             ImageMargins->0,
+             ImageSize->Full,
+             Method->"Preemptive"],
+            
+            EventHandlerTag[{
+             "MouseEntered" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, True], 
+              "MouseExited" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, False], 
+              Method -> "Preemptive", PassEventsDown -> Automatic, 
+              PassEventsUp -> True}]],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], "\[SpanFromLeft]"}
+        },
+        AutoDelete->False,
+        FrameStyle->Directive[
+          GrayLevel[0.8], 
+          Thickness[Tiny]],
+        GridBoxAlignment->{"Columns" -> {Left, Right}, "Rows" -> {{Center}}},
+        GridBoxDividers->{
+         "Columns" -> {{None}}, "Rows" -> {False, {True}, False}},
+        GridBoxItemSize->{
+         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+       "Grid"]}, Dynamic[System`InformationDump`open$$],
+      BaselinePosition->Baseline,
+      FrameMargins->0,
+      ImageSize->Automatic],
+     DynamicModuleValues:>{}],
+    BaseStyle->"InformationGridFrame",
+    StripOnInput->False], "InformationGridPlain",
+   StripOnInput->False],
+  InformationData[<|
+   "ObjectType" -> "Symbol", "Usage" -> 
+    "\!\(\*StyleBox[RowBox[{\"TransportVector\", \"[\", StyleBox[\"CoinMatrix\
+\", \"TI\"], \"]\"}], \"MR\"]\) gives the transport vector for a DTQW given \
+the \!\(\*StyleBox[\"CoinMatrix\", \"TI\"]\).\n\
+\!\(\*StyleBox[RowBox[{\"TransportVector\", \"[\", StyleBox[\"C1\", \"TI\"], \
+\",\", StyleBox[\"C2\", \"TI\"], \"]\"}], \"MR\"]\) gives the transport \
+vector for a DTQW with step operator U = S.\!\(\*StyleBox[\"C2\", \
+\"TI\"]\).S.\!\(\*StyleBox[\"C1\", \"TI\"]\)\n\
+\!\(\*StyleBox[RowBox[{\"TransportVector\", \"[\", \
+StyleBox[\"\[CurlyTheta]\", \"TI\"], \",\", StyleBox[\"\[Phi]\", \"TI\"], \",\
+\", StyleBox[\"\[Theta]\", \"TI\"], \"]\"}], \"MR\"]\) gives the transport \
+vector for a DTQW with a SU(2) coin operator with axis {\!\(\*StyleBox[\"\
+\[CurlyTheta]\", \"TI\"]\), \!\(\*StyleBox[\"\[Phi]\", \"TI\"]\)} and angle \
+of rotation \!\(\*StyleBox[\"\[Theta]\", \"TI\"]\).", "Documentation" -> None,
+     "OwnValues" -> None, "UpValues" -> None, "DownValues" -> 
+    Information`InformationValueForm[
+     DownValues, QuantumWalks`TransportVector, {QuantumWalks`TransportVector[
+         PatternTest[
+          Pattern[QuantumWalks`DQWL`Private`c, 
+           Blank[]], MatrixQ]] :> 
+       Module[{QuantumWalks`DQWL`Private`k, QuantumWalks`DQWL`Private`s, 
+          QuantumWalks`DQWL`Private`uk, QuantumWalks`DQWL`Private`trU, 
+          QuantumWalks`DQWL`Private`omegaK, QuantumWalks`DQWL`Private`vgK, 
+          QuantumWalks`DQWL`Private`nVectorK, 
+          QuantumWalks`DQWL`Private`integrand, 
+          QuantumWalks`DQWL`Private`sigmas}, QuantumWalks`DQWL`Private`sigmas = {
+            PauliMatrix[1], 
+            PauliMatrix[2], 
+            PauliMatrix[3]}; QuantumWalks`DQWL`Private`s = DiagonalMatrix[{
+             Exp[(-I) QuantumWalks`DQWL`Private`k], 
+             Exp[I QuantumWalks`DQWL`Private`k]}]; 
+         QuantumWalks`DQWL`Private`uk = 
+          Dot[QuantumWalks`DQWL`Private`s, QuantumWalks`DQWL`Private`c]; 
+         QuantumWalks`DQWL`Private`trU = ComplexExpand[
+            Re[
+             Tr[QuantumWalks`DQWL`Private`uk]]]; 
+         QuantumWalks`DQWL`Private`omegaK = 
+          ArcCos[QuantumWalks`DQWL`Private`trU/2]; 
+         QuantumWalks`DQWL`Private`vgK = 
+          D[QuantumWalks`DQWL`Private`omegaK, QuantumWalks`DQWL`Private`k]; 
+         QuantumWalks`DQWL`Private`nVectorK = 
+          Table[(I/(2 Sin[QuantumWalks`DQWL`Private`omegaK])) Tr[
+              Dot[QuantumWalks`DQWL`Private`uk, 
+               Part[
+               QuantumWalks`DQWL`Private`sigmas, 
+                QuantumWalks`DQWL`Private`j]]], {
+            QuantumWalks`DQWL`Private`j, 1, 3}]; 
+         QuantumWalks`DQWL`Private`integrand = 
+          QuantumWalks`DQWL`Private`vgK QuantumWalks`DQWL`Private`nVectorK; 
+         Re[(1/(2 Pi)) 
+           NIntegrate[
+            QuantumWalks`DQWL`Private`integrand, {
+             QuantumWalks`DQWL`Private`k, -Pi, Pi}, Method -> "LocalAdaptive",
+              Exclusions -> {Sin[QuantumWalks`DQWL`Private`omegaK] == 0}]]], 
+       QuantumWalks`TransportVector[
+         PatternTest[
+          Pattern[QuantumWalks`DQWL`Private`c1, 
+           Blank[]], MatrixQ], 
+         PatternTest[
+          Pattern[QuantumWalks`DQWL`Private`c2, 
+           Blank[]], MatrixQ]] :> 
+       Module[{QuantumWalks`DQWL`Private`k, QuantumWalks`DQWL`Private`s, 
+          QuantumWalks`DQWL`Private`uk, QuantumWalks`DQWL`Private`trU, 
+          QuantumWalks`DQWL`Private`omegaK, QuantumWalks`DQWL`Private`vgK, 
+          QuantumWalks`DQWL`Private`nVectorK, 
+          QuantumWalks`DQWL`Private`integrand, 
+          QuantumWalks`DQWL`Private`sigmas}, QuantumWalks`DQWL`Private`sigmas = {
+            PauliMatrix[1], 
+            PauliMatrix[2], 
+            PauliMatrix[3]}; QuantumWalks`DQWL`Private`s = DiagonalMatrix[{
+             Exp[(-I) QuantumWalks`DQWL`Private`k], 
+             Exp[I QuantumWalks`DQWL`Private`k]}]; 
+         QuantumWalks`DQWL`Private`uk = 
+          Dot[QuantumWalks`DQWL`Private`s, QuantumWalks`DQWL`Private`c2, 
+            QuantumWalks`DQWL`Private`s, QuantumWalks`DQWL`Private`c1]; 
+         QuantumWalks`DQWL`Private`trU = ComplexExpand[
+            Re[
+             Tr[QuantumWalks`DQWL`Private`uk]]]; 
+         QuantumWalks`DQWL`Private`omegaK = 
+          ArcCos[QuantumWalks`DQWL`Private`trU/2]; 
+         QuantumWalks`DQWL`Private`vgK = 
+          D[QuantumWalks`DQWL`Private`omegaK, QuantumWalks`DQWL`Private`k]; 
+         QuantumWalks`DQWL`Private`nVectorK = 
+          Table[(I/(2 Sin[QuantumWalks`DQWL`Private`omegaK])) Tr[
+              Dot[QuantumWalks`DQWL`Private`uk, 
+               Part[
+               QuantumWalks`DQWL`Private`sigmas, 
+                QuantumWalks`DQWL`Private`j]]], {
+            QuantumWalks`DQWL`Private`j, 1, 3}]; 
+         QuantumWalks`DQWL`Private`integrand = 
+          QuantumWalks`DQWL`Private`vgK QuantumWalks`DQWL`Private`nVectorK; 
+         Re[(1/(2 Pi)) 
+           NIntegrate[
+            QuantumWalks`DQWL`Private`integrand, {
+             QuantumWalks`DQWL`Private`k, -Pi, Pi}, Method -> "LocalAdaptive",
+              Exclusions -> {Sin[QuantumWalks`DQWL`Private`omegaK] == 0}]]], 
+       QuantumWalks`TransportVector[
+         Pattern[QuantumWalks`DQWL`Private`alpha, 
+          Blank[]], 
+         Pattern[QuantumWalks`DQWL`Private`phi, 
+          Blank[]], 
+         Pattern[QuantumWalks`DQWL`Private`theta, 
+          Blank[]]] :> 
+       Module[{QuantumWalks`DQWL`Private`nVector, 
+          QuantumWalks`DQWL`Private`zVector, 
+          QuantumWalks`DQWL`Private`cosHalf, 
+          QuantumWalks`DQWL`Private`sinHalf, 
+          QuantumWalks`DQWL`Private`prefactorA, 
+          QuantumWalks`DQWL`Private`term1, QuantumWalks`DQWL`Private`term2, 
+          QuantumWalks`DQWL`Private`term3}, 
+         QuantumWalks`DQWL`Private`nVector = {
+           Sin[QuantumWalks`DQWL`Private`alpha] 
+            Cos[QuantumWalks`DQWL`Private`phi], 
+            Sin[QuantumWalks`DQWL`Private`alpha] 
+            Sin[QuantumWalks`DQWL`Private`phi], 
+            Cos[QuantumWalks`DQWL`Private`alpha]}; 
+         QuantumWalks`DQWL`Private`zVector = {0, 0, 1}; 
+         QuantumWalks`DQWL`Private`cosHalf = 
+          Cos[QuantumWalks`DQWL`Private`theta/2]; 
+         QuantumWalks`DQWL`Private`sinHalf = 
+          Sin[QuantumWalks`DQWL`Private`theta/2]; 
+         QuantumWalks`DQWL`Private`prefactorA = (1 - 
+            QuantumWalks`DQWL`Private`sinHalf 
+            Sin[QuantumWalks`DQWL`Private`alpha])/(
+           QuantumWalks`DQWL`Private`cosHalf^2 + 
+           QuantumWalks`DQWL`Private`sinHalf^2 
+            Cos[QuantumWalks`DQWL`Private`alpha]^2); 
+         QuantumWalks`DQWL`Private`term1 = 
+          QuantumWalks`DQWL`Private`sinHalf^2 
+           Dot[QuantumWalks`DQWL`Private`nVector, 
+             QuantumWalks`DQWL`Private`zVector] 
+           QuantumWalks`DQWL`Private`nVector; 
+         QuantumWalks`DQWL`Private`term2 = 
+          QuantumWalks`DQWL`Private`cosHalf^2 
+           QuantumWalks`DQWL`Private`zVector; 
+         QuantumWalks`DQWL`Private`term3 = 
+          QuantumWalks`DQWL`Private`sinHalf QuantumWalks`DQWL`Private`cosHalf 
+           Cross[QuantumWalks`DQWL`Private`zVector, 
+             QuantumWalks`DQWL`Private`nVector]; 
+         Simplify[
+          QuantumWalks`DQWL`Private`prefactorA (
+            QuantumWalks`DQWL`Private`term1 + QuantumWalks`DQWL`Private`term2 + 
+            QuantumWalks`DQWL`Private`term3)]]}], "SubValues" -> None, 
+    "DefaultValues" -> None, "NValues" -> None, "FormatValues" -> None, 
+    "Options" -> None, "Attributes" -> {}, "FullName" -> 
+    "QuantumWalks`TransportVector"|>, False]]], "Output",
+ CellChangeTimes->{3.986497831354622*^9},
+ CellLabel->"Out[85]=",ExpressionUUID->"0ed3dfed-9881-47da-9f29-b2b3b9b523bd"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"coin", "=", 
+   RowBox[{"RandomSU2Rotation", "[", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"TransportVector", "[", "coin", "]"}]}], "Input",
+ CellChangeTimes->{{3.9864978325019836`*^9, 3.986497862659339*^9}},
+ CellLabel->"In[88]:=",ExpressionUUID->"cdac71dc-f0fc-4cf7-882d-312d5b9a29d6"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"-", "0.2175374598313095`"}], ",", 
+   RowBox[{"-", "0.07374315591945063`"}], ",", "0.6799571801869206`"}], 
+  "}"}]], "Output",
+ CellChangeTimes->{{3.986497859908916*^9, 3.98649786552172*^9}},
+ CellLabel->"Out[89]=",ExpressionUUID->"661715f7-0508-40ec-8e9b-7cba6f532e8c"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"coin1", ",", "coin2"}], "}"}], "=", 
+   RowBox[{"RandomSU2Rotation", "[", "2", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"TransportVector", "[", 
+  RowBox[{"coin1", ",", "coin2"}], "]"}]}], "Input",
+ CellChangeTimes->{{3.986497884586841*^9, 3.986497895356777*^9}, {
+  3.986497930043848*^9, 3.986497930586178*^9}, {3.986497981179528*^9, 
+  3.9864979835790358`*^9}},
+ CellLabel->
+  "In[101]:=",ExpressionUUID->"9b586d5d-1836-40cd-aa55-a3cb0e053da7"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"0.04758526589723808`", ",", 
+   RowBox[{"-", "0.05057314919561771`"}], ",", "0.08836686671955979`"}], 
+  "}"}]], "Output",
+ CellChangeTimes->{{3.9864978907003107`*^9, 3.986497895619761*^9}, 
+   3.9864979307458057`*^9, {3.986497977843865*^9, 3.986497989452612*^9}},
+ CellLabel->
+  "Out[102]=",ExpressionUUID->"460346c1-c2e8-45ef-938c-10f964500a75"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"\[CurlyTheta]", ",", "\[Phi]", ",", "\[Theta]"}], "}"}], "=", 
+   RowBox[{"RandomSU2Parameters", "[", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"TransportVector", "[", 
+  RowBox[{"\[CurlyTheta]", ",", "\[Phi]", ",", "\[Theta]"}], "]"}]}], "Input",\
+
+ CellChangeTimes->{{3.986498023471451*^9, 3.9864980468030767`*^9}},
+ CellLabel->
+  "In[103]:=",ExpressionUUID->"cc79397f-8423-4b9a-90d6-e24680a82d6d"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"-", "0.043790944740074125`"}], ",", 
+   RowBox[{"-", "0.1773992230946828`"}], ",", "0.07513369879737108`"}], 
+  "}"}]], "Output",
+ CellChangeTimes->{3.986498047478745*^9},
+ CellLabel->
+  "Out[104]=",ExpressionUUID->"5cb52c88-4b7f-4b72-aac6-49e60adefe6d"]
+}, Open  ]]
+}, Closed]]
+},
+WindowSize->{810, 1412.25},
+WindowMargins->{{Automatic, -810}, {-187.5, Automatic}},
+InputAliases-><|"intt" -> RowBox[{"\[Integral]", 
+     RowBox[{"\[SelectionPlaceholder]", 
+       RowBox[{"\[DifferentialD]", "\[Placeholder]"}]}]}], "dintt" -> 
+  RowBox[{
+     SubsuperscriptBox[
+     "\[Integral]", "\[SelectionPlaceholder]", "\[Placeholder]"], 
+     RowBox[{"\[Placeholder]", 
+       RowBox[{"\[DifferentialD]", "\[Placeholder]"}]}]}], "rintt" -> 
+  RowBox[{
+     UnderscriptBox["\[Integral]", 
+      RowBox[{"\[SelectionPlaceholder]", "\[Element]", "\[Placeholder]"}]], 
+     "\[Placeholder]"}], "sumt" -> RowBox[{
+     UnderoverscriptBox["\[Sum]", 
+      RowBox[{"\[SelectionPlaceholder]", "=", "\[Placeholder]"}], 
+      "\[Placeholder]"], "\[Placeholder]"}], "prodt" -> RowBox[{
+     UnderoverscriptBox["\[Product]", 
+      RowBox[{"\[SelectionPlaceholder]", "=", "\[Placeholder]"}], 
+      "\[Placeholder]"], "\[Placeholder]"}], "dt" -> RowBox[{
+     SubscriptBox["\[PartialD]", "\[SelectionPlaceholder]"], 
+     "\[Placeholder]"}], "cbrt" -> 
+  RadicalBox[
+   "\[SelectionPlaceholder]", "3", SurdForm -> True, MultilineFunction -> 
+    None], "surd" -> 
+  RadicalBox[
+   "\[SelectionPlaceholder]", "\[Placeholder]", SurdForm -> True, 
+    MultilineFunction -> None], "ket" -> 
+  TemplateBox[{"\[SelectionPlaceholder]"}, "Ket"], "bra" -> 
+  TemplateBox[{"\[SelectionPlaceholder]"}, "Bra"], "braket" -> 
+  TemplateBox[{"\[SelectionPlaceholder]", "\[Placeholder]"}, "BraKet"], 
+  "delay" -> TemplateBox[{"\[SelectionPlaceholder]"}, "SystemsModelDelay"], 
+  "grad" -> RowBox[{
+     SubscriptBox["\[Del]", "\[SelectionPlaceholder]"], "\[Placeholder]"}], 
+  "del." -> RowBox[{
+     SubscriptBox["\[Del]", "\[SelectionPlaceholder]"], ".", 
+     "\[Placeholder]"}], "delx" -> RowBox[{
+     SubscriptBox["\[Del]", "\[SelectionPlaceholder]"], "\[Cross]", 
+     "\[Placeholder]"}], "del2" -> RowBox[{
+     SubsuperscriptBox["\[Del]", "\[SelectionPlaceholder]", 2], 
+     "\[Placeholder]"}], "kd" -> 
+  TemplateBox[{"\[SelectionPlaceholder]"}, "KroneckerDeltaSeq"], "algs" -> 
+  TemplateBox[{}, "Algebraics"], "bools" -> TemplateBox[{}, "Booleans"], 
+  "comps" -> TemplateBox[{}, "Complexes"], "ints" -> 
+  TemplateBox[{}, "Integers"], "pris" -> TemplateBox[{}, "Primes"], "rats" -> 
+  TemplateBox[{}, "Rationals"], "reals" -> TemplateBox[{}, "Reals"], "pints" -> 
+  TemplateBox[{}, "PositiveIntegers"], "npints" -> 
+  TemplateBox[{}, "NonPositiveIntegers"], "nnints" -> 
+  TemplateBox[{}, "NonNegativeIntegers"], "nints" -> 
+  TemplateBox[{}, "NegativeIntegers"], "prats" -> 
+  TemplateBox[{}, "PositiveRationals"], "nprats" -> 
+  TemplateBox[{}, "NonPositiveRationals"], "nnrats" -> 
+  TemplateBox[{}, "NonNegativeRationals"], "nrats" -> 
+  TemplateBox[{}, "NegativeRationals"], "preals" -> 
+  TemplateBox[{}, "PositiveReals"], "npreals" -> 
+  TemplateBox[{}, "NonPositiveReals"], "nnreals" -> 
+  TemplateBox[{}, "NonNegativeReals"], "nreals" -> 
+  TemplateBox[{}, "NegativeReals"], "dlim" -> RowBox[{
+     UnderscriptBox["\[Limit]", 
+      RowBox[{"\[SelectionPlaceholder]", 
+        UnderscriptBox["\[Rule]", 
+         TemplateBox[{}, "Integers"]], "\[Infinity]"}]], "\[Placeholder]"}], 
+  "dMlim" -> RowBox[{
+     UnderscriptBox["\[MaxLimit]", 
+      RowBox[{"\[SelectionPlaceholder]", 
+        UnderscriptBox["\[Rule]", 
+         TemplateBox[{}, "Integers"]], "\[Infinity]"}]], "\[Placeholder]"}], 
+  "dmlim" -> RowBox[{
+     UnderscriptBox["\[MinLimit]", 
+      RowBox[{"\[SelectionPlaceholder]", 
+        UnderscriptBox["\[Rule]", 
+         TemplateBox[{}, "Integers"]], "\[Infinity]"}]], "\[Placeholder]"}], 
+  "tue" -> OverscriptBox["\[UndirectedEdge]", "\[Placeholder]"], "tde" -> 
+  OverscriptBox["\[DirectedEdge]", "\[Placeholder]"], "cB" -> 
+  TemplateBox[{}, "CombinatorB"], "cC" -> TemplateBox[{}, "CombinatorC"], 
+  "cI" -> TemplateBox[{}, "CombinatorI"], "cK" -> 
+  TemplateBox[{}, "CombinatorK"], "cS" -> TemplateBox[{}, "CombinatorS"], 
+  "cW" -> TemplateBox[{}, "CombinatorW"], "cY" -> 
+  TemplateBox[{}, "CombinatorY"], "notation" -> RowBox[{"Notation", "[", 
+     RowBox[{
+       TemplateBox[{"\[SelectionPlaceholder]"}, "NotationTemplateTag"], " ", 
+       "\[DoubleLongLeftRightArrow]", " ", 
+       TemplateBox[{"\[Placeholder]"}, "NotationTemplateTag"]}], "]"}], 
+  "notation>" -> RowBox[{"Notation", "[", 
+     RowBox[{
+       TemplateBox[{"\[SelectionPlaceholder]"}, "NotationTemplateTag"], " ", 
+       "\[DoubleLongRightArrow]", " ", 
+       TemplateBox[{"\[Placeholder]"}, "NotationTemplateTag"]}], "]"}], 
+  "notation<" -> RowBox[{"Notation", "[", 
+     RowBox[{
+       TemplateBox[{"\[SelectionPlaceholder]"}, "NotationTemplateTag"], " ", 
+       "\[DoubleLongLeftArrow]", " ", 
+       TemplateBox[{"\[Placeholder]"}, "NotationTemplateTag"]}], "]"}], 
+  "symb" -> RowBox[{"Symbolize", "[", 
+     TemplateBox[{"\[SelectionPlaceholder]"}, "NotationTemplateTag"], "]"}], 
+  "infixnotation" -> RowBox[{"InfixNotation", "[", 
+     RowBox[{
+       TemplateBox[{"\[SelectionPlaceholder]"}, "NotationTemplateTag"], ",", 
+       "\[Placeholder]"}], "]"}], "addia" -> RowBox[{"AddInputAlias", "[", 
+     RowBox[{"\"\[SelectionPlaceholder]\"", "\[Rule]", 
+       TemplateBox[{"\[Placeholder]"}, "NotationTemplateTag"]}], "]"}], 
+  "pattwraper" -> 
+  TemplateBox[{"\[SelectionPlaceholder]"}, "NotationPatternTag"], 
+  "madeboxeswraper" -> 
+  TemplateBox[{"\[SelectionPlaceholder]"}, "NotationMadeBoxesTag"], "cf" -> 
+  SubscriptBox["&", "\[Placeholder]"]|>,
+FrontEndVersion->"14.2 for Linux x86 (64-bit) (December 26, 2024)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"1b7f011c-e9c0-41a4-a8da-5edb8fc9e0a0"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[554, 20, 653, 14, 49, "Input",ExpressionUUID->"c3934d3e-2037-446b-86a7-3791e98c8781",
+ InitializationCell->True],
+Cell[CellGroupData[{
+Cell[1232, 38, 136, 3, 49, "Section",ExpressionUUID->"048432b3-ae2b-4a07-96dd-6ca7de50bf3b"],
+Cell[CellGroupData[{
+Cell[1393, 45, 179, 3, 22, "Input",ExpressionUUID->"94e7fe42-e2af-4276-acc8-edc75616cd09"],
+Cell[1575, 50, 33877, 712, 107, "Output",ExpressionUUID->"0ed3dfed-9881-47da-9f29-b2b3b9b523bd"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[35489, 767, 331, 6, 37, "Input",ExpressionUUID->"cdac71dc-f0fc-4cf7-882d-312d5b9a29d6"],
+Cell[35823, 775, 323, 7, 25, "Output",ExpressionUUID->"661715f7-0508-40ec-8e9b-7cba6f532e8c"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[36183, 787, 520, 12, 37, "Input",ExpressionUUID->"9b586d5d-1836-40cd-aa55-a3cb0e053da7"],
+Cell[36706, 801, 387, 8, 36, "Output",ExpressionUUID->"460346c1-c2e8-45ef-938c-10f964500a75"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[37130, 814, 476, 12, 37, "Input",ExpressionUUID->"cc79397f-8423-4b9a-90d6-e24680a82d6d"],
+Cell[37609, 828, 306, 8, 36, "Output",ExpressionUUID->"5cb52c88-4b7f-4b72-aac6-49e60adefe6d"]
+}, Open  ]]
+}, Closed]]
+}
+]
+*)
+

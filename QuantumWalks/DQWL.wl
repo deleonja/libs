@@ -255,7 +255,45 @@ TransportVector[c1_?MatrixQ, c2_?MatrixQ] := Module[
   ]
 ]
 
-TransportVector[alpha_, phi_, theta_] := Module[
+TransportVector[c1_?MatrixQ, c2_?MatrixQ, c3_?MatrixQ] := Module[
+  {k, s, uk, trU, omegaK, vgK, nVectorK, integrand, sigmas},
+  
+  (* Matrices de Pauli *)
+  sigmas = {PauliMatrix[1], PauliMatrix[2], PauliMatrix[3]};
+  
+  (* Operadores de desplazamiento en el espacio de Fourier (simb\[OAcute]licos en k) *)
+  s = DiagonalMatrix[{Exp[-I*k], Exp[I*k]}];
+  
+  (* Operador de evoluci\[OAcute]n en el espacio de momentos *)
+  uk = s . c3 . s . c2 . s . c1;
+  
+  (* Cuasi-energ\[IAcute]a (banda positiva) *)
+  (* ComplexExpand y Re aseguran que no queden residuos imaginarios que confundan a ArcCos *)
+  trU = ComplexExpand[Re[Tr[uk]]];
+  omegaK = ArcCos[trU / 2];
+  
+  (* Velocidad de grupo obtenida por derivaci\[OAcute]n anal\[IAcute]tica exacta de omega *)
+  vgK = D[omegaK, k];
+  
+  (* Vector espectral unitario *)
+  (* Nota: Se usa 'nVectorK' para evitar el conflicto con el s\[IAcute]mbolo protegido 'N' *)
+  nVectorK = Table[
+    (I / (2 * Sin[omegaK])) * Tr[uk . sigmas[[j]]],
+    {j, 1, 3}
+  ];
+  
+  (* Integrando del vector de transporte *)
+  integrand = vgK * nVectorK;
+  
+  (* Integraci\[OAcute]n num\[EAcute]rica sobre la zona de Brillouin *)
+  (* Re limpia cualquier ruido num\[EAcute]rico imaginario del orden de $10^{-16}i$ *)
+  Re[ 1/(2 Pi) * NIntegrate[integrand, {k, -Pi, Pi}, 
+      Method -> "LocalAdaptive", 
+      Exclusions -> {Sin[omegaK] == 0}] 
+  ]
+]
+
+TransportVector[alpha_?NumericQ, phi_?NumericQ, theta_?NumericQ] := Module[
     {nVector, zVector, cosHalf, sinHalf, prefactorA, term1, term2, term3},
     
     (* 1. Definici\[OAcute]n de vectores base y eje de rotaci\[OAcute]n *)

@@ -77,6 +77,11 @@ RandomSU2Rotation::usage = FormatUsage[
 RandomSU2Rotation[n] gives ```n``` Haar random SU(2) operators. "
 ];
 
+QuantumTexture::usage = FormatUsage[
+"QuantumTexture[PkList,evalsList,t] computes the quantum-channel texture grand sum \
+for a unitary evolution with Pk=|<Ek|f1>|^2."
+];
+
 , {FrontEndObject::notavail, First::normal}];
 
 
@@ -326,6 +331,12 @@ RandomSU2Rotation[] := Module[
 ]
 
 RandomSU2Rotation[n_] := Table[RandomSU2Rotation[], n]
+
+
+QuantumTexture[Pk_, evals_, t_] := Module[
+	{d = Length[evals]}, 
+	d * Abs[Total[Pk * Exp[-I * evals * t]]]^2
+]
 
 
 (* ::Subsection:: *)

@@ -26,8 +26,8 @@ $(PACKAGES):
 		echo "=== FILENAME: $${file} ==="; \
 		cat "$$file"; \
 		printf "\n\n"; \
-	done > "$@_v$${VER}_Source.txt"; \
-	echo "$@_v$${VER}_Source.txt generado con éxito."
+	done > "$@_Source.txt"; \
+	echo "$@_Source.txt generated successfully."
 
 
 ###############################################################################
@@ -120,8 +120,8 @@ release:
 .PHONY: clean
 
 clean:
-	@echo "Cleaning up exported source files..."
-	@rm -f *_v*_Source.txt
+	@echo "Cleaning up all source files..."
+	@rm -f *_Source.txt
 	@echo "Cleanup complete."
 
 ###############################################################################
@@ -129,7 +129,7 @@ clean:
 ###############################################################################
 
 DriveRemote := gdrive
-DrivePath := WolframSources
+DrivePath := 'Gemini Gems'
 
 .PHONY: upload
 
@@ -139,14 +139,14 @@ DrivePath := WolframSources
 # ---------------------------------------------------------------------------
 upload:
 ifndef pkg
-	$(error Error: Debes especificar el paquete. Ejemplo: make upload pkg=QMB)
+	$(error Error: You shall specify the package. Example: make upload pkg=QMB)
 endif
 	@VER=$$(cat $(pkg)/version.txt); \
-	Filename="$(pkg)_v$${VER}_Source.txt"; \
+	Filename="$(pkg)_Source.txt"; \
 	if [ ! -f "$$Filename" ]; then \
-		echo "Archivo $$Filename no encontrado. Generándolo..."; \
+		echo "File $$Filename not found. Generating it..."; \
 		$(MAKE) $(pkg); \
 	fi; \
-	echo "Subiendo $$Filename a Google Drive ($(DrivePath))..."; \
+	echo "Uploading $$Filename to Google Drive ($(DrivePath))..."; \
 	rclone copy "$$Filename" $(DriveRemote):$(DrivePath) --progress && \
-	echo "Carga de $$Filename completada con éxito."
+	echo "$$Filename uploaded succesfully."
