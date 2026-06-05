@@ -22,7 +22,7 @@ Purity::usage = FormatUsage[
 ];
 
 HaarRandomState::usage = FormatUsage[
-"RandomHaarState[dim] returns a Haar-random quantum state \
+"HaarRandomState[dim] returns a Haar-random quantum state \
 	vector of dimension ```dim```."
 ];
 
@@ -96,7 +96,7 @@ Qubit::deprecated = "Qubit is deprecated and has been removed. Use \
 QubitStateFromBlochVector instead.";
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Private definitions*)
 
 
@@ -339,7 +339,7 @@ QuantumTexture[Pk_, evals_, t_] := Module[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Deprecated functions*)
 
 
