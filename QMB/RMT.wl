@@ -6,13 +6,13 @@ BeginPackage["QMB`"];
 Get["ForScience`"];
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Public definitions*)
 
 
 Quiet[
 SpectralFormFactorRMT::usage = FormatUsage[
-"ConnectedSpectralFormFactor[\[Tau], \[Beta]] returns the connected spectral \
+"SpectralFormFactorRMT[\[Tau], \[Beta]] returns the connected spectral \
 form factor K_c(\[Tau]) at the scaled time \[Tau]. \
 The Dyson index \[Beta] determines the ensemble: 0 (Poisson), \
 1 (GOE), 2 (GUE), or 4 (GSE)."
@@ -20,7 +20,7 @@ The Dyson index \[Beta] determines the ensemble: 0 (Poisson), \
 , {FrontEndObject::notavail, First::normal}];
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Private definitions*)
 
 
