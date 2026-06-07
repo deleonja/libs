@@ -44,8 +44,8 @@ MomentumSectorPeriodicBoseHubbard::usage = FormatUsage[
 Begin["`BoseHubbard`Private`"];
 
 
-(* ::Subsection::Closed:: *)
-(*Bose Hubbard with periodic boundary conditions*)
+(* ::Subsection:: *)
+(*Periodic boundary conditions*)
 
 
 (*Secondary*)
