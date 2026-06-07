@@ -24,24 +24,36 @@ Module[{RootPath, PacletPath, PacletData, VersionLocal,
     ]; 
 
     (* 3. Check for updates with 0.5s timeout *)
-    CheckResult = TimeConstrained[URLRead[GitHubUrl, "Body"], 0.5, $Failed];
+    CheckResult = Quiet[
+		TimeConstrained[URLRead[GitHubUrl, "Body"], 3, $Failed]
+	];
 
-    (* 4. Notify user of discrepancies *)
+    (* 4. Notify user *)
     If[StringQ[CheckResult],
         VersionRemote = StringTrim[CheckResult];
-        If[VersionLocal != VersionRemote,
+        If[VersionLocal =!= VersionRemote,
             Print["[QMB Update] A newer version is available (Local: ", 
                 VersionLocal, ", Remote: ", VersionRemote, ")."];
-            Print["[QMB Update] You may want to pull from GitHub to update."]
+            Print["[QMB Update] Pull updates from GitHub for newest version."]
         ]
     ];
 
-    (* 5. Load submodules *)
-    Get[FileNameJoin[{RootPath, "OldQMB.wl"}]]; 
-    Get[FileNameJoin[{RootPath, "GeneralQM.wl"}]]; 
-    Get[FileNameJoin[{RootPath, "RMT.wl"}]];
-    Get[FileNameJoin[{RootPath, "QKT.wl"}]]; 
-    Get[FileNameJoin[{RootPath, "ManyBody", "SpinChains.wl"}]];
-    Get[FileNameJoin[{RootPath, "ManyBody", "BoseHubbard.wl"}]];
-    Get[FileNameJoin[{RootPath, "ManyBody", "Fermions.wl"}]];
+	(* 5. Load submodules with error handling *)
+    Scan[
+        Function[file,
+            If[FileExistsQ[file],
+                Quiet[Get[file]],
+                Print["[QMB Warning] Submodule not found: ", file]
+            ]
+        ],
+        {
+            FileNameJoin[{RootPath, "OldQMB.wl"}],
+            FileNameJoin[{RootPath, "GeneralQM.wl"}],
+            FileNameJoin[{RootPath, "RMT.wl"}],
+            FileNameJoin[{RootPath, "QKT.wl"}],
+            FileNameJoin[{RootPath, "ManyBody", "SpinChains.wl"}],
+            FileNameJoin[{RootPath, "ManyBody", "BoseHubbard.wl"}],
+            FileNameJoin[{RootPath, "ManyBody", "Fermions.wl"}]
+        }
+    ]
 ];
