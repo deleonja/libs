@@ -7,7 +7,7 @@ Module[{RootPath, PacletPath, PacletData, VersionLocal,
     RootPath = DirectoryName[DirectoryName[$InputFileName]];
     PacletPath = FileNameJoin[{RootPath, "PacletInfo.wl"}];
     GitHubUrl = "https://raw.githubusercontent.com/deleonja/libs/main/" <> 
-        "QMB/version.txt?timestamp=" <> ToString[Round[AbsoluteTime[]]];
+        "QMB/version.txt?timestamp=" <> ToString[IntegerPart[AbsoluteTime[]]];
 
     (* 1. Handling ForScience paclet installation *)
     If[Length[PacletFind["ForScience"]] == 0, 
