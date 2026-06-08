@@ -35,7 +35,7 @@ VerifyTest[
         data = Import[PacletPath];
         Version /. List @@ data
     ],
-    "2.4.1",
+    "2.4.2",
     "Local version reads correctly from PacletInfo.wl"
 ]
 
@@ -93,13 +93,13 @@ TestSection["Step 4 \[LongDash] Version comparison"]
 
 Print["  Checking =!= detects mismatch..."];
 VerifyProperty[
-    ("2.4.1" =!= "2.4.0"),
+    ("2.4.2" =!= "2.4.0"),
     "=!= correctly detects version mismatch"
 ]
 
 Print["  Checking =!= detects match..."];
 VerifyProperty[
-    !("2.4.1" =!= "2.4.1"),
+    !("2.4.2" =!= "2.4.2"),
     "=!= correctly detects matching versions"
 ]
 
