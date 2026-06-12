@@ -12,8 +12,10 @@ Module[{RootPath, PacletPath, PacletData, VersionLocal,
     (* 1. Handling ForScience paclet installation *)
     If[Length[PacletFind["ForScience"]] == 0, 
         PacletInstall[FileNameJoin[{RootPath, "Kernel", 
-            "ForScience-0.88.45.paclet"}]]
+			"ForScience-0.88.45.paclet"}]]
     ];
+    
+    Print["1"];
 
     (* 2. Read version directly from disk file to avoid cache issues *)
     VersionLocal = If[FileExistsQ[PacletPath],
@@ -22,8 +24,10 @@ Module[{RootPath, PacletPath, PacletData, VersionLocal,
         Version /. List @@ PacletData,
         "0.0.0"
     ]; 
+    
+    Print["2"];
 
-    (* 3. Check for updates with 0.5s timeout *)
+    (* 3. Check for updates *)
     CheckResult = Quiet[
 		TimeConstrained[URLRead[GitHubUrl, "Body"], 3, $Failed]
 	];
@@ -37,8 +41,10 @@ Module[{RootPath, PacletPath, PacletData, VersionLocal,
             Print["[QMB Update] Pull updates from GitHub for newest version."]
         ]
     ];
+    
+    Print["3"];
 
-	(* 5. Load submodules with error handling *)
+	(* 4. Load submodules with error handling *)
     Scan[
         Function[file,
             If[FileExistsQ[file],
@@ -55,5 +61,7 @@ Module[{RootPath, PacletPath, PacletData, VersionLocal,
             FileNameJoin[{RootPath, "ManyBody", "BoseHubbard.wl"}],
             FileNameJoin[{RootPath, "ManyBody", "Fermions.wl"}]
         }
-    ]
+    ];
+    
+    Print["4"];
 ];
