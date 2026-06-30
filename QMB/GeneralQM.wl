@@ -66,9 +66,9 @@ matrix ```Matrix```."
 ];
 
 RandomSU2Parameters::usage = FormatUsage[
-"RandomSU2Parameters[] gives a random list {\[CurlyTheta],\[Phi],\[Theta]} of the spherical coordinates \
-\[CurlyTheta] and \[Phi] of the rotation axis, and the rotation angle \[Theta] to generate a Haar \
-random SU(2) operator in \[DoubleStruckCapitalC]^2 . 
+"RandomSU2Parameters[] gives a random list {\[CurlyTheta],\[Phi],\[Theta]} of the spherical \
+	coordinates \[CurlyTheta] and \[Phi] of the rotation axis, and the rotation angle \[Theta] to \
+	generate a Haar random SU(2) operator in \[DoubleStruckCapitalC]^2 . 
 RandomSU2Parameters[n] gives n random lists."
 ];
 
@@ -290,7 +290,7 @@ SU2RotationParameters[uMatrix_?MatrixQ] := Module[
     
     (* Calculate spherical coordinates from the normalized vector *)
     VarTheta = ArcCos[VectorZ / NormV];
-    Phi = Mod[ArcTan[VectorX, VectorY], 2Pi];
+    Phi = ArcTan[VectorX, VectorY];
     
     {VarTheta, Phi, ThetaR}
 ]
