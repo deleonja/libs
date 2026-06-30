@@ -18,7 +18,7 @@ Get["path/to/libs/QuantumWalks/Kernel/init.m"];
 
 ## 🏷️ Versions
 
-- **QMB**: v2.4.2
+- **QMB**: v2.4.3
 - **QuantumWalks**: v0.2.0
 
 ------
