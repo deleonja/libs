@@ -1,5 +1,21 @@
 (* ::Package:: *)
 
+(* 1. Dynamically resolve and evaluate the QMB initialization script *)
+Module[{PackageRoot, QMBInitPath},
+  (* Go two levels up from QuantumWalks/DQWL.wl to find the root directory *)
+  PackageRoot = DirectoryName[$InputFileName, 2];
+  QMBInitPath = FileNameJoin[{PackageRoot, "QMB", "Kernel", "init.m"}];
+  
+  (* Load QMB only if it exists and hasn't been loaded into the kernel yet *)
+  If[FileExistsQ[QMBInitPath] && !MemberQ[$Packages, "QMB`"],
+    Get[QMBInitPath],
+    If[!FileExistsQ[QMBInitPath], 
+      Print["Warning: QMB initialization script not found at ", QMBInitPath]
+    ]
+  ];
+];
+
+
 BeginPackage["QuantumWalks`"]
 
 
@@ -7,11 +23,11 @@ BeginPackage["QuantumWalks`"]
 <<ForScience`;
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Public definitions*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*DTQW*)
 
 
@@ -61,13 +77,13 @@ TransportVector::usage = FormatUsage[
 "TransportVector[CoinMatrix] gives the transport vector for a DTQW given \
 	the ```CoinMatrix```.
 TransportVector[C1,C2] gives the transport vector for a \
-	DTQW with step operator U = S.```C2```.S.```C1```
-TransportVector[\[CurlyTheta],\[Phi],\[Theta]] gives the transport vector for a DTQW with a SU(2) \
-	coin operator with axis {```\[CurlyTheta]```,```\[Phi]```} and angle of rotation ```\[Theta]```.
+	DTQW with step operator U = S.```C2```.S.```C1```.
+TransportVector[C1,C2,C3] gives the transport vector for \
+	DTQW with step operator U = S.```C3```.S.```C2```.S.```C1```.
 "];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Parrondo's paradox*)
 
 
@@ -88,14 +104,14 @@ CriticalAngle::usage = FormatUsage[
 ];
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Private definitions*)
 
 
 Begin["`DQWL`Private`"];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*DTQW*)
 
 
@@ -182,39 +198,17 @@ PositionProbabilityDistribution[psi_, tmax_] := Chop[
 ExpValPosition[\[Psi]_, t_]:=PositionProbabilityDistribution[\[Psi],t] . Range[-t-1,t+1]
 
 
-TransportVector[c_?MatrixQ] := Module[
-  {k, s, uk, trU, omegaK, vgK, nVectorK, integrand, sigmas},
+TransportVector[CoinMatrix_?MatrixQ] := Module[
+  {Coin00, Coin01},
   
-  (* Matrices de Pauli *)
-  sigmas = {PauliMatrix[1], PauliMatrix[2], PauliMatrix[3]};
+  Coin00 = CoinMatrix[[1, 1]];
+  Coin01 = CoinMatrix[[1, 2]];
   
-  (* Operador de desplazamiento est\[AAcute]ndar en el espacio de momentos *)
-  s = DiagonalMatrix[{Exp[-I*k], Exp[I*k]}];
-  
-  (* Operador de evoluci\[OAcute]n *)
-  uk = s . c;
-  
-  (* Cuasi-energ\[IAcute]a *)
-  trU = ComplexExpand[Re[Tr[uk]]];
-  omegaK = ArcCos[trU / 2];
-  
-  (* Velocidad de grupo *)
-  vgK = D[omegaK, k];
-  
-  (* Vector espectral unitario *)
-  nVectorK = Table[
-    (I / (2 * Sin[omegaK])) * Tr[uk . sigmas[[j]]],
-    {j, 1, 3}
-  ];
-  
-  (* Integrando *)
-  integrand = vgK * nVectorK;
-  
-  (* Integraci\[OAcute]n num\[EAcute]rica *)
-  Re[ 1/(2 Pi) * NIntegrate[integrand, {k, -Pi, Pi}, 
-      Method -> "LocalAdaptive", 
-      Exclusions -> {Sin[omegaK] == 0}] 
-  ]
+  -1 / (1 + Abs[Coin01]) * {
+    -Re[Coin01 * Conjugate[Coin00]],
+     Im[Coin01 * Conjugate[Coin00]],
+    -Abs[Coin00]^2
+  }
 ]
 
 TransportVector[c1_?MatrixQ, c2_?MatrixQ] := Module[
@@ -255,66 +249,61 @@ TransportVector[c1_?MatrixQ, c2_?MatrixQ] := Module[
   ]
 ]
 
-TransportVector[c1_?MatrixQ, c2_?MatrixQ, c3_?MatrixQ] := Module[
-  {k, s, uk, trU, omegaK, vgK, nVectorK, integrand, sigmas},
-  
-  (* Matrices de Pauli *)
-  sigmas = {PauliMatrix[1], PauliMatrix[2], PauliMatrix[3]};
-  
-  (* Operadores de desplazamiento en el espacio de Fourier (simb\[OAcute]licos en k) *)
-  s = DiagonalMatrix[{Exp[-I*k], Exp[I*k]}];
-  
-  (* Operador de evoluci\[OAcute]n en el espacio de momentos *)
-  uk = s . c3 . s . c2 . s . c1;
-  
-  (* Cuasi-energ\[IAcute]a (banda positiva) *)
-  (* ComplexExpand y Re aseguran que no queden residuos imaginarios que confundan a ArcCos *)
-  trU = ComplexExpand[Re[Tr[uk]]];
-  omegaK = ArcCos[trU / 2];
-  
-  (* Velocidad de grupo obtenida por derivaci\[OAcute]n anal\[IAcute]tica exacta de omega *)
-  vgK = D[omegaK, k];
-  
-  (* Vector espectral unitario *)
-  (* Nota: Se usa 'nVectorK' para evitar el conflicto con el s\[IAcute]mbolo protegido 'N' *)
-  nVectorK = Table[
-    (I / (2 * Sin[omegaK])) * Tr[uk . sigmas[[j]]],
-    {j, 1, 3}
-  ];
-  
-  (* Integrando del vector de transporte *)
-  integrand = vgK * nVectorK;
-  
-  (* Integraci\[OAcute]n num\[EAcute]rica sobre la zona de Brillouin *)
-  (* Re limpia cualquier ruido num\[EAcute]rico imaginario del orden de $10^{-16}i$ *)
-  Re[ 1/(2 Pi) * NIntegrate[integrand, {k, -Pi, Pi}, 
-      Method -> "LocalAdaptive", 
-      Exclusions -> {Sin[omegaK] == 0}] 
-  ]
-]
+TransportVector[coin1_?MatrixQ, coin2_?MatrixQ, coin3_?MatrixQ] :=
+ Module[
+  {pauliVector, pauliZ, k, z, sMat, dsMat, uMat, duMat, trUMat,
+   trDUMat, trSigmaUMat, integrand, trUMatZ, polyEq, zRoots, kExcl,
+   integrandFn, safeIntegrand},
 
-TransportVector[alpha_?NumericQ, phi_?NumericQ, theta_?NumericQ] := Module[
-    {nVector, zVector, cosHalf, sinHalf, prefactorA, term1, term2, term3},
-    
-    (* 1. Definici\[OAcute]n de vectores base y eje de rotaci\[OAcute]n *)
-    nVector = {Sin[alpha] * Cos[phi], Sin[alpha] * Sin[phi], Cos[alpha]};
-    zVector = {0, 0, 1};
-    
-    (* 2. Pre-c\[AAcute]lculo de t\[EAcute]rminos trigonom\[EAcute]tricos de la moneda *)
-    cosHalf = Cos[theta / 2];
-    sinHalf = Sin[theta / 2];
-    
-    (* 3. C\[AAcute]lculo del prefactor escalar A *)
-    prefactorA = (1 - sinHalf * Sin[alpha]) / (cosHalf^2 + sinHalf^2 * Cos[alpha]^2);
-    
-    (* 4. Construcci\[OAcute]n geom\[EAcute]trica del vector *)
-    term1 = sinHalf^2 * Dot[nVector, zVector] * nVector;
-    term2 = cosHalf^2 * zVector;
-    term3 = sinHalf * cosHalf * Cross[zVector, nVector];
-    
-    (* Retorno simplificado *)
-    Simplify[prefactorA * (term1 + term2 + term3)]
-]
+  pauliVector = {Pauli[1], Pauli[2], Pauli[3]};
+  pauliZ = Pauli[3];
+
+  (* Symbolic build -- done ONCE per call, not once per quadrature
+     point (that's the whole point of compiling it below) *)
+  sMat = {{Exp[-I k], 0}, {0, Exp[I k]}};
+  dsMat = -I * pauliZ . sMat;
+
+  uMat = sMat . coin3 . sMat . coin2 . sMat . coin1;
+  duMat = dsMat . coin3 . sMat . coin2 . sMat . coin1 +
+           sMat . coin3 . dsMat . coin2 . sMat . coin1 +
+           sMat . coin3 . sMat . coin2 . dsMat . coin1;
+
+  trUMat = Tr[uMat];
+  trDUMat = Tr[duMat];
+  trSigmaUMat = Table[Tr[pauliVector[[j]] . uMat], {j, 3}];
+
+  integrand = I * (trDUMat * trSigmaUMat)/(trUMat^2 - 4);
+
+  (* ---- Step 1: exact singular k-points via algebraic root-finding
+     instead of NIntegrate's internal (expensive) transcendental
+     Solve. Substitute z = Exp[I k] -- trUMat is a Laurent polynomial
+     in z, so trUMat^2 - 4 == 0 becomes an ordinary polynomial
+     equation in z. ---- *)
+  trUMatZ = trUMat /. Exp[(n_.)*I*k] :> z^n;
+  polyEq = Numerator[Together[trUMatZ^2 - 4]];
+
+  zRoots = Quiet@Cases[
+      z /. NSolve[polyEq == 0, z],
+      _?(Abs[Abs[#] - 1] < 10^-8 &)
+      ];
+
+  kExcl = DeleteDuplicates[
+     Chop[Re[-I*Log[#]]] & /@ zRoots,
+     Abs[#1 - #2] < 10^-6 &
+     ];
+
+  (* ---- Step 2: integrate the exact
+     (numeric) exclusion points found above -- no symbolic Solve
+     happens inside NIntegrate anymore. ---- *)
+  Table[
+  -1/(2 Pi) * NIntegrate[Evaluate[Re[integrand[[j]]]], {k, -Pi, Pi},
+     Method -> "LocalAdaptive",
+     Exclusions -> If[kExcl === {}, None, Thread[k == kExcl]],
+     MaxRecursion -> 12,
+     WorkingPrecision -> MachinePrecision
+     ],
+  {j, 3}]
+  ]
 
 
 (* ::Subsection::Closed:: *)
