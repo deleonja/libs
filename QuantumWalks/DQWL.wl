@@ -1,21 +1,5 @@
 (* ::Package:: *)
 
-(* 1. Dynamically resolve and evaluate the QMB initialization script *)
-Module[{PackageRoot, QMBInitPath},
-  (* Go two levels up from QuantumWalks/DQWL.wl to find the root directory *)
-  PackageRoot = DirectoryName[$InputFileName, 2];
-  QMBInitPath = FileNameJoin[{PackageRoot, "QMB", "Kernel", "init.m"}];
-  
-  (* Load QMB only if it exists and hasn't been loaded into the kernel yet *)
-  If[FileExistsQ[QMBInitPath] && !MemberQ[$Packages, "QMB`"],
-    Get[QMBInitPath],
-    If[!FileExistsQ[QMBInitPath], 
-      Print["Warning: QMB initialization script not found at ", QMBInitPath]
-    ]
-  ];
-];
-
-
 BeginPackage["QuantumWalks`"]
 
 
@@ -255,8 +239,8 @@ TransportVector[coin1_?MatrixQ, coin2_?MatrixQ, coin3_?MatrixQ] :=
    trDUMat, trSigmaUMat, integrand, trUMatZ, polyEq, zRoots, kExcl,
    integrandFn, safeIntegrand},
 
-  pauliVector = {Pauli[1], Pauli[2], Pauli[3]};
-  pauliZ = Pauli[3];
+  pauliVector = {PauliMatrix[1], PauliMatrix[2], PauliMatrix[3]};
+  pauliZ = PauliMatrix[3];
 
   (* Symbolic build -- done ONCE per call, not once per quadrature
      point (that's the whole point of compiling it below) *)
