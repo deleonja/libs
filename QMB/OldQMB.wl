@@ -3,7 +3,8 @@
 BeginPackage["QMB`"];
 
 
-Get["ForScience`"]; (* nice formatting of usage definitions *)
+Quiet[Get["ForScience`"]];
+Remove["ForScience`PlotUtils`PlotGrid"];
 
 
 (* ::Section::Closed:: *)

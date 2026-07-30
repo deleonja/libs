@@ -3,7 +3,8 @@
 BeginPackage["QMB`ManyBody`", {"QMB`"}];
 
 
-Get["ForScience`"];
+Quiet[Get["ForScience`"]];
+Remove["ForScience`PlotUtils`PlotGrid"];
 
 
 (* ::Section:: *)
