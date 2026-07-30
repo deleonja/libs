@@ -3,7 +3,8 @@
 BeginPackage["QuantumWalks`Billiards`", {"QuantumWalks`"}];
 
 
-<<ForScience`
+Quiet[Get["ForScience`"]];
+Remove["ForScience`PlotUtils`PlotGrid"];
 
 
 BuildShiftOperators::usage = "BuildShiftOperators[gridData, opts] construye \

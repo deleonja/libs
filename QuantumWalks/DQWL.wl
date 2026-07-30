@@ -4,7 +4,8 @@ BeginPackage["QuantumWalks`"]
 
 
 (* For nice formatting of usage messages, see https://github.com/MMA-ForScience/ForScience *)
-<<ForScience`;
+Quiet[Get["ForScience`"]];
+Remove["ForScience`PlotUtils`PlotGrid"];
 
 
 (* ::Section:: *)
