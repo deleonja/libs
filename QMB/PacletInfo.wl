@@ -2,7 +2,7 @@
 
 Paclet[
   Name -> "QMB",
-  Version -> "2.4.3",
+  Version -> "2.4.4",
   WolframVersion -> "13.0+",
   Description -> "General-porpuse quantum physics package",
   Creator -> "Jose Alfredo de Leon",
