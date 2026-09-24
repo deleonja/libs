@@ -187,10 +187,15 @@ Unfold[spectrum, opts] allows specifying options for the kernel distribution.
 * \"SmoothPDF\": Pure function representing the mean level density \[Rho](E).
 * \"Bandwidth\": The bandwidth parameter used in the KDE.
 * \"OriginalLevels\": The sorted input spectrum.
+* \"UnfoldedSpacings\": All nearest-neighbor spacings, including the wrap-around spacing, in circular mode.
+* \"UnfoldedBands\": Unfolded levels grouped by band when band cuts are given.
+* \"GapIndices\": Positions of spacings between bands; exclude these from spacing statistics.
 
 **Options**
-* \"Bandwidth\": (Default: Automatic) Controls the smoothing scale. Set a Real number to manually tune the separation between secular variation and fluctuations.
-* \"Kernel\": (Default: \"Gaussian\") Specifies the kernel function type (e.g., \"Epanechnikov\", \"Rectangular\")."
+* \"Bandwidth\": (Default: Automatic) Controls the smoothing scale; accepts native SmoothKernelDistribution specifications, including adaptive bandwidths.
+* \"Kernel\": (Default: \"Gaussian\") Specifies the kernel function type (e.g., \"Epanechnikov\", \"Rectangular\").
+* \"BandCuts\": (Default: {}) Positions inside known spectral gaps. Each band is unfolded separately.
+* \"Circular\": (Default: False) Unfold eigenphases modulo 2\[Pi] with a periodic Gaussian kernel. In this mode Bandwidth is a positive angular width or Automatic."
 ];
 
 
@@ -601,7 +606,9 @@ SpacingRatios[spectrum_, k_]:=RotateLeft[#, k]/# &[kthOrderSpacings[spectrum, k]
 (* Options for Unfold allow tuning the kernel smoothness *)
 Options[Unfold] = {
     "Bandwidth" -> Automatic, (* Can be set to a real number for manual control *)
-    "Kernel" -> "Gaussian"
+    "Kernel" -> "Gaussian",
+    "BandCuts" -> {},
+    "Circular" -> False
 };
 
 Unfold[spectrum_List, opts : OptionsPattern[]] := Module[
@@ -613,7 +620,18 @@ Unfold[spectrum_List, opts : OptionsPattern[]] := Module[
         smoothCDFFunc, 
         smoothPDFFunc,
         bwParam,
-        kernelType
+        kernelType,
+        cuts,
+        circular,
+        harmonics,
+        moments,
+        weights,
+        boundaryTerms,
+        bands,
+        kernels,
+        distributions,
+        counts,
+        gapIndices
     },
 
     (* 1. Validation and Preparation *)
@@ -633,6 +651,92 @@ Unfold[spectrum_List, opts : OptionsPattern[]] := Module[
     bwParam = OptionValue["Bandwidth"];
     kernelType = OptionValue["Kernel"];
 
+    cuts = OptionValue["BandCuts"];
+
+    If[!ListQ[cuts] || !VectorQ[cuts, NumericQ] ||
+       !AllTrue[cuts, First[sortedSpectrum] < # < Last[sortedSpectrum] &],
+        Message[Unfold::badCuts];
+        Return[$Failed]
+    ];
+
+    circular = OptionValue["Circular"];
+    If[TrueQ[circular],
+        If[cuts =!= {} || kernelType =!= "Gaussian",
+            Message[Unfold::circularOptions];
+            Return[$Failed]
+        ];
+        If[!VectorQ[spectrum, RealValuedNumericQ],
+            Message[Unfold::realPhases];
+            Return[$Failed]
+        ];
+        If[bwParam === Automatic, bwParam = N[2 Pi/Sqrt[nLevels]]];
+        If[!RealValuedNumericQ[bwParam] || !TrueQ[bwParam > 0],
+            Message[Unfold::circularBandwidth];
+            Return[$Failed]
+        ];
+
+        (* Wrapped Gaussian KDE; retain Fourier modes above 10^-14. *)
+        sortedSpectrum = Sort[N[Mod[sortedSpectrum + Pi, 2 Pi] - Pi]];
+        harmonics = Range[Ceiling[Sqrt[2 Log[10.^14]]/bwParam]];
+        moments = Table[Mean[Exp[I m sortedSpectrum]], {m, harmonics}];
+        weights = Exp[-(bwParam harmonics)^2/2];
+        boundaryTerms = Im[moments Exp[-I harmonics Pi]];
+        With[{n = nLevels, m = harmonics, c = moments,
+              w = weights, b = boundaryTerms},
+            smoothCDFFunc = Function[phi,
+                n (phi + Pi)/(2 Pi) +
+                n/Pi Total[(w/m) (-Im[c Exp[-I m phi]] + b)]
+            ];
+            smoothPDFFunc = Function[phi,
+                n/(2 Pi) (1 + 2 Total[w Re[c Exp[-I m phi]]])
+            ]
+        ];
+        unfoldedLevels = smoothCDFFunc /@ sortedSpectrum;
+        Return[<|
+            "UnfoldedLevels" -> unfoldedLevels,
+            "UnfoldedSpacings" -> Differences[
+                Append[unfoldedLevels, nLevels + First[unfoldedLevels]]
+            ],
+            "SmoothCDF" -> smoothCDFFunc,
+            "SmoothPDF" -> smoothPDFFunc,
+            "Bandwidth" -> bwParam,
+            "OriginalLevels" -> sortedSpectrum
+        |>]
+    ];
+
+    If[cuts =!= {},
+        cuts = Sort[DeleteDuplicates[cuts]];
+        bands = Split[sortedSpectrum,
+            Function[{a, b}, !AnyTrue[cuts, Function[c, a < c <= b]]]
+        ];
+        If[!AllTrue[bands, Length[#] >= 3 && First[#] < Last[#] &],
+            Message[Unfold::shortBand];
+            Return[$Failed]
+        ];
+        counts = Length /@ bands;
+        gapIndices = Most[Accumulate[counts]];
+        kernels = SmoothKernelDistribution[#, bwParam, kernelType] & /@ bands;
+        distributions = MapThread[
+            TruncatedDistribution[{First[#1], Last[#1]}, #2] &,
+            {bands, kernels}
+        ];
+        With[{dist = distributions, sizes = counts},
+            smoothCDFFunc = Function[e,
+                Total[MapThread[#1 CDF[#2, e] &, {sizes, dist}]]];
+            smoothPDFFunc = Function[e,
+                Total[MapThread[#1 PDF[#2, e] &, {sizes, dist}]]]
+        ];
+        unfoldedLevels = smoothCDFFunc /@ sortedSpectrum;
+        Return[<|
+            "UnfoldedLevels" -> unfoldedLevels,
+            "UnfoldedBands" -> TakeList[unfoldedLevels, counts],
+            "GapIndices" -> gapIndices,
+            "SmoothCDF" -> smoothCDFFunc,
+            "SmoothPDF" -> smoothPDFFunc,
+            "Bandwidth" -> (#["Bandwidth"] & /@ kernels),
+            "OriginalLevels" -> sortedSpectrum
+        |>]
+    ];
     (* Construct the distribution object *)
     skd = SmoothKernelDistribution[
         sortedSpectrum, 
@@ -662,6 +766,11 @@ Unfold[spectrum_List, opts : OptionsPattern[]] := Module[
 
 (* Error Message definition *)
 Unfold::notEnoughLevels = "Spectrum length `1` is too short for unfolding. At least 3 levels are required.";
+Unfold::badCuts = "BandCuts must be a list of numeric cut positions inside the spectrum.";
+Unfold::shortBand = "Each band must contain at least three levels with nonzero range.";
+Unfold::circularOptions = "Circular unfolding uses a Gaussian kernel and cannot be combined with BandCuts.";
+Unfold::realPhases = "Circular unfolding requires a list of real numeric phases.";
+Unfold::circularBandwidth = "Circular bandwidth must be Automatic or a positive real angular width.";
 
 
 ComplexSpacingRatios[eigs_List?VectorQ] := Module[
