@@ -2,13 +2,10 @@
 
 BeginPackage["QMB`"];
 
-
 Quiet[Get["ForScience`"]];
 Remove["ForScience`PlotUtils`PlotGrid"];
 
-
-(* ::Section::Closed:: *)
-(*TODO*)
+(*TODO*) (* {{{* *)
 
 
 (* ::Text:: *)
@@ -18,13 +15,9 @@ Remove["ForScience`PlotUtils`PlotGrid"];
 (* ::Text:: *)
 (*Hay cosas de Heisenberg meets fuzzy que tambi\[EAcute]n tengo que pasar para ac\[AAcute]*)
 
-
-(* ::Section::Closed:: *)
-(*Public definitions*)
-
-
-(* ::Subsection::Closed:: *)
-(*General quantum mechanics*)
+(* *}}} *)
+(* Public definitions {{{* *)
+(*General quantum mechanics {{{* *)
 
 
 (* All usage messages are evaluated quietly as FormatUsage[] requires FrontEnd. Therefore, if 
@@ -150,9 +143,8 @@ ComplexToPolar::usage = FormatUsage[
 "ComplexToPolar[z] returns the polar form of ```z```."
 ];
 
-
-(* ::Subsection::Closed:: *)
-(*Quantum chaos*)
+(* *}}} *)
+(*Quantum chaos {{{* *)
 
 
 MeanLevelSpacingRatio::usage = FormatUsage[
@@ -177,7 +169,7 @@ SpacingRatios::usage = FormatUsage[
 
 
 Unfold::usage = FormatUsage[
-  "Unfold[spectrum] returns an Association containing the unfolded ```spectrum``` and \
+  "Unfold[spectrum] numerically converts every level and returns an Association containing the unfolded ```spectrum``` and \
 smoothed density functions calculated via Kernel Density Estimation (KDE).
 Unfold[spectrum, opts] allows specifying options for the kernel distribution.
 
@@ -197,6 +189,8 @@ Unfold[spectrum, opts] allows specifying options for the kernel distribution.
 * \"BandCuts\": (Default: {}) Positions inside known spectral gaps. Each band is unfolded separately.
 * \"Circular\": (Default: False) Unfold eigenphases modulo 2\[Pi] with a periodic Gaussian kernel. In this mode Bandwidth is a positive angular width or Automatic."
 ];
+
+UnfoldCircular::usage = "UnfoldCircular[spectrum,nMax] unfolds the spectrum";
 
 
 ComplexSpacingRatios::usage =
@@ -240,10 +234,8 @@ AnalyticalNumberVarianceGUE::usage = FormatUsage[
 number variance for the Gaussian Unitary Ensemble."
 ];
 
-
-(* ::Subsection::Closed:: *)
-(*RMT*)
-
+(* *}}} *)
+(*RMT {{{* *)
 
 RatiosDistribution::usage = FormatUsage[
 	"RatiosDistribution[r,\[Beta]] represents the probability distribution of level spacing \
@@ -285,9 +277,8 @@ density function P(s) for the normalized nearest-neighbor level spacings. \
 The Dyson index ```\[Beta]``` determines the ensemble: 0 (Poisson), 1 (GOE), \
 2 (GUE), or 4 (GSE)."];
 
-
-(* ::Subsubsection::Closed:: *)
-(*Ginibre matrices*)
+(* *}}} *)
+(*Ginibre matrices {{{* *)
 
 
 GenerateGinibreMatrix::usage =
@@ -306,9 +297,8 @@ Options:
 GenerateGinibreMatrix::invalidEnsemble = "Ensemble type `1` is not recognized. \
 Use \"Unitary\", \"Orthogonal\", or \"Symplectic\".";
 
-
-(* ::Subsection::Closed:: *)
-(*Quantum channels*)
+(* *}}} *)
+(*Quantum channels {{{* *)
 
 
 Reshuffle::usage = "Reshuffle[m] applies the reshuffle transformation to the matrix m with dimension \!\(\*SuperscriptBox[\(d\), \(2\)]\)\[Times]\!\(\*SuperscriptBox[\(d\), \(2\)]\).
@@ -319,9 +309,8 @@ Quiet[
 	SuperoperatorFromU::usage = FormatUsage["DensityMatrix[\[Psi]] returns the density matrix of state vector ```\[Psi]```."];
 , {FrontEndObject::notavail, First::normal}];
 
-
-(* ::Subsection::Closed:: *)
-(*Bose-Hubbard*)
+(* *}}} *)
+(*Bose-Hubbard {{{* *)
 
 
 BoseHubbardHamiltonian::usage = FormatUsage[
@@ -392,9 +381,8 @@ BosonicPartialTrace::usage = "BosonicPartialTrace[\[Rho]] calculates the partial
 
 InitializationBosonicPartialTrace::usage = "InitializationBosonicPartialTrace[{\!\(\*SubscriptBox[\(i\), \(1\)]\),\[Ellipsis],\!\(\*SubscriptBox[\(i\), \(k\)]\)}, N, L] initializes variables for BosonicPartialTrace[] to calculate the reduced density matrix of sites {\!\(\*SubscriptBox[\(i\), \(1\)]\),\[Ellipsis],\!\(\*SubscriptBox[\(i\), \(k\)]\)}.";
 
-
-(* ::Subsection::Closed:: *)
-(*Fuzzy measurements in bosonic systems*)
+(* *}}} *)
+(*Fuzzy measurements in bosonic systems {{{* *)
 
 
 BosonEscapeKrausOperators::usage = "BosonEscapeKrausOperators[N, L]: bosons escape to nearest neighbouring sites. N: bosons, L: site.";
@@ -405,9 +393,8 @@ InitializeVariables::usage = "InitializeVariables[n, L, boundaries, FMmodel] set
 
 FuzzyMeasurement::usage = "FuzzyMeasurement[\[Psi], \!\(\*SubscriptBox[\(p\), \(fuzzy\)]\)] gives \[ScriptCapitalF](\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Ket\"]\)\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Bra\"]\)) = (1 - \!\(\*SubscriptBox[\(p\), \(fuzzy\)]\))\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Ket\"]\)\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Bra\"]\) + \!\(\*SubscriptBox[\(p\), \(fuzzy\)]\) \!\(\*UnderscriptBox[\(\[Sum]\), \(i\)]\) \!\(\*SubscriptBox[\(S\), \(i\)]\)\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Ket\"]\)\!\(\*TemplateBox[{\"\[Psi]\"},\n\"Bra\"]\)\!\(\*SubsuperscriptBox[\(S\), \(i\), \(\[Dagger]\)]\), where \!\(\*SubscriptBox[\(S\), \(i\)]\) must be initizalized runnning InitializeVariables[n, L, boundaries, FMmodel].";
 
-
-(* ::Subsection::Closed:: *)
-(*Light-matter systems*)
+(* *}}} *)
+(*Light-matter systems {{{* *)
 
 
 ARQMHamiltonian::usage = 
@@ -429,9 +416,8 @@ FormatUsage[
 	nMax: maximum photon number (n=0 to nMax)."
 ];
 
-
-(* ::Subsection::Closed:: *)
-(*Fuzzy measurement channels*)
+(* *}}} *)
+(*Fuzzy measurement channels {{{* *)
 
 
 SwapMatrix::usage = "SwapMatrix[targetSite, wrongSite, N, L] returns the swap matrix that exchanges site targetSite with wrongSite for a system of N bosons and L sites.";
@@ -441,15 +427,10 @@ FuzzyMeasurementChannel::usage =
 "FuzzyMeasurementChannel[\[Rho], p, PermMatrices] returns (1-p) \[Rho] + \!\(\*FractionBox[\(p\), \(N - 1\)]\) \!\(\*SubscriptBox[\(\[Sum]\), \(i\)]\)\!\(\*SubscriptBox[\(S\), \(i, i + 1\)]\)\!\(\*SubscriptBox[\(\[Rho]S\), \(i, i + 1\)]\).
 FuzzyMeasurementChannel[\[Rho], {\!\(\*SubscriptBox[\(p\), \(totalError\)]\), \!\(\*SubscriptBox[\(p\), \(NN\)]\), \!\(\*SubscriptBox[\(p\), \(SNN\)]\)}, {{\!\(\*SubscriptBox[\(S\), \(i, i + 1\)]\)}, {\!\(\*SubscriptBox[\(S\), \(i, i + 2\)]\)}}] returns \[ScriptCapitalE](\[Rho])=(1-\!\(\*SubscriptBox[\(p\), \(totalError\)]\))\[Rho] + \!\(\*SubscriptBox[\(p\), \(totalError\)]\)(\!\(\*FractionBox[SubscriptBox[\(p\), \(NN\)], \(L - 1\)]\)) \!\(\*SuperscriptBox[SubscriptBox[\(\[Sum]\), \(i = 1\)], \(L - 1\)]\) \!\(\*SubscriptBox[\(S\), \(i, i + 1\)]\) \[Rho] \!\(\*SubscriptBox[\(S\), \(i, i + 1\)]\) + \!\(\*SubscriptBox[\(p\), \(totalError\)]\)(\!\(\*FractionBox[SubscriptBox[\(p\), \(SNN\)], \(L - 2\)]\)) \!\(\*SuperscriptBox[SubscriptBox[\(\[Sum]\), \(i = 1\)], \(L - 2\)]\) \!\(\*SubscriptBox[\(S\), \(i, i + 2\)]\) \[Rho] \!\(\*SubscriptBox[\(S\), \(i, i + 2\)]\).";
 
-
-(* ::Section::Closed:: *)
-(*Private definitions*)
-
-
+(* *}}} *)
+(* *}}} *)
+(* Private definitions {{{* *)
 Begin["`Private`"]
-
-
-(* ::Subsection::Closed:: *)
 (*General quantum mechanics*)
 
 
@@ -601,177 +582,220 @@ kthOrderSpacings[spectrum_, k_] := RotateLeft[#, k] - # &[Sort[spectrum]][[;; -(
 SpacingRatios[spectrum_, k_]:=RotateLeft[#, k]/# &[kthOrderSpacings[spectrum, k]][[;; -(k+1)]]
 
 
-(*Unfold*)
-
-(* Options for Unfold allow tuning the kernel smoothness *)
-Options[Unfold] = {
+(* Unfold {{{* *)
+Options[Unfold] = {(* {{{* *)
     "Bandwidth" -> Automatic, (* Can be set to a real number for manual control *)
     "Kernel" -> "Gaussian",
     "BandCuts" -> {},
     "Circular" -> False
 };
-
-Unfold[spectrum_List, opts : OptionsPattern[]] := Module[
-    {
-        sortedSpectrum, 
-        nLevels, 
-        skd, 
-        unfoldedLevels, 
-        smoothCDFFunc, 
-        smoothPDFFunc,
-        bwParam,
-        kernelType,
-        cuts,
-        circular,
-        harmonics,
-        moments,
-        weights,
-        boundaryTerms,
-        bands,
-        kernels,
-        distributions,
-        counts,
-        gapIndices
-    },
-
-    (* 1. Validation and Preparation *)
-    (* RMT requires sorted, numeric eigenvalues *)
-    sortedSpectrum = Sort[Select[spectrum, NumericQ]];
-    nLevels = Length[sortedSpectrum];
-
-    If[nLevels < 3, 
-        Message[Unfold::notEnoughLevels, nLevels]; 
+(* *}}} *)
+unfoldPrepareSpectrum[spectrum_List] := Module[{levels = N[spectrum]}, (* {{{* *)
+    If[!VectorQ[levels, RealValuedNumericQ],
+        Message[Unfold::nonNumericLevels];
         Return[$Failed]
     ];
-
-    (* 2. Algorithmic Logic: Kernel Density Estimation (KDE) *)
-    (* We model the secular (smooth) part of the density of states.
-       The cumulative mapping \[CurlyEpsilon]_i = N_smooth(E_i) gives the unfolded spectrum. *)
-    
-    bwParam = OptionValue["Bandwidth"];
-    kernelType = OptionValue["Kernel"];
-
-    cuts = OptionValue["BandCuts"];
-
-    If[!ListQ[cuts] || !VectorQ[cuts, NumericQ] ||
-       !AllTrue[cuts, First[sortedSpectrum] < # < Last[sortedSpectrum] &],
-        Message[Unfold::badCuts];
+    If[Length[levels] < 3,
+        Message[Unfold::notEnoughLevels, Length[levels]];
         Return[$Failed]
     ];
-
-    circular = OptionValue["Circular"];
-    If[TrueQ[circular],
-        If[cuts =!= {} || kernelType =!= "Gaussian",
-            Message[Unfold::circularOptions];
-            Return[$Failed]
-        ];
-        If[!VectorQ[spectrum, RealValuedNumericQ],
-            Message[Unfold::realPhases];
-            Return[$Failed]
-        ];
-        If[bwParam === Automatic, bwParam = N[2 Pi/Sqrt[nLevels]]];
-        If[!RealValuedNumericQ[bwParam] || !TrueQ[bwParam > 0],
-            Message[Unfold::circularBandwidth];
-            Return[$Failed]
-        ];
-
-        (* Wrapped Gaussian KDE; retain Fourier modes above 10^-14. *)
-        sortedSpectrum = Sort[N[Mod[sortedSpectrum + Pi, 2 Pi] - Pi]];
-        harmonics = Range[Ceiling[Sqrt[2 Log[10.^14]]/bwParam]];
-        moments = Table[Mean[Exp[I m sortedSpectrum]], {m, harmonics}];
-        weights = Exp[-(bwParam harmonics)^2/2];
-        boundaryTerms = Im[moments Exp[-I harmonics Pi]];
-        With[{n = nLevels, m = harmonics, c = moments,
-              w = weights, b = boundaryTerms},
-            smoothCDFFunc = Function[phi,
-                n (phi + Pi)/(2 Pi) +
-                n/Pi Total[(w/m) (-Im[c Exp[-I m phi]] + b)]
-            ];
-            smoothPDFFunc = Function[phi,
-                n/(2 Pi) (1 + 2 Total[w Re[c Exp[-I m phi]]])
-            ]
-        ];
-        unfoldedLevels = smoothCDFFunc /@ sortedSpectrum;
-        Return[<|
-            "UnfoldedLevels" -> unfoldedLevels,
-            "UnfoldedSpacings" -> Differences[
-                Append[unfoldedLevels, nLevels + First[unfoldedLevels]]
-            ],
-            "SmoothCDF" -> smoothCDFFunc,
-            "SmoothPDF" -> smoothPDFFunc,
-            "Bandwidth" -> bwParam,
-            "OriginalLevels" -> sortedSpectrum
-        |>]
-    ];
-
-    If[cuts =!= {},
-        cuts = Sort[DeleteDuplicates[cuts]];
-        bands = Split[sortedSpectrum,
-            Function[{a, b}, !AnyTrue[cuts, Function[c, a < c <= b]]]
-        ];
-        If[!AllTrue[bands, Length[#] >= 3 && First[#] < Last[#] &],
-            Message[Unfold::shortBand];
-            Return[$Failed]
-        ];
-        counts = Length /@ bands;
-        gapIndices = Most[Accumulate[counts]];
-        kernels = SmoothKernelDistribution[#, bwParam, kernelType] & /@ bands;
-        distributions = MapThread[
-            TruncatedDistribution[{First[#1], Last[#1]}, #2] &,
-            {bands, kernels}
-        ];
-        With[{dist = distributions, sizes = counts},
-            smoothCDFFunc = Function[e,
-                Total[MapThread[#1 CDF[#2, e] &, {sizes, dist}]]];
-            smoothPDFFunc = Function[e,
-                Total[MapThread[#1 PDF[#2, e] &, {sizes, dist}]]]
-        ];
-        unfoldedLevels = smoothCDFFunc /@ sortedSpectrum;
-        Return[<|
-            "UnfoldedLevels" -> unfoldedLevels,
-            "UnfoldedBands" -> TakeList[unfoldedLevels, counts],
-            "GapIndices" -> gapIndices,
-            "SmoothCDF" -> smoothCDFFunc,
-            "SmoothPDF" -> smoothPDFFunc,
-            "Bandwidth" -> (#["Bandwidth"] & /@ kernels),
-            "OriginalLevels" -> sortedSpectrum
-        |>]
-    ];
-    (* Construct the distribution object *)
-    skd = SmoothKernelDistribution[
-        sortedSpectrum, 
-        bwParam, 
-        kernelType
-    ];
-
-    (* 3. Compute Unfolded Levels *)
-    (* Map physics eigenvalues to mean level spacing of 1 *)
-    unfoldedLevels = nLevels * CDF[skd, sortedSpectrum];
-
-    (* 4. Functional Construction with Scope Injection *)
-    With[{distObject = skd, n = nLevels},
-        smoothCDFFunc = Function[e, n * CDF[distObject, e]];
-        smoothPDFFunc = Function[e, n * PDF[distObject, e]];
-    ];
-
-    (* 5. Return Structured Data *)
-    <|
-        "UnfoldedLevels" -> unfoldedLevels,
-        "SmoothCDF" -> smoothCDFFunc,      (* Cumulative Mean Level Number *)
-        "SmoothPDF" -> smoothPDFFunc,      (* Mean Level Density *)
-        "Bandwidth" -> skd["Bandwidth"],
-        "OriginalLevels" -> sortedSpectrum
-    |>
+    Sort[levels]
 ];
+(* *}}} *)
+unfoldValidOptionsQ[levels_, config_] := Module[(* {{{* *)
+    {cuts = config["BandCuts"], bw = config["Bandwidth"]},
+    If[!ListQ[cuts] || !VectorQ[cuts, NumericQ] ||
+       !AllTrue[cuts, First[levels] < # < Last[levels] &],
+        Message[Unfold::badCuts];
+        Return[False]
+    ];
+    If[TrueQ[config["Circular"]],
+        If[cuts =!= {} || config["Kernel"] =!= "Gaussian",
+            Message[Unfold::circularOptions];
+            Return[False]
+        ];
+        If[bw =!= Automatic &&
+           (!RealValuedNumericQ[bw] || !TrueQ[bw > 0]),
+            Message[Unfold::circularBandwidth];
+            Return[False]
+        ]
+    ];
+    True
+];
+(* *}}} *)
+unfoldResult[levels_, cumulative_, density_, bandwidth_] := <|(* {{{* *)
+    "UnfoldedLevels" -> (cumulative /@ levels),
+    "SmoothCDF" -> cumulative,
+    "SmoothPDF" -> density,
+    "Bandwidth" -> bandwidth,
+    "OriginalLevels" -> levels
+|>;
+(* *}}} *)
+unfoldCircular[levels_, config_] := Module[(* {{{* *)
+    {n = Length[levels], bw, phases, harmonics, moments, weights,
+     boundaryTerms, cumulative, density, result, unfolded},
+    bw = config["Bandwidth"];
+    If[bw === Automatic, bw = N[2 Pi/Sqrt[n]]];
+    phases = Sort[N[Mod[levels + Pi, 2 Pi] - Pi]];
 
-(* Error Message definition *)
+    (* Wrapped Gaussian KDE; retain Fourier modes above 10^-14. *)
+    harmonics = Range[Ceiling[Sqrt[2 Log[10.^14]]/bw]];
+    moments = Table[Mean[Exp[I m phases]], {m, harmonics}];
+    weights = Exp[-(bw harmonics)^2/2];
+    boundaryTerms = Im[moments Exp[-I harmonics Pi]];
+    With[{count = n, m = harmonics, c = moments,
+          w = weights, b = boundaryTerms},
+        cumulative = Function[phi,
+            count (phi + Pi)/(2 Pi) +
+            count/Pi Total[(w/m) (-Im[c Exp[-I m phi]] + b)]
+        ];
+        density = Function[phi,
+            count/(2 Pi) (1 + 2 Total[w Re[c Exp[-I m phi]]])
+        ]
+    ];
+    result = unfoldResult[phases, cumulative, density, bw];
+    unfolded = result["UnfoldedLevels"];
+    Join[result,
+        <|"UnfoldedSpacings" -> Differences[
+            Append[unfolded, n + First[unfolded]]
+        ]|>
+    ]
+];
+(* *}}} *)
+unfoldBands[levels_, config_] := Module[(* {{{* *)
+    {cuts, bands, counts, gapIndices, kernels, distributions,
+     cumulative, density, result},
+    cuts = Sort[DeleteDuplicates[config["BandCuts"]]];
+    bands = Split[levels,
+        Function[{a, b}, !AnyTrue[cuts, Function[c, a < c <= b]]]
+    ];
+    If[!AllTrue[bands, Length[#] >= 3 && First[#] < Last[#] &],
+        Message[Unfold::shortBand];
+        Return[$Failed]
+    ];
+    counts = Length /@ bands;
+    gapIndices = Most[Accumulate[counts]];
+    kernels = SmoothKernelDistribution[#, config["Bandwidth"],
+        config["Kernel"]] & /@ bands;
+    distributions = MapThread[
+        TruncatedDistribution[{First[#1], Last[#1]}, #2] &,
+        {bands, kernels}
+    ];
+    With[{dist = distributions, sizes = counts},
+        cumulative = Function[e,
+            Total[MapThread[#1 CDF[#2, e] &, {sizes, dist}]]];
+        density = Function[e,
+            Total[MapThread[#1 PDF[#2, e] &, {sizes, dist}]]]
+    ];
+    result = unfoldResult[levels, cumulative, density,
+        (#["Bandwidth"] & /@ kernels)];
+    Join[result,
+        <|"UnfoldedBands" -> TakeList[result["UnfoldedLevels"], counts],
+          "GapIndices" -> gapIndices|>
+    ]
+];
+(* *}}} *)
+unfoldOrdinary[levels_, config_] := Module[(* {{{* *)
+    {dist, cumulative, density},
+    dist = SmoothKernelDistribution[levels, config["Bandwidth"],
+        config["Kernel"]];
+    With[{d = dist, n = Length[levels]},
+        cumulative = Function[e, n CDF[d, e]];
+        density = Function[e, n PDF[d, e]]
+    ];
+    unfoldResult[levels, cumulative, density, dist["Bandwidth"]]
+];
+(* *}}} *)
+Unfold[spectrum_List, opts : OptionsPattern[]] := Module[(* {{{* *)
+    {levels, config},
+    levels = unfoldPrepareSpectrum[spectrum];
+    If[levels === $Failed, Return[$Failed]];
+    config = <|
+        "Bandwidth" -> OptionValue["Bandwidth"],
+        "Kernel" -> OptionValue["Kernel"],
+        "BandCuts" -> OptionValue["BandCuts"],
+        "Circular" -> OptionValue["Circular"]
+    |>;
+    If[!unfoldValidOptionsQ[levels, config], Return[$Failed]];
+    Which[
+        TrueQ[config["Circular"]], unfoldCircular[levels, config],
+        config["BandCuts"] =!= {}, unfoldBands[levels, config],
+        True, unfoldOrdinary[levels, config]
+    ]
+];
+(* *}}} *)
+(* Error Message definition {{{* *)
 Unfold::notEnoughLevels = "Spectrum length `1` is too short for unfolding. At least 3 levels are required.";
+Unfold::nonNumericLevels = "Every spectrum level must evaluate to a real number after numerical conversion.";
 Unfold::badCuts = "BandCuts must be a list of numeric cut positions inside the spectrum.";
 Unfold::shortBand = "Each band must contain at least three levels with nonzero range.";
 Unfold::circularOptions = "Circular unfolding uses a Gaussian kernel and cannot be combined with BandCuts.";
-Unfold::realPhases = "Circular unfolding requires a list of real numeric phases.";
 Unfold::circularBandwidth = "Circular bandwidth must be Automatic or a positive real angular width.";
+(* *}}} *)
+(* *}}} *) 
+(* UnfoldCircular {{{* *)
+ClearAll[UnfoldCircular];
+UnfoldCircular[
+	eigenphases_List,
+	nBins_: Automatic,
+	maxHarmonic_Integer : 25
+] := Module[
+	{angles, binCount, edges, heights, centers, dx, ns,
+		a, b, cumulative, pdf, unfolded},
 
+		(* Represent every phase in the same circular interval. *)
+		angles = Mod[eigenphases + Pi, 2 Pi] - Pi;
+
+		(* Select a bin count, then cover the full circle. *)
+		nBinss = If[
+			IntegerQ[nBins],
+			nBins,
+			Max[
+				Length[First[HistogramList[angles, nBins]]] - 1,
+				2 maxHarmonic + 1
+			]
+		];
+		edges = Subdivide[-Pi, Pi, nBinss];
+		{edges, heights} =
+			HistogramList[angles, {edges}, "PDF"];
+
+		(* Compute the Fourier coefficients. *)
+		centers = MovingAverage[edges, 2];
+		dx = First[Differences[edges]];
+		ns = Range[maxHarmonic];
+
+		a = N[(dx/Pi) Cos[Outer[Times, ns, centers]] .
+			heights];
+		b = N[(dx/Pi) Sin[Outer[Times, ns, centers]] .
+			heights];
+
+		(* Integrate the fitted PDF analytically. *)
+		cumulative[t_?NumericQ] :=
+			(t + Pi)/(2 Pi) +
+				Total[
+					(a Sin[ns t] +
+						b ((-1)^ns - Cos[ns t]))/ns
+				];
+
+		(* Embed the coefficients in the returned function. *)
+		pdf = Function[
+			t,
+			Evaluate[
+				1/(2 Pi) +
+					Total[a Cos[ns t] + b Sin[ns t]]
+			]
+		];
+		unfolded = Length[angles] (cumulative /@ angles);
+
+		<|
+			"OriginalLevels" -> eigenphases,
+			"UnfoldedLevels" -> unfolded,
+			"SmoothPDF" -> pdf,
+			"nBins" -> nBinss,
+			"maxHarmonic" -> maxHarmonic
+		|>
+	];
+(* *}}} *)
 
 ComplexSpacingRatios[eigs_List?VectorQ] := Module[
   {
@@ -1553,8 +1577,7 @@ SwappedFockState[fockState_, targetSite_, wrongSite_] :=
     Thread[# -> Part[fockState, Reverse[#]] ] & [{targetSite, wrongSite}]
   ]
 
+(* *}}} *)
 
 End[]
-
-
 EndPackage[]
