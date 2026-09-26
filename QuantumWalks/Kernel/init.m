@@ -47,4 +47,5 @@ Module[{rootPath, PacletPath, PacletData, VersionLocal,
     Get[FileNameJoin[{rootPath, "Billiards", "Cardioid.wl"}]];
     Get[FileNameJoin[{rootPath, "Billiards", "Rectangle.wl"}]];
     Get[FileNameJoin[{rootPath, "Billiards", "Ellipse.wl"}]];
+    Get[FileNameJoin[{rootPath, "Billiards", "ChoiPurity.wl"}]];
 ];
