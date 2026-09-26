@@ -190,7 +190,13 @@ Unfold[spectrum, opts] allows specifying options for the kernel distribution.
 * \"Circular\": (Default: False) Unfold eigenphases modulo 2\[Pi] with a periodic Gaussian kernel. In this mode Bandwidth is a positive angular width or Automatic."
 ];
 
-UnfoldCircular::usage = "UnfoldCircular[spectrum,nMax] unfolds the spectrum";
+UnfoldCircular::usage =
+"UnfoldCircular[eigenphases] unfolds phases on the circle and returns \
+an Association with unfolded levels and the fitted PDF to the density of states.
+UnfoldCircular[eigenphases, nBins] sets the histogram bin count \
+(default: Automatic).
+UnfoldCircular[eigenphases, nBins, maxHarmonic] also sets the number \
+of Fourier harmonics (default: 25).";
 
 
 ComplexSpacingRatios::usage =
@@ -734,7 +740,6 @@ Unfold::circularBandwidth = "Circular bandwidth must be Automatic or a positive 
 (* *}}} *)
 (* *}}} *) 
 (* UnfoldCircular {{{* *)
-ClearAll[UnfoldCircular];
 UnfoldCircular[
 	eigenphases_List,
 	nBins_: Automatic,
